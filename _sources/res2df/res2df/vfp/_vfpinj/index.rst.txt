@@ -1,0 +1,223 @@
+res2df.vfp._vfpinj
+==================
+
+.. py:module:: res2df.vfp._vfpinj
+
+.. autoapi-nested-parse::
+
+   Utilities to extract the VFPINJ data from an Eclipse (input) deck.
+   Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
+   basic_data (dictionary with basic data types), df (pandas DataFrame) or
+   pyarrow_tables (pyarrow.Tables).
+
+   Data can be extracted from a complete deck or from individual files.
+   Supports output both in csv format as a pandas DataFrame or in pyarrow
+   a pyarrow.Table. Also functionality to write pandas DataFrame and
+   pyarrow.Table to file as Eclipse .Ecl format
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.vfp._vfpinj._deckrecord2list
+   res2df.vfp._vfpinj._stack_vfptable2df
+   res2df.vfp._vfpinj._string2intlist
+   res2df.vfp._vfpinj._write_vfp_range
+   res2df.vfp._vfpinj.basic_data
+   res2df.vfp._vfpinj.basic_data2df
+   res2df.vfp._vfpinj.basic_data2pyarrow
+   res2df.vfp._vfpinj.df2basic_data
+   res2df.vfp._vfpinj.pyarrow2basic_data
+   res2df.vfp._vfpinj._check_basic_data
+   res2df.vfp._vfpinj.df
+   res2df.vfp._vfpinj.pyarrow
+   res2df.vfp._vfpinj._write_basic_record
+   res2df.vfp._vfpinj._write_table_records
+   res2df.vfp._vfpinj.df2res
+
+
+Module Contents
+---------------
+
+.. py:function:: _deckrecord2list(record: opm.opmcommon_python.DeckRecord, keyword: str, recordindex: int, recordname: str) -> list[float]
+
+   Parse an opm.opmcommon_python.DeckRecord belonging to a certain keyword
+   and return as list of numbers
+
+   :param record: Record be parsed
+   :param keyword: Which keyword this belongs to
+   :param recordindex: For keywords where itemlistname is 'records', this is a
+                       list index to the "record".
+   :param recordname: Name of the record
+
+
+.. py:function:: _stack_vfptable2df(index_names_list: list[str], index_values_list: numpy.ndarray | list[list[float]], flow_values_list: numpy.ndarray | list[float], table_values_list: numpy.ndarray | list[list[float]]) -> pandas.DataFrame
+
+   Return a dataframe from a list of interpolation ranges and tabulated values
+
+   :param index_names_list: List with name of each interpolated
+                            quantity (i.e. THP, WFR, GFR, ALQ for VFPPROD
+                            or THP for VFPINJ)
+   :param index_values_list: List of list with values for
+                             each interpolated quantity for
+                             each row in vfp table (each record)
+                             (dim (no index names) x (no records))
+   :param flow_values_list: List of flow values (dim = no flow_values)
+   :param table_values_list: List of list with tabulated values
+                             (dim = (no records) x  (no flow_values))
+
+
+.. py:function:: _string2intlist(list_def_str: str) -> _string2intlist.list[int]
+
+   Produce a list of int from input string
+
+   :param list_def_str: String defining list of int
+                        Format "[1,2,6:9]" to define list [1,2,6,7,8,9]
+
+
+.. py:function:: _write_vfp_range(values: list[float], var_type: str, unit_type: str, format: str = '%10.6g', values_per_line: int = 5) -> str
+
+   Creates a :term:`include file` content string of a resdata
+   record for a given table range
+
+   :param values: List/array with the range sorted
+   :param var_type: The Eclipse variable type defintion
+   :param unit_type: The unit type for the variable
+   :param format: Format string for values
+   :param values_per_line: Number of values per line in output
+
+
+.. py:function:: basic_data(keyword: opm.opmcommon_python.DeckKeyword, vfpnumbers_str: str | None = None) -> dict[str, Any]
+
+   Read and return all data for Eclipse VFPINJ keyword as basic data types
+
+   Empty string returned if vfp table number does not match any number in list
+
+   :param keyword: :term:`.DATA file` keyword
+   :param vfpnumbers_str: String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds
+
+
+.. py:function:: basic_data2df(tableno: int, datum: float, rate_type: res2df.vfp._vfpdefs.VFPINJ_FLO, thp_type: res2df.vfp._vfpdefs.THPTYPE, unit_type: res2df.vfp._vfpdefs.UNITTYPE, tab_type: res2df.vfp._vfpdefs.VFPINJ_TABTYPE, flow_values: numpy.ndarray, thp_values: numpy.ndarray, thp_indices: numpy.ndarray, tab_data: numpy.ndarray) -> pandas.DataFrame
+
+   Return a pandas DataFrame from VFPINJ liftcurve data
+
+   :param tableno: table number
+   :param datum: datum depth
+   :param rate_type: rate type used for flow values
+   :param thp_type: thp type used for THP values
+   :param unit_type: unit type
+   :param tab_type: type for tabulated (record) values
+   :param flow_values: rate values used to generate table
+   :param thp_type: thp type
+   :param thp_indices: which index in thp value table a given BHP value
+                       corresponds to (1-base)
+   :param tab_data: tabulated (BHP) data
+                    (ordered as thp- and flow-values)
+
+
+.. py:function:: basic_data2pyarrow(tableno: int, datum: float, rate_type: res2df.vfp._vfpdefs.VFPINJ_FLO, thp_type: res2df.vfp._vfpdefs.THPTYPE, unit_type: res2df.vfp._vfpdefs.UNITTYPE, tab_type: res2df.vfp._vfpdefs.VFPINJ_TABTYPE, flow_values: numpy.ndarray, thp_values: numpy.ndarray, thp_indices: numpy.ndarray, tab_data: numpy.ndarray) -> pyarrow.Table
+
+   Return a pyarrow Table from VFPINJ record data
+
+   :param tableno: table number
+   :param datum: datum depth
+   :param rate_type: rate type used for flow values
+   :param thp_type: thp type
+   :param unit_type: unit type
+   :param tab_type: type for tabulated (record) values
+   :param flow_values: rate values used to generate table
+   :param thp_values: THP values used to generate table
+   :param thp_indices: THP indices for each record in tabulated data
+   :param tab_data: tabulated (BHP) data
+                    (ordered according to thp- and flow-values)
+
+
+.. py:function:: df2basic_data(dframe: pandas.DataFrame) -> dict[str, Any]
+
+   Return basic data type for VFPINJ from a pandas dataframe.
+
+   Return format is a dictionary all data in VFPINJ in basic data types
+   (str, int, float, numpy.array)
+
+   :param dframe: pandas DataFrame for VFPINJ
+
+
+.. py:function:: pyarrow2basic_data(pa_table: pyarrow.Table) -> dict[str, Any]
+
+   Return basic data type for VFPINJ from a pyarrow.Table.
+
+   Return format is a dictionary all data in VFPINJ in basic data types
+   (str, int, float, numpy.array)
+
+   :param pa_table: pyarrow Table with data for VFPINJ
+
+
+.. py:function:: _check_basic_data(vfp_data: dict[str, Any]) -> bool
+
+   Perform a check of the VFPINJ data contained in the dictionary.
+   Checks if all data is present and if the dimensions of the arrays
+   are consisitent.
+
+   :param vfp_data: Dictionary containing all data for a VFPINJ keyword in Eclipse
+
+
+.. py:function:: df(keyword: opm.opmcommon_python.DeckKeyword, vfpnumbers_str: str | None = None) -> pandas.DataFrame | None
+
+   Return a dataframes of a single VFPINJ table from a :term:`.DATA file`
+
+   Data from the VFPINJ keyword are stacked into a Pandas Dataframe
+
+   :param keyword: :term:`.DATA file` keyword
+   :param vfpnumbers_str: String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+
+
+.. py:function:: pyarrow(keyword: opm.opmcommon_python.DeckKeyword, vfpnumbers_str: str | None = None) -> pyarrow.Table | None
+
+   Return a pyarrow Table of a single VFPINJ table from a :term:`.DATA file`
+      If no VFPINJ table found, return None
+
+   :param keyword: :term:`.DATA file` keyword
+   :param vfpnumbers_str: String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+
+
+.. py:function:: _write_basic_record(tableno: int, datum: float, flo_type: str, pressure_type: str, unit_type: str, tab_type: str) -> str
+
+   Creates a :term:`include file` content string of the
+   first record for the Eclipse VFPINJ keyword
+
+   :param tableno: VFPROD table number
+   :param datum: datum depth
+   :param pressure_type: THP type
+   :param unit_type: Unit type
+   :param tab_type: Table type (BHP)
+
+
+.. py:function:: _write_table_records(thp_indices: numpy.ndarray, table: numpy.ndarray, format: str = '%10.6g', values_per_line: int = 5) -> str
+
+   Creates a :term:`include file` content string representing
+   for a VFPINJ table (BHP part)
+
+   :param thp_indices: array of int representing index for THP value for record
+   :param table: DataFrame with multiindex for table ranges and colums
+                 for tabulated values (BHP)
+   :param format: Format string for values
+   :param values_per_line: Number of values per line in output
+
+
+.. py:function:: df2res(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Creates a :term:`include file` content string
+   representing single VFPINJ Eclipse input from a dataframe
+
+   All data for the keywords VFPINJ will be returned.
+
+   :param dframe: Dataframe containing complete description of single VFPINJ input
+   :param comment: Text that will be included as comment
+
+

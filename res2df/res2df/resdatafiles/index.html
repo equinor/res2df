@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.resdatafiles &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=21b8ffc7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="res2df.rft" href="../rft/index.html" />
+    <link rel="prev" title="res2df.res2csvlogger" href="../res2csvlogger/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">res2df</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../common/index.html">res2df.common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compdat/index.html">res2df.compdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../csv2res/index.html">res2df.csv2res</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../equil/index.html">res2df.equil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faults/index.html">res2df.faults</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fipreports/index.html">res2df.fipreports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../grid/index.html">res2df.grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gruptree/index.html">res2df.gruptree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hook_implementations/index.html">res2df.hook_implementations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../inferdims/index.html">res2df.inferdims</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nnc/index.html">res2df.nnc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opmkeywords/index.html">res2df.opmkeywords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parameters/index.html">res2df.parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pillars/index.html">res2df.pillars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pvt/index.html">res2df.pvt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csv/index.html">res2df.res2csv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csvlogger/index.html">res2df.res2csvlogger</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">res2df.resdatafiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../rft/index.html">res2df.rft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../satfunc/index.html">res2df.satfunc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../summary/index.html">res2df.summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trans/index.html">res2df.trans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">res2df.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vfp/index.html">res2df.vfp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wcon/index.html">res2df.wcon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellcompletiondata/index.html">res2df.wellcompletiondata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellconnstatus/index.html">res2df.wellconnstatus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.resdatafiles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/res2df/res2df/resdatafiles/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-res2df.resdatafiles">
+<span id="res2df-resdatafiles"></span><h1>res2df.resdatafiles<a class="headerlink" href="#module-res2df.resdatafiles" title="Link to this heading"></a></h1>
+<p>Module to hold simulator input and output filenames</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a></p></td>
+<td><p>Class for holding reservoir simulator <a class="reference internal" href="../../../glossary.html#term-output-file"><span class="xref std std-term">output files</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.resdatafiles.rreplace" title="res2df.resdatafiles.rreplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rreplace</span></code></a>(→ str)</p></td>
+<td><p>Variant of str.replace() that only replaces at the end of the string</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">res2df.resdatafiles.</span></span><span class="sig-name descname"><span class="pre">ResdataFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclbase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles" title="Link to this definition"></a></dt>
+<dd><p>Class for holding reservoir simulator <a class="reference internal" href="../../../glossary.html#term-output-file"><span class="xref std std-term">output files</span></a></p>
+<p>Exists only for convenience, so that loading of
+ResdataFile/Summary objects is easy for users, and with
+caching if wanted.</p>
+<p>Various functions that needs some of the simulator <a class="reference internal" href="../../../glossary.html#term-output-file"><span class="xref std std-term">output</span></a>
+(or <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a>) should be able to ask this class, and
+it should be loaded or served from cache.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_path" title="Link to this definition"></a></dt>
+<dd><p>Return the full path to the directory with the .DATA file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_deck">
+<span class="sig-name descname"><span class="pre">get_deck</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">opm.opmcommon_python.Deck</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_deck" title="Link to this definition"></a></dt>
+<dd><p>Return a opm.io <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> of the .DATA file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.str2deck">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">str2deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parsecontext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">opm.opmcommon_python.Deck</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.str2deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.str2deck" title="Link to this definition"></a></dt>
+<dd><p>Produce a opm.io <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> from a string, using permissive
+parsing by default</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.file2deck">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file2deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">opm.opmcommon_python.Deck</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.file2deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.file2deck" title="Link to this definition"></a></dt>
+<dd><p>Try to convert standalone files into opm.io Deck objects</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_egrid">
+<span class="sig-name descname"><span class="pre">get_egrid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.grid.Grid</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_egrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_egrid" title="Link to this definition"></a></dt>
+<dd><p>Find and return EGRID file as a Grid object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_egridfile">
+<span class="sig-name descname"><span class="pre">get_egridfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.resfile.ResdataFile</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_egridfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_egridfile" title="Link to this definition"></a></dt>
+<dd><p>Find and return the EGRID file as a ResdataFile object</p>
+<p>This gives access to data vectors defined on the grid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_summary">
+<span class="sig-name descname"><span class="pre">get_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_restart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.summary.Summary</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_summary" title="Link to this definition"></a></dt>
+<dd><p>Find and return the summary file and
+return as Summary object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>include_restart</strong> – Sent to resdata for whether restart files
+should be traversed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_initfile">
+<span class="sig-name descname"><span class="pre">get_initfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.resfile.ResdataFile</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_initfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_initfile" title="Link to this definition"></a></dt>
+<dd><p>Find and return the INIT file as a ResdataFile object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_rftfile">
+<span class="sig-name descname"><span class="pre">get_rftfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.resfile.ResdataFile</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_rftfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_rftfile" title="Link to this definition"></a></dt>
+<dd><p>Find and return the RFT file as a ResdataFile object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_rstfile">
+<span class="sig-name descname"><span class="pre">get_rstfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.resfile.ResdataFile</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_rstfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_rstfile" title="Link to this definition"></a></dt>
+<dd><p>Find and return the UNRST file as a ResdataFile object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_rstfilename">
+<span class="sig-name descname"><span class="pre">get_rstfilename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_rstfilename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_rstfilename" title="Link to this definition"></a></dt>
+<dd><p>Return the inferred name of the UNRST file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_prtfilename">
+<span class="sig-name descname"><span class="pre">get_prtfilename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_prtfilename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_prtfilename" title="Link to this definition"></a></dt>
+<dd><p>Return the inferred name of the PRT file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.close" title="Link to this definition"></a></dt>
+<dd><p>Close any opened files. Most files are opened though ecl with
+an option to close the stream as possible, leaving not much work
+for this function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.resdatafiles.ResdataFiles.get_zonemap">
+<span class="sig-name descname"><span class="pre">get_zonemap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#ResdataFiles.get_zonemap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.ResdataFiles.get_zonemap" title="Link to this definition"></a></dt>
+<dd><p>Return a dictionary from (int) K layers in the simgrid to strings</p>
+<p>Typical usage is to map from grid layer to zone names.</p>
+<p>The layer filename must currently follow format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;ZoneA&#39;</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
+<span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
+</pre></div>
+</div>
+<p>where the single quotes are optional for zones without spaces.
+Write single layer zones as 11-11. NB: ResInsight requires single
+quotes always.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Name of file. If relative path, relative to DATA
+file location. If nonexisting file, an empty dict will be
+returned and a warning issued.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dict, integer keys which are the K layers. Every layer mentioned</dt><dd><p>in the interval in the input file is present. Can be empty.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.resdatafiles.rreplace">
+<span class="sig-prename descclassname"><span class="pre">res2df.resdatafiles.</span></span><span class="sig-name descname"><span class="pre">rreplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/resdatafiles.html#rreplace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.resdatafiles.rreplace" title="Link to this definition"></a></dt>
+<dd><p>Variant of str.replace() that only replaces at the end of the string</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../res2csvlogger/index.html" class="btn btn-neutral float-left" title="res2df.res2csvlogger" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../rft/index.html" class="btn btn-neutral float-right" title="res2df.rft" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

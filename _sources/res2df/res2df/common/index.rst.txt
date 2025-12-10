@@ -1,0 +1,350 @@
+res2df.common
+=============
+
+.. py:module:: res2df.common
+
+.. autoapi-nested-parse::
+
+   Common functions for res2df modules
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.common.write_dframe_stdout_file
+   res2df.common.write_inc_stdout_file
+   res2df.common.parse_month
+   res2df.common.datetime_to_ecldate
+   res2df.common.keyworddata_to_df
+   res2df.common.parse_opmio_deckrecord
+   res2df.common.parse_opmio_date_rec
+   res2df.common.parse_opmio_tstep_rec
+   res2df.common.merge_zones
+   res2df.common.comment_formatter
+   res2df.common.handle_wanted_keywords
+   res2df.common.fill_reverse_parser
+   res2df.common.df2res
+   res2df.common.generic_deck_table
+   res2df.common.runlength_compress
+   res2df.common.stack_on_colnames
+   res2df.common.is_color
+   res2df.common.parse_lyrfile
+   res2df.common.convert_lyrlist_to_zonemap
+   res2df.common.get_wells_matching_template
+
+
+Module Contents
+---------------
+
+.. py:function:: write_dframe_stdout_file(dframe: pandas.DataFrame | pyarrow.Table, output: str, index: bool = False, caller_logger: logging.Logger | None = None, logstr: str | None = None) -> None
+
+   Write a dataframe to either stdout or a file
+
+   If output is the magic string "-", output is written
+   to stdout.
+
+   :param dframe: Dataframe to write
+   :param output: Filename or "-"
+   :param index: Passed to to_csv()
+   :param caller_logger: Used if not stdout
+   :param logstr: Logged if not stdout.
+
+
+.. py:function:: write_inc_stdout_file(string: str, outputfilename: str) -> None
+
+   Write a string (typically an :term:`include file` string) to stdout
+   or to a named file
+
+
+.. py:function:: parse_month(rdmonth: str) -> int
+
+   Translate resdata month strings to integer months
+
+
+.. py:function:: datetime_to_ecldate(timestamp: str | datetime.datetime | datetime.date) -> str
+
+   Convert a Python timestamp or date to the Eclipse DATE format
+
+
+.. py:function:: keyworddata_to_df(deck: opm.opmcommon_python.Deck, keyword: str, renamer: collections.abc.Mapping[str, str | list[str]] | None = None, recordcountername: str | None = None, emptyrecordcountername: str | None = None) -> pandas.DataFrame
+
+   Extract data associated to a keyword into tabular form.
+
+   Two modes of enumeration of tables in the keyworddata is supported, you
+   will have to find out which one fits your particular keyword. Activate
+   by setting recordcountername or emptyrecordcountername to some string, which
+   will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.
+
+   :param deck: Parsed :term:`deck`
+   :param keyword: Name of the keyword for which to extract data.
+   :param renamer: Mapping of names present in OPM json files for the
+                   keyword to desired column names in returned dataframe
+   :param recordcountername: If present, an extra column is added with this name
+                             with consecutive rows enumerated from 1. Use this to assign
+                             EQLNUM or similar when this should be consecutive pr. row (not
+                             the case for all keywords).
+   :param emptyrecordcountername: If supplied, an index is added to every parsed
+                                  row based on how many empty records is encountered. For PVTO f.ex,
+                                  this gives the PVTNUM indexing.
+
+
+.. py:function:: parse_opmio_deckrecord(record: opm.opmcommon_python.DeckRecord, keyword: str, itemlistname: str = 'items', recordindex: int | None = None, renamer: collections.abc.Mapping[str, str | list[str]] | None = None) -> dict[str, Any]
+
+   Parse an opm.io.DeckRecord belonging to a certain keyword
+
+   :param record: Record be parsed
+   :param keyword: Which keyword this belongs to
+   :param itemlistname: The key in the json dict that describes the items,
+                        typically 'items' or 'records'
+   :param recordindex: For keywords where itemlistname is 'records', this is a
+                       list index to the "record".
+                       Beware, there are multiple concepts here for what we call a record.
+   :param renamer: If supplied, this dictionary will be used to remap
+                   the keys in returned dict. For items with name DATA, the dict
+                   value is assumed to be a list of strings to be mapped to
+                   each subitem.
+
+
+.. py:function:: parse_opmio_date_rec(record: opm.io.DeckRecord) -> datetime.date
+
+   Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.
+
+
+.. py:function:: parse_opmio_tstep_rec(record: opm.io.DeckRecord) -> list[float | int]
+
+   Parse a record with TSTEP data
+
+   :returns: list of floats or ints
+
+
+.. py:function:: merge_zones(df: pandas.DataFrame, zonedict: dict, zoneheader: str = 'ZONE', kname: str = 'K1') -> pandas.DataFrame
+
+   Merge in a column with zone names, from a dictionary mapping
+   k-index to zone name. If the zonemap is not covering all
+   zones, cells will be filled with NaN.
+
+   :param df: Dataframe where we should augment a column
+   :param zonedict: Dictionary with integer keys pointing to strings
+                    with zone names.
+   :param zoneheader: Name of the result column merged in,
+                      default: ZONE
+   :param kname: Column header in your dataframe that maps to dictionary keys.
+                 default K1
+
+
+.. py:function:: comment_formatter(multiline: str | None, prefix: str = '-- ') -> str
+
+   Prepends comment characters to every line in input
+
+   If nothing is supplied, an empty string is returned.
+
+   :param multiline: String that can contain newlines
+   :param prefix: Comment characters to prepend every line with
+                  Default is the Eclipse comment syntax '-- '
+
+   :returns:
+
+             string, with newlines preserved, and where each line
+                 starts with the given prefix. Always ends with a newline.
+
+
+.. py:function:: handle_wanted_keywords(wanted: list[str] | None, deck: opm.io.Deck, supported: list[str], modulename: str = '') -> list[str]
+
+   Handle three list of keywords, wanted, available and supported
+
+   :param keywords: None, or list of strings of user-requested keywords
+   :param deck: Used to query which data is available
+   :param supported: Keywords that are supported by the module
+   :param modulename: Name of the module calling this function, used in logging
+
+
+.. py:function:: fill_reverse_parser(parser: argparse.ArgumentParser, modulename: str, defaultoutputfile: str) -> argparse.ArgumentParser
+
+   A standardized submodule parser for the command line utility
+      to produce :term:`include files <include file>` from a CSV file.
+
+   :param parser: parser to fill with arguments
+   :param modulename: Will be included in the help text
+   :param defaultoutputfile: Default :term:`output file` name
+
+
+.. py:function:: df2res(dataframe: pandas.DataFrame, keywords: str | list[str] | list[str | None] | None = None, comments: dict[str, str] | None = None, supported: list[str] | None = None, consecutive: str | None = None, filename: str | None = None) -> str
+
+   Generate resdata :term:`include file` content from dataframes in res2df format.
+
+   This function hands over the actual text generation pr. keyword
+   to functions named df2res_<keywordname> in the calling module.
+
+   These functions may again use generic_deck_table() from this module
+   for the actual string construction.
+
+   :param dataframe: Dataframe with res2df format.
+   :param keywords: List of keywords to include. Will be reduced
+                    to the set of keywords available in dataframe and to those supported
+   :param comments: Dictionary indexed by keyword with comments to be
+                    included pr. keyword. If a key named "master" is present
+                    it will be used as a master comment for the outputted file.
+   :param supported: List of strings of keywords which are
+                     supported in this invocation of this function.
+   :param consecutive: Column name for which we require the
+                       numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.
+   :param filename: If supplied, the generated text will also be dumped
+                    to file.
+
+   :returns: string that can be used as contents of :term:`include file`.
+
+
+.. py:function:: generic_deck_table(dframe: pandas.DataFrame, keyword: str, comment: str | None = None, renamer: collections.abc.Mapping[str, str] | None = None, drop_trailing_columns: bool = True) -> str
+
+   Construct string contents of a :term:`.DATA file` table.
+
+   This function will *not* add a final slash after all rows, as
+   this is keyword dependent. Some keywords require it, some keywords
+   require it to not be there.
+
+   The header is printed as a comment, with header names taken
+   from the dataframe.
+
+   The renamer is a map that is used to translate your dataframe column
+   names into opm.common item names, and the dictionary should map
+   from opm.common names into your chosen ones. If you have standard named
+   dataframe columns, the renamer is only applied to the column header comment.
+
+   Trailing columns that are all defaulted (that is either np.nan, None)
+   or consisting of only "1*" will be dropped, as Eclipse will always
+   interpret that as "1*".
+
+
+.. py:function:: runlength_compress(string: str, sep: str = '  ') -> str
+
+   Compress a string of space-separated elements so that
+
+      2 2 2 2 2 3 3 4
+
+   becomes
+
+      5*2 2*3 4
+
+   which is the format supported by Eclipse. The input
+   string must be splittable with split(). Any newlines
+   will be replaced by a space prior to split().
+
+   See https:///en.wikipedia.org/wiki/Run-length_encoding
+
+   :param string: String of space-separated elements to compress
+   :type string: str
+   :param sep: Separator string used in output. Separator string in
+               input is not conserved, but it must be compatible with
+               str.split()
+   :type sep: str
+
+   :returns: string, shorter or equal-length to the input.
+
+
+.. py:function:: stack_on_colnames(dframe: pandas.DataFrame, sep: str = '@', stackcolname: str = 'DATE', inplace: bool = True) -> pandas.DataFrame
+
+   For a dataframe where some columns are multilevel, but where
+   the second level is encoded in the column name, this function
+   will stack the dataframe by putting the second level of the column
+   multiindex into its own column, best understood by this example:
+
+   A dframe like this
+
+      ===== =============== ==============
+      PORV   OWC@2000-01-01 OWC@2020-01-01
+      ===== =============== ==============
+      100       1000          990
+      ===== =============== ==============
+
+   will be stacked to
+
+      ====  ====  ==========
+      PORV  OWC   DATE
+      ====  ====  ==========
+      100   1000  2000-01-01
+      100   990   2020-01-01
+      ====  ====  ==========
+
+   (for the defaults values for *sep* and *stackcolname*)
+
+   Column order is not guaranteed
+
+   :param dframe: A dataframe to stack
+   :param sep: The separator that is used in dframe.columns to define
+               the multilevel column names.
+   :param stackcolname: Used as column name for the second level
+                        of the column multiindex
+
+
+.. py:function:: is_color(input_string: str) -> bool
+
+   Checks if the input string is a valid color.
+   That is six-digit hexadecimal, three-digit hexadecimal or
+   given as a SVG color keyword name
+
+
+.. py:function:: parse_lyrfile(filename: str | pathlib.Path) -> list[dict[str, Any]] | None
+
+   Return a list of dicts representation of the lyr file.
+
+   The lyr file contains data of the following format,
+   where the color code is optional::
+
+     'ZoneA' 1-4     #FFE5F7
+     'ZoneB' 5       red
+
+   Description of the lyr format:
+   https://resinsight.org/3d-main-window/formations/#formation-names-description-files-_lyr_
+
+   The output has the following format::
+
+       [
+           {
+               "name": "ZoneA",
+               "from_layer": 1,
+               "to_layer": 4,
+               "color": "#FFE5F7"
+           },
+           {
+               "name": "ZoneB",
+               "span": 5,
+               "color": "red"
+           }
+       ]
+
+   :param filename: Absolute path to a lyr file
+
+   :returns: A list of dictionaries representing the information in the lyr file.
+
+
+.. py:function:: convert_lyrlist_to_zonemap(lyrlist: list[dict[str, Any]] | None) -> dict[int, str] | None
+
+   Returns a layer to zone map as a dictionary
+
+   :param lyrlist: list of dicts coming from parse_lyrfile()
+
+   :returns: "zoneA", 2: "zoneB"}
+   :rtype: Layer to zone mapping {1
+
+
+.. py:function:: get_wells_matching_template(template: str, wells: list[str]) -> list[str]
+
+   Returns the wells in the list that is matching the template
+   containing wilcard characters. The wildcard charachters supported
+   are * to match zero or more charachters and ? to match a single
+   non-empty character. Any wildcards in the beginning of the template
+   must be preceded with a \.
+
+   Well name templates starting with ? might be allowed in Eclipse
+   in some contexts, but not in all and will not be permitted here to
+   avoid confusion.
+
+   :param template: well name template with wildcard characters
+   :param wells: list of wells to match against the template
+
+   :returns: List of matched wells
+
+

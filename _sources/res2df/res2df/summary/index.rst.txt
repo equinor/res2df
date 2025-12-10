@@ -1,0 +1,169 @@
+res2df.summary
+==============
+
+.. py:module:: res2df.summary
+
+.. autoapi-nested-parse::
+
+   Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.summary.date_range
+   res2df.summary.resample_smry_dates
+   res2df.summary.df
+   res2df.summary.smry_meta
+   res2df.summary.df2ressum
+   res2df.summary.fill_parser
+   res2df.summary.fill_reverse_parser
+   res2df.summary.summary_main
+   res2df.summary.summary_reverse_main
+
+
+Module Contents
+---------------
+
+.. py:function:: date_range(start_date: datetime.date, end_date: datetime.date, freq: str) -> collections.abc.Iterable[datetime.datetime]
+
+   Wrapper for pandas.date_range to allow for extra res2df specific mnemonics
+   'yearly', 'daily', 'weekly', mapped over to pandas DateOffsets.
+
+   :param start_date:
+   :type start_date: datetime.date
+   :param end_date:
+   :type end_date: datetime.date
+   :param freq: monthly, daily, weekly, yearly, or a Pandas date offset
+                frequency.
+   :type freq: str
+
+   :returns: list of datetimes
+
+
+.. py:function:: resample_smry_dates(summarydates: list[datetime.datetime], freq: str = FREQ_RAW, normalize: bool = True, start_date: str | datetime.date | None = None, end_date: str | datetime.date | None = None) -> list[datetime.date] | list[datetime.datetime]
+
+   Resample (optionally) a list of date(time)s to a new datelist according to options.
+
+   Based on the dates as input, a new list at a finer or coarser time density
+   can be returned, on the same date range. Incoming dates can also be cropped.
+
+   :param summarydates: list of datetimes, typically coming from Summary.dates
+   :param freq: string denoting requested frequency for
+                the returned list of datetime. 'raw' will
+                return the input datetimes (no resampling).
+                Options for timeresampling are
+                'daily', 'weekly', 'monthly' and 'yearly'. 'first' will give
+                the first date (minimum),  'last' will give out the last
+                date (maximum), as a list with one element. Can also be a single date.
+   :param normalize: Whether to normalize backwards at the start
+                     and forwards at the end to ensure the raw
+                     date range is covered when resampling time. This is
+                     ignored if start_date or end_date is explicitly supplied.
+   :param start_date: str or date with first date to include
+                      Dates prior to this date will be dropped, supplied
+                      start_date will always be included. Overrides
+                      normalized dates.
+   :param end_date: str or date with last date to be included.
+                    Dates past this date will be dropped, supplied
+                    end_date will always be included. Overrides
+                    normalized dates. Overridden if freq is 'last'.
+
+
+.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles, time_index: str | None = None, column_keys: list[str] | str | None = None, start_date: str | datetime.date | None = None, end_date: str | datetime.date | None = None, include_restart: bool = False, params: bool = False, paramfile: str | None = None, datetime: bool = False) -> pandas.DataFrame
+
+   Extract data from UNSMRY as Pandas dataframes.
+
+   This is a thin wrapper for Summary.pandas_frame, by adding
+   support for string mnenomics for the time index.
+
+   The dataframe is always indexed by DATE, and the datatype for the
+   index will usually be datetime64[ns] as long as all dates are
+   before year 2262. If a longer time range is detected, the index.dtype
+   will be object, and consisting of datetime.datetime() objects. The index
+   is always named "DATE".
+
+   :param resdatafiles: ResdataFiles object representing a
+                        :term:`.DATA file`. Alternatively a Summary object.
+   :param time_index: string indicating a resampling frequency,
+                      'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will
+                      return the simulated report steps (also default).
+                      If a list of DateTime is supplied, data will be resampled
+                      to these.
+   :param column_keys: list of column key wildcards. None means everything.
+   :param start_date: str or date with first date to include.
+                      Dates prior to this date will be dropped, supplied
+                      start_date will always be included.
+   :param end_date: str or date with last date to be included.
+                    Dates past this date will be dropped, supplied
+                    end_date will always be included. Overriden if time_index
+                    is 'last'.
+   :param include_restart: boolean sent to resdata for whether restart
+                           files should be traversed
+   :param params: If set, parameters.txt will be attempted loaded
+                  and merged with the summary data.
+   :param paramsfile: Explicit path to parameters file if autodiscovery is
+                      not wanted. Implies params=True
+   :param datetime: If True, the time index of the returned DataFrame
+                    is always of datetime type. If not, it will be datetime
+                    if raw dates are requested (which are at second accuracy),
+                    or it will be strings in case of yearly, monthly or daily
+                    time frequency.
+
+   Returns empty dataframe if there is no summary file, or if the
+   column_keys are not existing.
+
+
+.. py:function:: smry_meta(resdatafiles: res2df.resdatafiles.ResdataFiles) -> dict[str, dict[str, Any]]
+
+   Provide metadata for summary data vectors.
+
+   A dictionary indexed by summary vector name is returned, and each
+   value is dictionary with the metadata types provided by the underlying
+   Summary object:
+
+   * unit (string)
+   * is_total (bool)
+   * is_rate (bool)
+   * is_historical (bool)
+   * get_num (int) (only provided if not None)
+   * keyword (str)
+   * wgname (str or None)
+
+
+.. py:function:: df2ressum(dframe: pandas.DataFrame, casename: str = 'SYNTHETIC') -> resdata.summary.Summary
+
+   Convert a dataframe to a Summary object
+
+   :param dframe: Dataframe with a DATE colum (or with the
+                  dates/datetimes in the index).
+   :param casename: Name of casename/basename to be used for the Summary object
+                    If the Summary object is later written to disk, this will be used
+                    to construct the filenames.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: parser to fill with arguments
+
+
+.. py:function:: fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Fill a parser for the operation:  dataframe -> summary files
+
+
+.. py:function:: summary_main(args: argparse.Namespace) -> None
+
+   Read summary data from disk and write CSV back to disk
+
+
+.. py:function:: summary_reverse_main(args: argparse.Namespace) -> None
+
+   Entry point for usage with "csv2res summary" on the command line
+
+

@@ -1,0 +1,78 @@
+res2df.parameters
+=================
+
+.. py:module:: res2df.parameters
+
+.. autoapi-nested-parse::
+
+   Support module for extra files with key-value information
+   related to simulator runs
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.parameters.find_parameter_files
+   res2df.parameters.load_parameterstxt
+   res2df.parameters.load_all
+   res2df.parameters.load
+
+
+Module Contents
+---------------
+
+.. py:function:: find_parameter_files(deckpath: res2df.resdatafiles.ResdataFiles | str | pathlib.Path, filebase: str = 'parameters') -> list[pathlib.Path]
+
+   Locate a default prioritized list of files to try to read as key-value
+
+   File extensions .yml, .json and .txt are recognized and will be found in
+   current dir, one directory up, and two directories up.
+
+   :param deckpath: Either a ResdataFiles object of
+                    a simulator output set (only the corresponding path will be used),
+                    or path to a file or directory, that will be used as a starting
+                    point for locating parameter files
+   :param filebase: the base of filenames to look for.
+
+   :returns: Absolute paths to filenames. Empty list if nothing found
+
+
+.. py:function:: load_parameterstxt(filename: str | pathlib.Path) -> dict[str, Any]
+
+   Read parameters.txt into a dictionary
+
+   Lines starting with a hash will be ignored.
+
+   :param filename: file containing one key-value pair pr. line,
+                    separated by whitespace
+
+
+.. py:function:: load_all(filenames: list[str] | list[pathlib.Path], warnduplicates: bool = True) -> dict[str, Any]
+
+   Reads a list of parameter filenames
+
+   Dictionaries for all files will be merged into one.
+
+   Keys must be unique over all filenames, if not
+   only the first occurence will be used (based on
+   the order of filenames).
+
+   :param filenames: Order matters.
+   :param warnduplicates: If True (default), overlapping keys will be warned.
+
+
+.. py:function:: load(filename: str | pathlib.Path) -> dict[str, Any]
+
+   Read a parameter file as txt, yaml or json
+
+   :returns:
+
+             dict() with parameter names as keys. Empty dictionary if
+                 no parameters in the file.
+
+   Raises ValueError or IOError if no files are readable
+
+

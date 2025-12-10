@@ -1,0 +1,236 @@
+res2df.equil
+============
+
+.. py:module:: res2df.equil
+
+.. autoapi-nested-parse::
+
+   Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.equil.df
+   res2df.equil.rsvd_fromdeck
+   res2df.equil.rvvd_fromdeck
+   res2df.equil.pbvd_fromdeck
+   res2df.equil.pdvd_fromdeck
+   res2df.equil.phases_from_deck
+   res2df.equil.phases_from_columns
+   res2df.equil.equil_fromdeck
+   res2df.equil.fill_parser
+   res2df.equil.fill_reverse_parser
+   res2df.equil.equil_main
+   res2df.equil.equil_reverse_main
+   res2df.equil.df2res
+   res2df.equil.df2res_equil
+   res2df.equil.df2res_rsvd
+   res2df.equil.df2res_rvvd
+   res2df.equil.df2res_pbvd
+   res2df.equil.df2res_pdvd
+
+
+Module Contents
+---------------
+
+.. py:function:: df(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntequl: int | None = None) -> pandas.DataFrame
+
+   Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
+   PBVD and PDVD.
+
+   How each data value in the EQUIL records are to be interpreted
+   depends on the phase configuration in the :term:`deck`, which means
+   that we need more than the EQUIL section alone to determine the
+   dataframe.
+
+   If ntequl is not supplied and EQLDIMS is not in the :term:`deck`, the
+   equil data is not well defined in terms of OPM. This means
+   that we have to infer the correct number of EQUIL lines from what
+   gives us successful parsing from OPM. In those cases, the
+   :term:`deck` must be supplied as a string, if not, extra EQUIL lines
+   are possibly already removed by the OPM parser in resdatafiles.str2deck().
+
+   :param deck: :term:`.DATA file` or string with :term:`deck`. If
+                not string, EQLDIMS must be present in the :term:`deck`.
+   :param keywords: Requested keywords for which to extract data.
+   :param ntequl: If not None, should state the NTEQUL in EQLDIMS. If
+                  None and EQLDIMS is not present, it will be inferred.
+
+   :returns: pd.DataFrame, at least with columns KEYWORD and EQLNUM
+
+
+.. py:function:: rsvd_fromdeck(deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None) -> pandas.DataFrame
+
+   Extract RSVD data from a :term:`deck`
+
+   :param deck:
+   :param ntequl: Number of EQLNUM regions in :term:`deck`. Will
+                  be inferred if not present in :term:`deck`
+
+
+.. py:function:: rvvd_fromdeck(deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None) -> pandas.DataFrame
+
+   Extract RVVD data from a :term:`deck`
+
+   :param deck:
+   :param ntequl: Number of EQLNUM regions in :term:`deck`. Will
+                  be inferred if not present in :term:`deck`
+
+
+.. py:function:: pbvd_fromdeck(deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None) -> pandas.DataFrame
+
+   Extract PBVD data from a :term:`deck`
+
+   :param deck:
+   :param ntequl: Number of EQLNUM regions in :term:`deck`. Will
+                  be inferred if not present in :term:`deck`
+
+
+.. py:function:: pdvd_fromdeck(deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None) -> pandas.DataFrame
+
+   Extract PDVD data from a :term:`deck`
+
+   :param deck:
+   :param ntequl: Number of EQLNUM regions in :term:`deck`. Will
+                  be inferred if not present in :term:`deck`
+
+
+.. py:function:: phases_from_deck(deck: str | opm.opmcommon_python.Deck) -> str
+
+   Determined the set of phases from a :term:`deck`, as
+   a string with values "oil-water-gas", "gas-water", "oil-water",
+   or "oil-gas"
+
+   :param deck: A parsed :term:`deck` or :term:`.DATA file` as a string
+
+   :returns: String with phase configuration. Empty string if inconclusive.
+
+
+.. py:function:: phases_from_columns(columns: collections.abc.Container[str]) -> str
+
+   Determine the set of phases available in an
+   equil dataframe, based on which columns are there.
+   Returns "oil-water-gas", "gas-water", "oil-water",
+   or "oil-gas"
+
+   By this, we can pick the correct RENAMER to use.
+
+   :param columns: list of strings we can use for the determination
+
+   :returns: String with phase configuration. Empty string if inconclusive.
+
+
+.. py:function:: equil_fromdeck(deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None) -> pandas.DataFrame
+
+   Extract EQUIL data from a :term:`deck`
+
+   If the :term:`deck` is supplied as a string object, the number
+   of EQLNUM regions will be inferred if needed.
+
+   :param deck:
+   :param ntequl: Number of EQLNUM regions in :term:`deck`.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: parser to
+                  fill with arguments
+   :type parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Fill a parser for the operation dataframe -> resdata :term:`include file`
+
+
+.. py:function:: equil_main(args: argparse.Namespace) -> None
+
+   Read from disk and write CSV back to disk
+
+
+.. py:function:: equil_reverse_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility
+   for CSV to reservoir simulator :term:`include files <include file>`
+
+
+.. py:function:: df2res(equil_df: pandas.DataFrame, keywords: list[str] | None = None, comments: dict[str, str] | None = None, withphases: bool = False, filename: str | None = None) -> str
+
+   Generate string contents of :term:`include files <include file>`
+   from dataframes with solution (EQUIL, RSVD++) data.
+
+   :param equil_df: Dataframe with res2df format.
+   :param keywords: List of keywords to include. Must be
+                    supported and present in the incoming dataframe.
+   :param comments: Dictionary indexed by keyword with comments to be
+                    included pr. keyword. If a key named "master" is present
+                    it will be used as a master comment for the outputted file.
+   :param withphases: If True, the phase configuration keywords
+                      will be outputted. This is mostly for testing, and should
+                      not be necessary in production.
+   :param filename: If supplied, the generated text will also be dumped
+                    to file.
+
+
+.. py:function:: df2res_equil(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for EQUIL keyword
+
+   :param dframe: Containing EQUIL data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_rsvd(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for RSVD keyword
+
+   This data consists of one table (rs as a function
+   of depth) for each EQLNUM
+
+   :param dframe: Containing RSVD data
+   :param comment Text that will be included as a comment:
+
+
+.. py:function:: df2res_rvvd(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for RVVD keyword
+
+   This data consists of one table (rv as a function
+   of depth) for each EQLNUM
+
+   :param dframe: Containing RVVD data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_pbvd(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for PBVD keyword
+
+   Bubble-point versus depth
+
+   This data consists of one table (Pb as a function
+   of depth) for each EQLNUM
+
+   :param dframe: Containing PBVD data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_pdvd(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for PDVD keyword.
+
+   Dew-point versus depth.
+
+   This data consists of one table (Pd as a function
+   of depth) for each EQLNUM
+
+   :param dframe: Containing PDVD data
+   :param comment: Text that will be included as a comment
+
+

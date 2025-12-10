@@ -1,0 +1,57 @@
+res2df.res2csv
+==============
+
+.. py:module:: res2df.res2csv
+
+.. autoapi-nested-parse::
+
+   End-user command line tool for accessing functionality
+   in res2df
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.res2csv.get_parser
+   res2df.res2csv.run_subparser_main
+   res2df.res2csv.main
+
+
+Module Contents
+---------------
+
+.. py:function:: get_parser() -> argparse.ArgumentParser
+
+   Make parser
+
+
+.. py:function:: run_subparser_main(args: argparse.Namespace, submodule: str, parser: argparse.ArgumentParser | None = None) -> None
+
+   Wrapper for running the subparsers main() function, with
+   custom argument handling.
+
+   In order to support ERT forward model syntax, empty positional
+   arguments must be allowed, but ignored. This function takes
+   care of shuffling the single required positional argument into
+   args.DATAFILE, and will error if more than one positional
+   argument is supplied
+
+   This function is to be supplied to argsparse's set_default()
+   function, by use of functools.partial so that the submodule_name
+   argument can be set.
+
+   :param args: argparse argument namespace
+   :type args: Namespace
+   :param submodule: One of res2df's submodules. That module
+                     must have a function called <submodule>_main()
+   :param parser: Used for raising errors.
+
+
+.. py:function:: main() -> None
+
+   Entry point
+
+

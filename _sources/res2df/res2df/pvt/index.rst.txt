@@ -1,0 +1,234 @@
+res2df.pvt
+==========
+
+.. py:module:: res2df.pvt
+
+.. autoapi-nested-parse::
+
+   Extract the PVT data from a .DATA file as Pandas Dataframes
+
+   Data can be extracted from a complete deck or from individual files.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.pvt.pvtw_fromdeck
+   res2df.pvt.density_fromdeck
+   res2df.pvt.rock_fromdeck
+   res2df.pvt.pvto_fromdeck
+   res2df.pvt.pvdo_fromdeck
+   res2df.pvt.pvdg_fromdeck
+   res2df.pvt.pvtg_fromdeck
+   res2df.pvt.df
+   res2df.pvt.fill_parser
+   res2df.pvt.fill_reverse_parser
+   res2df.pvt.pvt_main
+   res2df.pvt.pvt_reverse_main
+   res2df.pvt.df2res
+   res2df.pvt.df2res_rock
+   res2df.pvt.df2res_density
+   res2df.pvt.df2res_pvtw
+   res2df.pvt.df2res_pvtg
+   res2df.pvt.df2res_pvdg
+   res2df.pvt.df2res_pvdo
+   res2df.pvt.df2res_pvto
+
+
+Module Contents
+---------------
+
+.. py:function:: pvtw_fromdeck(deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract PVTW from a :term:`deck`
+
+   :param deck:
+   :param ntpvt: Number of PVT regions in :term:`deck`. Will
+                 be inferred if not present in :term:`deck`.
+
+
+.. py:function:: density_fromdeck(deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract DENSITY from a :term:`deck`
+
+   :param deck:
+   :param ntpvt: Number of PVT regions in :term:`deck`. Will
+                 be inferred if not present in :term:`deck`.
+
+
+.. py:function:: rock_fromdeck(deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract ROCK from a :term:`deck`
+
+   :param deck:
+   :param ntpvt: Number of PVT regions in :term:`deck`. Will
+                 be inferred if not present in :term:`deck`.
+
+
+.. py:function:: pvto_fromdeck(deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract PVTO from a :term:`deck`
+
+   :param deck:
+   :param ntpvt: Number of PVT regions in :term:`deck`. Will
+                 be inferred if not present in :term:`deck`.
+
+
+.. py:function:: pvdo_fromdeck(deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract PVDO from a :term:`deck`
+
+   :param deck:
+   :param ntpvt: Number of PVT regions in deck. Will
+                 be inferred if not present in deck.
+
+
+.. py:function:: pvdg_fromdeck(deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract PVDG from a :term:`deck`
+
+   :param deck:
+   :param ntpvt: Number of PVT regions in :term:`deck`. Will
+                 be inferred if not present in :term:`deck`.
+
+
+.. py:function:: pvtg_fromdeck(deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract PVTG from a :term:`deck`
+
+   :param deck:
+   :param ntpvt: Number of PVT regions in :term:`deck`. Will
+                 be inferred if not present in :term:`deck`.
+
+
+.. py:function:: df(deck: str | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntpvt: int | None = None) -> pandas.DataFrame
+
+   Extract all (most) PVT data from a :term:`deck`.
+
+   If you want to call this function on :term:`include files <include file>`,
+   read them in to strings as in this example:
+
+   > pvt_df = pvt.df(open("pvt.inc").read())
+
+   :param deck: Incoming data :term:`deck`. Always
+                supply as a string if you don't know TABDIMS-NTSFUN.
+   :param keywords: List of keywords for which data is
+                    wanted. All data will be merged into one dataframe.
+   :param pvtnumcount: Number of PVTNUMs defined in the :term:`deck`, only
+                       needed if TABDIMS with NTPVT is not found in the :term:`deck`.
+                       If not supplied (or None) and NTPVT is not defined,
+                       it will be attempted inferred.
+
+   :returns: pd.DataFrame
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers for parsing :term:`.DATA file` or
+   :term:`include files <include file>` into dataframes
+
+   :param parser: parser to fill with arguments
+   :type parser: ArgumentParser or subparser
+
+
+.. py:function:: fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers for writing :term:`include files <include file>` from
+   dataframes (as CSV files)
+
+   :param parser: parser to fill with arguments
+   :type parser: ArgumentParser or subparser
+
+
+.. py:function:: pvt_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility for Eclipse to CSV
+
+
+.. py:function:: pvt_reverse_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility for CSV to simulator
+   :term:`deck`
+
+
+.. py:function:: df2res(pvt_df: pandas.DataFrame, keywords: str | list[str] | None = None, comments: dict[str, str] | None = None, filename: str | None = None) -> str
+
+   Generate resdata :term:`include file` content from PVT dataframes
+
+   :param pvt_df: Dataframe with PVT data in res2df format.
+   :param keywords: List of keywords to include. Must be
+                    supported and present in the incoming dataframe.
+   :param comments: Dictionary indexed by keyword with comments to be
+                    included pr. keyword. If a key named "master" is present
+                    it will be used as a master comment for the outputted file.
+   :param filename: If supplied, the generated text will also be dumped
+                    to file.
+
+
+.. py:function:: df2res_rock(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for ROCK keyword
+
+   :param dframe: Containing ROCK data
+   :type dframe: pd.DataFrame
+   :param comment: Text that will be included as a comment
+   :type comment: str
+
+
+.. py:function:: df2res_density(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for DENSITY keyword
+
+   :param dframe: Containing DENSITY data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_pvtw(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for PVTW keyword
+
+   PVTW is one line/record with data for a reference pressure
+   for each PVTNUM.
+
+   :param dframe: Containing PVTW data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_pvtg(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for PVTG keyword
+
+   :param dframe: Containing PVTG data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_pvdg(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for PVDG keyword
+
+   This data consists of one table (volumefactor and visosity
+   as a function of pressure) pr. PVTNUM.
+
+   :param dframe: Containing PVDG data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_pvdo(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for PVDO keyword
+
+   :param dframe: Containing PVDO data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_pvto(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for PVTO-data from a dataframe
+
+   :param dframe: Containing PVTO data
+   :param comment: Text that will be included as a comment
+
+

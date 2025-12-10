@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.pillars &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=21b8ffc7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="res2df.pvt" href="../pvt/index.html" />
+    <link rel="prev" title="res2df.parameters" href="../parameters/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">res2df</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../common/index.html">res2df.common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compdat/index.html">res2df.compdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../csv2res/index.html">res2df.csv2res</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../equil/index.html">res2df.equil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faults/index.html">res2df.faults</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fipreports/index.html">res2df.fipreports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../grid/index.html">res2df.grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gruptree/index.html">res2df.gruptree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hook_implementations/index.html">res2df.hook_implementations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../inferdims/index.html">res2df.inferdims</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nnc/index.html">res2df.nnc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opmkeywords/index.html">res2df.opmkeywords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parameters/index.html">res2df.parameters</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">res2df.pillars</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../pvt/index.html">res2df.pvt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csv/index.html">res2df.res2csv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csvlogger/index.html">res2df.res2csvlogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resdatafiles/index.html">res2df.resdatafiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rft/index.html">res2df.rft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../satfunc/index.html">res2df.satfunc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../summary/index.html">res2df.summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trans/index.html">res2df.trans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">res2df.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vfp/index.html">res2df.vfp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wcon/index.html">res2df.wcon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellcompletiondata/index.html">res2df.wellcompletiondata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellconnstatus/index.html">res2df.wellconnstatus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.pillars</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/res2df/res2df/pillars/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-res2df.pillars">
+<span id="res2df-pillars"></span><h1>res2df.pillars<a class="headerlink" href="#module-res2df.pillars" title="Link to this heading"></a></h1>
+<p>Extract statistics pr cornerpoint pillar (i,j)-pair</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pillars.df" title="res2df.pillars.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Produce a dataframe with pillar information</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pillars.compute_volumes" title="res2df.pillars.compute_volumes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_volumes</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Compute &quot;dynamic&quot; volumes, volumes for data coming from the</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pillars.compute_pillar_contacts" title="res2df.pillars.compute_pillar_contacts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_pillar_contacts</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Compute contacts pr. pillar in a grid dataframe.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pillars.fill_parser" title="res2df.pillars.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<td><p>Set up sys.argv parser.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pillars.pillars_main" title="res2df.pillars.pillars_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pillars_main</span></code></a>(→ None)</p></td>
+<td><p>This is the command line API</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.pillars.df">
+<span class="sig-prename descclassname"><span class="pre">res2df.pillars.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../resdatafiles/index.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><span class="pre">res2df.resdatafiles.ResdataFiles</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rstdates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">datetime.date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.date</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soilcutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sgascutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swatcutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackdates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/pillars.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.pillars.df" title="Link to this definition"></a></dt>
+<dd><p>Produce a dataframe with pillar information</p>
+<p>This is the “main” function for Python API users
+Produces a dataframe with data for each I-J combination
+(in the column PILLAR), and if a region parameter is
+supplied, also pr. region.</p>
+<p>PORV is the summed porevolume of the pillar (in the region),
+VOLUME is bulk volume, and PORO is porevolume weighted porosity
+PERM columns contain unweighted value averages, use with caution.</p>
+<p>If a restart date is picked, then SWAT and SGAS will
+be used to compute volumes pr. phase, WATVOL, OILVOL and GASVOL. The
+columns with dynamic data will include the date in the column headers
+like <a class="reference external" href="mailto:SWAT&#37;&#52;&#48;2009-01-01">SWAT<span>&#64;</span>2009-01-01</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>region</strong> – A parameter the pillars will be split
+on. Typically EQLNUM or FIPNUM. Set to empty string
+or None to avoid any region grouping.</p></li>
+<li><p><strong>rstdates</strong> – Dates for which restart data
+is to be extracted. The string can
+be in ISO-format, or one of the mnenomics
+‘first’, ‘last’ or ‘all’. It can also be a list
+of datetime.date.</p></li>
+<li><p><strong>soilcutoff</strong> – If not None, an oil-water contact will
+be estimated pr. pillar, based on the deepest cell with
+SOIL above the given cutoff. Value is put in column OWC.</p></li>
+<li><p><strong>sgascuttof</strong> – If not None, a gas contact will be
+estimated pr pillar, based on the deepest cell with
+SGAS above the given cutoff. Value is put in column GOC.</p></li>
+<li><p><strong>swatcutoff</strong> – OWC or GWC is only computed for pillars
+where at least one cell is above this value.</p></li>
+<li><p><strong>stackdates</strong> – If true, a column
+called DATE will be added and data for all restart
+dates will be added in a stacked manner.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.pillars.compute_volumes">
+<span class="sig-prename descclassname"><span class="pre">res2df.pillars.</span></span><span class="sig-name descname"><span class="pre">compute_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datestr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/pillars.html#compute_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.pillars.compute_volumes" title="Link to this definition"></a></dt>
+<dd><p>Compute “dynamic” volumes, volumes for data coming from the
+UNRST file (SWAT+SGAS)</p>
+<p>SOIL is assumed not be present in grid_df, it will be computed here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_df</strong> – A dataframe with the columns PORV, SWAT and SGAS</p></li>
+<li><p><strong>datestr</strong> – If not none, it should contain an ISO-8601 formatted date that
+will be appended to all columns with dynamic data, SWAT and SGAS
+in incoming grid_df must also be appended with the same date string.
+If datestr is “2009-01-02”, then the columns will look
+like “<a class="reference external" href="mailto:SOIL&#37;&#52;&#48;2009-01-02">SOIL<span>&#64;</span>2009-01-02</a>”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.pillars.compute_pillar_contacts">
+<span class="sig-prename descclassname"><span class="pre">res2df.pillars.</span></span><span class="sig-name descname"><span class="pre">compute_pillar_contacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soilcutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sgascutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swatcutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datestr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/pillars.html#compute_pillar_contacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.pillars.compute_pillar_contacts" title="Link to this definition"></a></dt>
+<dd><p>Compute contacts pr. pillar in a grid dataframe.</p>
+<p>Requires the columns PILLAR, SOIL, SGAS and SWAT, I, J and Z</p>
+<p>SOIL should be pre-computed in three-phase runs before calling this.
+PILLAR must be pre-computed in grid_df.</p>
+<p>OWC is deepest cell centre pr. pillar with oil saturation above soilcutoff,
+among those pillars with at least one cell above swatcutoff.</p>
+<p>GOC is the deepest cell centre pr. pillar with gas saturation above sgascutoff,
+among those pillars with at least one cell with non-zero oil saturation</p>
+<p>GWC is only computed when SOIL is not presented, and is the deepest
+cell centre with gas saturation above sgascutoff, among those pillars
+with at least one cell above swatcutoff.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_df</strong> – Representing the grid with geometry and properties</p></li>
+<li><p><strong>region</strong> – Region vector to group by, e.g. FIPNUM or EQLNUM</p></li>
+<li><p><strong>soilcutoff</strong> – OWC is deepest cell centre pr. pillar with oil
+saturation above this</p></li>
+<li><p><strong>sgascutoff</strong> – GOC/GWC is deepest cell centre pr. pillar with
+gas saturation above this</p></li>
+<li><p><strong>swatcutoff</strong> – Pillars must have this amount of water in (in one cell)
+them to be available for OWC/GWC computations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Index is PILLAR with values I-J. Rows only for
+pillars where a contact was found. Empty dataframe if no contacts found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.pillars.fill_parser">
+<span class="sig-prename descclassname"><span class="pre">res2df.pillars.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../../../_modules/res2df/pillars.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.pillars.fill_parser" title="Link to this definition"></a></dt>
+<dd><p>Set up sys.argv parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parser</strong> – argparse.ArgumentParser or argparse.subparser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.pillars.pillars_main">
+<span class="sig-prename descclassname"><span class="pre">res2df.pillars.</span></span><span class="sig-name descname"><span class="pre">pillars_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.Namespace</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/pillars.html#pillars_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.pillars.pillars_main" title="Link to this definition"></a></dt>
+<dd><p>This is the command line API</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../parameters/index.html" class="btn btn-neutral float-left" title="res2df.parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../pvt/index.html" class="btn btn-neutral float-right" title="res2df.pvt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

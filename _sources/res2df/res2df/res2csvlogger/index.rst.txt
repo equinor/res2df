@@ -1,0 +1,33 @@
+res2df.res2csvlogger
+====================
+
+.. py:module:: res2df.res2csvlogger
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.res2csvlogger.getLogger_res2csv
+
+
+Module Contents
+---------------
+
+.. py:function:: getLogger_res2csv(module_name: str = 'res2df', args_dict: dict[str, str | bool] | None = None) -> logging.Logger
+
+   Provide a custom logger for res2csv and csv2res
+
+   Logging output is by default split by logging levels (split between WARNING and
+   ERROR) to stdout and stderr, each log occurs in only one of the streams.
+   This deviates from Unix standard, but is accepted here because the code
+   often writes it main output to a dedicated filename.
+
+   :param module_name: A suggested name for the logger, usually
+                       __name__ should be supplied
+   :param args_dict: Dictionary with contents from the argparse namespace object.
+                     Only keys "output", "verbose" and "debug" will be looked at.
+                     Use vars(args) in caller code to convert from argparse Namespace object.
+
+

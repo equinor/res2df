@@ -1,0 +1,191 @@
+res2df.satfunc
+==============
+
+.. py:module:: res2df.satfunc
+
+.. autoapi-nested-parse::
+
+   Extract saturation function data (SWOF, SGOF, SWFN, etc.)
+   from a .DATA file as Pandas DataFrame.
+
+   Data can be extracted from a complete deck (`*.DATA`)
+   or from individual files.
+
+   Note that when parsing from individual files, it is
+   undefined in the syntax how many saturation functions (SATNUMs) are
+   present. For convenience, it is possible to estimate the count of
+   SATNUMs, but whenever this is known, it is recommended to either supply
+   TABDIMS or to supply the satnumcount directly to avoid possible bugs.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.satfunc.df
+   res2df.satfunc.interpolate_defaults
+   res2df.satfunc.fill_parser
+   res2df.satfunc.fill_reverse_parser
+   res2df.satfunc.satfunc_main
+   res2df.satfunc.satfunc_reverse_main
+   res2df.satfunc.df2res
+   res2df.satfunc.df2res_swof
+   res2df.satfunc.df2res_sgof
+   res2df.satfunc.df2res_sgfn
+   res2df.satfunc.df2res_sgwfn
+   res2df.satfunc.df2res_swfn
+   res2df.satfunc.df2res_slgof
+   res2df.satfunc.df2res_sof2
+   res2df.satfunc.df2res_sof3
+
+
+Module Contents
+---------------
+
+.. py:function:: df(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntsfun: int | None = None) -> pandas.DataFrame
+
+   Extract the data in the saturation function keywords as a Pandas
+   DataFrames.
+
+   Data for all saturation functions are merged into one dataframe.
+   The two first columns in the dataframe are 'KEYWORD' (which can be
+   SWOF, SGOF, etc.), and then SATNUM which is an index counter from 1 and
+   onwards. Then follows the data for each individual keyword that
+   is found in the :term:`deck`.
+
+   SATNUM data can only be parsed correctly if TABDIMS is present
+   and stating how many saturation functions there should be.
+   If you have a string with TABDIMS missing, you must supply
+   this as a string to this function, and not a parsed :term:`deck`, as
+   the default parser in ResdataFiles is very permissive (and only
+   returning the first function by default).
+
+   :param deck: Incoming data :term:`deck`. Always
+                supply as a string if you don't know TABDIMS-NTSFUN.
+   :param keywords: Requested keywords for which to
+                    to extract data.
+   :param ntsfun: Number of SATNUMs defined in the :term:`deck`, only
+                  needed if TABDIMS with NTSFUN is not found in the :term:`deck`.
+                  If not supplied (or None) and NTSFUN is not defined,
+                  it will be attempted inferred.
+
+   :returns: pd.DataFrame, columns 'KEYWORD', 'SW', 'KRW', 'KROW', 'PC', ..
+
+
+.. py:function:: interpolate_defaults(dframe: pandas.DataFrame) -> pandas.DataFrame
+
+   Interpolate NaN's linearly in saturation.
+   Saturation function tables in :term:`.DATA files <.DATA file>`
+   can have certain values defaulted.
+   When parsed by res2df, these values are returned as np.nan.
+   The incoming dataframe must be associated to one keyword only, but
+   can consist of multiple SATNUMs.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: parser to fill with arguments
+   :type parser: ArgumentParser or subparser
+
+
+.. py:function:: fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Fill a parser for the operation dataframe -> resdata :term:`include file`
+
+
+.. py:function:: satfunc_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility
+
+
+.. py:function:: satfunc_reverse_main(args: argparse.Namespace) -> None
+
+   For command line utility for CSV to resdata
+
+
+.. py:function:: df2res(satfunc_df: pandas.DataFrame, keywords: list[str] | None = None, comments: dict[str, str] | None = None, filename: str | None = None) -> str
+
+   Generate resdata :term:`include file` content from dataframes with
+   saturation functions (SWOF, SGOF, ...)
+
+   :param satfunc_df: Dataframe with res2df format.
+   :param keywords: List of keywords to include. Must be
+                    supported and present in the incoming dataframe. Keywords
+                    are printed in the order defined by this list.
+   :param comments: Dictionary indexed by keyword with comments to be
+                    included pr. keyword. If a key named "master" is present
+                    it will be used as a master comment for the outputted file.
+   :param filename: If supplied, the generated text will also be dumped
+                    to file.
+
+   :returns: Generated resdata :term:`include file` content
+
+
+.. py:function:: df2res_swof(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SWOF. Used by df2res().
+
+   :param dframe: Containing SWOF data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_sgof(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SGOF. Used by df2res().
+
+   :param dframe: Containing SGOF data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_sgfn(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SGFN. Used by df2res().
+
+   :param dframe: Containing SGFN data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_sgwfn(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SGWFN. Used by df2res().
+
+   :param dframe: Containing SGWFN data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_swfn(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SWFN. Used by df2res().
+
+   :param dframe: Containing SWFN data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_slgof(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SLGOF. Used by df2res().
+
+   :param dframe: Containing SLGOF data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_sof2(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SOF2. Used by df2res().
+
+   :param dframe: Containing SOF2 data
+   :param comment: Text that will be included as a comment
+
+
+.. py:function:: df2res_sof3(dframe: pandas.DataFrame, comment: str | None = None) -> str
+
+   Create string with :term:`include file` contents for SOF3. Used by df2res().
+
+   :param dframe: Containing SOF3 data
+   :param comment: Text that will be included as a comment
+
+

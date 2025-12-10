@@ -1,0 +1,175 @@
+res2df.vfp._vfp
+===============
+
+.. py:module:: res2df.vfp._vfp
+
+.. autoapi-nested-parse::
+
+   Extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas Dataframes
+
+   Data can be extracted from a complete deck or from individual files. Supports
+   output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.vfp._vfp.basic_data
+   res2df.vfp._vfp.basic_data2df
+   res2df.vfp._vfp.basic_data2pyarrow
+   res2df.vfp._vfp.df2basic_data
+   res2df.vfp._vfp.pyarrow2basic_data
+   res2df.vfp._vfp.dfs
+   res2df.vfp._vfp.pyarrow_tables
+   res2df.vfp._vfp.df2ress
+   res2df.vfp._vfp.df2res
+   res2df.vfp._vfp.df
+   res2df.vfp._vfp.fill_parser
+   res2df.vfp._vfp.fill_reverse_parser
+   res2df.vfp._vfp.vfp_main
+   res2df.vfp._vfp.vfp_reverse_main
+
+
+Module Contents
+---------------
+
+.. py:function:: basic_data(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keyword: str = 'VFPPROD', vfpnumbers_str: str | None = None) -> list[dict[str, Any]]
+
+   Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.
+   Dictionary returned contains items for liftcuve tables as simple datatypes
+   Required keys in dictionary for VFPPROD and VFPINJ can be found in
+   BASIC_DATA_KEYS in _vfpprod and _vfpinj.
+
+   :param deck: :term:`.DATA file` or string with :term:`deck`
+   :param keyword: VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
+   :param vfpnumbers_str: String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+
+
+.. py:function:: basic_data2df(data: dict[str, Any]) -> pandas.DataFrame
+
+   Convert basic_data representation of VFPPROD/VFPINF
+   (see function basic_data for defintion of data) into
+   pandas DataFrame representation
+
+   :param data: Dictionary with basic data representation of
+                VFPPROD or VFPINJ (see basic_data)
+
+
+.. py:function:: basic_data2pyarrow(data: dict[str, Any], /) -> pyarrow.Table
+
+   Convert basic_data representation of VFPPROD/VFPINF
+   (see function basic_data for defintion of data) into
+   pyarrow.Table representation
+
+   :param data: Dictionary with basic data representation of
+                VFPPROD or VFPINJ
+
+
+.. py:function:: df2basic_data(dframe: pandas.DataFrame, /) -> dict[str, Any] | None
+
+   Produce a dictionary with basic data types for a VFPPROD/VFPINJ
+   liftcurve table represented as a Pandas DataFrame
+
+   :param dframe: Dataframe containing complete description of VFPPROD/VFPINJ input
+
+
+.. py:function:: pyarrow2basic_data(pa_table: pyarrow.Table) -> dict[str, Any] | None
+
+   Produce a dictionary with basic data types for a VFPPROD/VFPINJ
+   liftcurve table represented as a pyarrow Table
+
+   :param pa_table: pyarrow.Table representation of VFPPROD/VFPINJ
+
+
+.. py:function:: dfs(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keyword: str = 'VFPPROD', vfpnumbers_str: str | None = None) -> list[pandas.DataFrame]
+
+   Produce a list of dataframes of vfp tables from a :term:`deck`
+
+   Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
+
+   :param deck: :term:`.DATA file` or string with :term:`deck`
+   :param keyword: VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
+   :param vfpnumbers_str: String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+
+
+.. py:function:: pyarrow_tables(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keyword: str = 'VFPPROD', vfpnumbers_str: str | None = None) -> list[pyarrow.Table]
+
+   Produce a list of pyarrow.Table of vfp tables from a :term:`deck`
+
+   Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
+
+   :param deck: :term:`.DATA file` or string with :term:`deck`
+   :param keyword: VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
+   :param vfpnumbers_str: String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+
+
+.. py:function:: df2ress(dframe: pandas.DataFrame, keyword: str = 'VFPPROD', comments: dict[str, str] | None = None) -> list[str]
+
+   Produce a list of strings defining VFPPROD/VFPINJ Eclipse
+   :term:`include file` contents from a dataframe
+
+   All data for the keyword VFPPROD or VFPINJ will be returned.
+
+   :param dframe: Dataframe containing complete description of VFPPROD/VFPINJ input
+   :param keywords: Keyword to include, 'VFPPROD' or 'VFPINJ'
+   :param comments: Dictionary indexed by keyword with comments to be
+                    included pr. keyword.
+
+
+.. py:function:: df2res(dframe: pandas.DataFrame, keyword: str = 'VFPPROD', comments: dict[str, str] | None = None, filename: str | None = None) -> str
+
+   Create a string defining all VFPPROD/VFPINJ Eclipse
+   :term:`include file` contents from a dataframe
+
+   All data for the keywords VFPPROD/VFPINJ will be returned.
+
+   :param dframe: Dataframe containing complete description of VFPPROD/VFPINJ input
+   :param keyword: Keywords to include, i.e. 'VFPPROD' or 'VFPINJ'
+   :param comments: comments: Dictionary indexed by keyword with comments to be
+                    included pr. keyword. If a key named "master" is present
+                    it will be used as a master comment for the outputted file.
+   :param filename: If supplied, the generated text will also be dumped
+                    to file.
+
+
+.. py:function:: df(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keyword: str = 'VFPPROD', vfpnumbers_str: str | None = None) -> pandas.DataFrame
+
+   Produce a dataframes of all vfp tables from a deck
+
+   All data for the keywords VFPPROD/VFPINJ will be returned.
+
+   :param deck: :term:`.DATA file` or string wit :term:`deck`
+   :param keyword: VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
+   :param vfpnumbers_str: str with list of VFP table numbers to extract
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: parser
+                  to fill with arguments
+   :type parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Fill a parser for the operation dataframe -> resdata :term:`include file`
+
+
+.. py:function:: vfp_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility.
+
+
+.. py:function:: vfp_reverse_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility for CSV to Eclipse
+
+

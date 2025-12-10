@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.compdat &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=21b8ffc7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="res2df.csv2res" href="../csv2res/index.html" />
+    <link rel="prev" title="res2df.common" href="../common/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">res2df</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../common/index.html">res2df.common</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">res2df.compdat</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../csv2res/index.html">res2df.csv2res</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../equil/index.html">res2df.equil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faults/index.html">res2df.faults</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fipreports/index.html">res2df.fipreports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../grid/index.html">res2df.grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gruptree/index.html">res2df.gruptree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hook_implementations/index.html">res2df.hook_implementations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../inferdims/index.html">res2df.inferdims</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nnc/index.html">res2df.nnc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opmkeywords/index.html">res2df.opmkeywords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parameters/index.html">res2df.parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pillars/index.html">res2df.pillars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pvt/index.html">res2df.pvt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csv/index.html">res2df.res2csv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csvlogger/index.html">res2df.res2csvlogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resdatafiles/index.html">res2df.resdatafiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rft/index.html">res2df.rft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../satfunc/index.html">res2df.satfunc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../summary/index.html">res2df.summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trans/index.html">res2df.trans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">res2df.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vfp/index.html">res2df.vfp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wcon/index.html">res2df.wcon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellcompletiondata/index.html">res2df.wellcompletiondata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellconnstatus/index.html">res2df.wellconnstatus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.compdat</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/res2df/res2df/compdat/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-res2df.compdat">
+<span id="res2df-compdat"></span><h1>res2df.compdat<a class="headerlink" href="#module-res2df.compdat" title="Link to this heading"></a></h1>
+<p>Parser and dataframe generator for the keywords:
+* COMPDAT
+* COMPLUMP
+* COMPSEGS
+* WELOPEN
+* WELSEGS
+* WLIST
+* WSEGAICD
+* WSEGSICD
+* WSEGVALV</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.compdat.deck2dfs" title="res2df.compdat.deck2dfs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deck2dfs</span></code></a>(→ dict[str, pandas.DataFrame])</p></td>
+<td><p>Loop through the <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> and pick up information found</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.compdat.expand_welopen" title="res2df.compdat.expand_welopen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_welopen</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Expands WELOPEN. First wildcard wells are expanded and then default</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.compdat.expand_welopen_defaults" title="res2df.compdat.expand_welopen_defaults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_welopen_defaults</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Expands rows in WELOPEN where one or two coordinates are defaulted.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.compdat.expand_welopen_wildcards" title="res2df.compdat.expand_welopen_wildcards"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_welopen_wildcards</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Expand rows in welopen with well names containing wildcard characters,</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.compdat.unrolldf" title="res2df.compdat.unrolldf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unrolldf</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Unroll dataframes, where some column pairs indicate</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.compdat.unroll_complump" title="res2df.compdat.unroll_complump"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unroll_complump</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Unrolls the COMPLUMP keyword where K2&gt;K1. Uses the unrolldf function,</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.compdat.expand_wlist" title="res2df.compdat.expand_wlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_wlist</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Expand all WLIST actions in a dataframe into a dataframe with</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.compdat.expand_complump_in_welopen_df" title="res2df.compdat.expand_complump_in_welopen_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_complump_in_welopen_df</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Go through all elements of WELOPEN and expand the rows</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.compdat.expand_wlist_in_welopen_df" title="res2df.compdat.expand_wlist_in_welopen_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_wlist_in_welopen_df</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Go trough a welopen dataframe and expand rows where the well-name refers</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.compdat.applywelopen" title="res2df.compdat.applywelopen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">applywelopen</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Apply WELOPEN actions to the COMPDAT dataframe.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.compdat.fill_parser" title="res2df.compdat.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<td><p>Set up sys.argv parsers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.compdat.compdat_main" title="res2df.compdat.compdat_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compdat_main</span></code></a>(→ None)</p></td>
+<td><p>Entry-point for module, for command line utility</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.compdat.df" title="res2df.compdat.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Main function for Python API users</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.deck2dfs">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">deck2dfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.io.Deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">datetime.date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unroll</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#deck2dfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.deck2dfs" title="Link to this definition"></a></dt>
+<dd><p>Loop through the <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> and pick up information found</p>
+<p>The loop over the <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> is a state machine, as it has to pick up dates and
+potential information from the WELSPECS keyword.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> – A <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> representing the schedule</p></li>
+<li><p><strong>start_date</strong> – The default date to use for
+events where the DATE or START keyword is not found in advance.
+Default: None</p></li>
+<li><p><strong>unroll</strong> – Whether to unroll rows that cover a range,
+like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with dataframes, at least for COMPDAT, COMPSEGS and WELSEGS.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.expand_welopen">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_welopen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#expand_welopen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.expand_welopen" title="Link to this definition"></a></dt>
+<dd><p>Expands WELOPEN. First wildcard wells are expanded and then default
+coordinates are expanded. The order of the expansion is important.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.expand_welopen_defaults">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_welopen_defaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#expand_welopen_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.expand_welopen_defaults" title="Link to this definition"></a></dt>
+<dd><p>Expands rows in WELOPEN where one or two coordinates are defaulted.
+Expansion happens by filtering on compdat rows that are matching the
+well name and the coordinates that are not defaulted.</p>
+<p>If all coordinates (I, J, K) are defaulted then the WELOPEN keyword
+is acting on the well and not on the connections, and shall not be
+expanded.</p>
+<p>It is important that expansion of wildcard wells is done prior to
+this function and that COMPDAT is unrolled so that K1=K2 in the input
+to this functions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.expand_welopen_wildcards">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_welopen_wildcards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#expand_welopen_wildcards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.expand_welopen_wildcards" title="Link to this definition"></a></dt>
+<dd><p>Expand rows in welopen with well names containing wildcard characters,
+with the correct wells from compdat_df that was defined at that date</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP*&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>might become the equivalent dataframe representation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="o">/</span>
+ <span class="s1">&#39;OP2&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>if both OP1 and OP2 are defined at that time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>welopen_df</strong> – DataFrame with welopen</p></li>
+<li><p><strong>compdat_df</strong> – DataFrame with compdat</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Expanded welopen dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.unrolldf">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">unrolldf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'K1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'K2'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#unrolldf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.unrolldf" title="Link to this definition"></a></dt>
+<dd><p>Unroll dataframes, where some column pairs indicate
+a range where data applies.</p>
+<p>After unrolling, column pairs with ranges are transformed
+into multiple rows, with no ranges.</p>
+<p>Example: COMPDAT supports K1, K2 intervals for multiple cells:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPDAT</span>
+  <span class="s1">&#39;OP1&#39;</span> <span class="mi">33</span> <span class="mi">44</span> <span class="mi">10</span> <span class="mi">11</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>is transformed/unrolled so it would be equal to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPDAT</span>
+  <span class="s1">&#39;OP1&#39;</span> <span class="mi">33</span> <span class="mi">44</span> <span class="mi">10</span> <span class="mi">10</span> <span class="o">/</span>
+  <span class="s1">&#39;OP1&#39;</span> <span class="mi">33</span> <span class="mi">44</span> <span class="mi">11</span> <span class="mi">11</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>The latter is easier to work with in Pandas dataframes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> – Dataframe to be unrolled</p></li>
+<li><p><strong>start_column</strong> – Column name that contains the start of
+a range.</p></li>
+<li><p><strong>end</strong> (<em>end_column Column name that contains the corresponding</em>) – of the range.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe, unrolled version. Identical to input if none of
+rows had any ranges.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.unroll_complump">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">unroll_complump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">complump_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#unroll_complump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.unroll_complump" title="Link to this definition"></a></dt>
+<dd><p>Unrolls the COMPLUMP keyword where K2&gt;K1. Uses the unrolldf function,
+but this function gives more precise handling of errors.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPLUMP</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">1</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>is transformed/unrolled to the dataframe representation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPLUMP</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="mi">7</span> <span class="mi">1</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">8</span> <span class="mi">8</span> <span class="mi">1</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dframe</strong> – Dataframe to be unrolled</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe, unrolled version.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.expand_wlist">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_wlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wlist_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#expand_wlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.expand_wlist" title="Link to this definition"></a></dt>
+<dd><p>Expand all WLIST actions in a dataframe into a dataframe with
+only “NEW” actions. This makes the dataframe cheaper to parse to
+get the state of the well lists at a particular date</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WLIST</span>
+  <span class="s1">&#39;*OP&#39;</span> <span class="n">NEW</span> <span class="n">OP1</span> <span class="o">/</span>
+  <span class="s1">&#39;*OP&#39;</span> <span class="n">ADD</span> <span class="n">OP2</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>is transformed into the equivalent dataframe representation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WLIST</span>
+  <span class="s1">&#39;*OP&#39;</span> <span class="n">NEW</span> <span class="n">OP1</span> <span class="n">OP2</span> <span class="o">/</span>  <span class="o">--</span> <span class="n">wells</span> <span class="n">always</span> <span class="nb">sorted</span> <span class="n">alphabetically</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>and then similarly for more complex MOV, DEL and NEW actions.</p>
+<p>The rationale is that if you extract all WLIST rows at a date
+and there are only NEW actions present, you can trust that dataframe
+to contain all WLIST actions accumulated from the start.</p>
+<p>Warning: If multiple WLIST keywords are at the same date, with other
+keywords depending on the WLIST state in between, that effect is lost
+through this dataframe representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wlist_df</strong> (<em>pd.DataFrame</em>) – Dataframe with WLIST action rows. DATE
+must be present as a column in the DataFrame</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame. WLIST rows with only NEW directives</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.expand_complump_in_welopen_df">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_complump_in_welopen_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complump_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#expand_complump_in_welopen_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.expand_complump_in_welopen_df" title="Link to this definition"></a></dt>
+<dd><p>Go through all elements of WELOPEN and expand the rows
+referring to COMPLUMPS. The output dataframe is as if the
+connections were refered to explicitly in WELOPEN:</p>
+<p>Example: COMPLUMP and WELOPEN keywords:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPLUMP</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="mi">7</span> <span class="mi">1</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">136</span> <span class="mi">8</span> <span class="mi">8</span> <span class="mi">1</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">136</span> <span class="mi">9</span> <span class="mi">9</span> <span class="mi">2</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">137</span> <span class="mi">10</span> <span class="mi">10</span> <span class="mi">3</span> <span class="o">/</span>
+<span class="o">/</span>
+<span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="mi">3</span><span class="o">*</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>is transformed into the equivalent dataframe representation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">8</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>welopen_df</strong> – Dataframe with WELOPEN actions</p></li>
+<li><p><strong>complump_df</strong> – Dataframe with COMPLUMP records. Optional.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>welopen_df with complump expanded to actual connections.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.expand_wlist_in_welopen_df">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_wlist_in_welopen_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wlist_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#expand_wlist_in_welopen_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.expand_wlist_in_welopen_df" title="Link to this definition"></a></dt>
+<dd><p>Go trough a welopen dataframe and expand rows where the well-name refers
+to a well-list. The returned dataframe is as if the welopen commands were
+inputted explicitly without the use of WLIST.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.applywelopen">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">applywelopen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wlist_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complump_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#applywelopen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.applywelopen" title="Link to this definition"></a></dt>
+<dd><p>Apply WELOPEN actions to the COMPDAT dataframe.</p>
+<p>Each record in the WELOPEN keyword acts as an operator on existing connections
+in existing wells.</p>
+<p>Example: COMPDAT and WELOPEN keyword:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPDAT</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">33</span> <span class="mi">44</span> <span class="mi">10</span> <span class="mi">11</span> <span class="s1">&#39;OPEN&#39;</span> <span class="o">/</span>
+ <span class="s1">&#39;OP2&#39;</span> <span class="mi">66</span> <span class="mi">44</span> <span class="mi">10</span> <span class="mi">11</span> <span class="s1">&#39;OPEN&#39;</span> <span class="o">/</span>
+<span class="o">/</span>
+<span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="n">SHUT</span> <span class="o">/</span>
+ <span class="s1">&#39;OP2&#39;</span> <span class="n">SHUT</span> <span class="mi">66</span> <span class="mi">44</span> <span class="mi">10</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>This <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> would define two wells where OP1 and OP2 have two
+connected grid cells each. The first welopen statment acts on the whole
+well, closing both the well and the connections. If this statement used STOP
+instead of SHUT, the connections would be left open. The second welopen
+statement acts on a single connection. Here SHUT and STOP would give the
+same result. This behavior has been proven to be correct in the simulator.
+The Eclipse manual states that ‘If items 3 - 7 are all defaulted, the
+Open/Shut/Stop command applies to the well, leaving the connections
+unchanged’, but this has been proven to be wrong. The state of the
+connection can be tested by looking at the CPI summary vectors. The
+connection is SHUT if CPI==0 and OPEN if CPI&gt;0.</p>
+<p>WELOPEN can also be used at different dates and changes therefore the state of
+connections without explicit use of the COMPDAT keyword. This function translates
+WELOPEN actions into explicit additional COMPDAT definitions in the exported df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compdat_df</strong> – Dataframe with unrolled COMPDAT data</p></li>
+<li><p><strong>welopen_df</strong> – Dataframe with WELOPEN actions</p></li>
+<li><p><strong>wlist_df</strong> – Dataframe with WLIST NEW records. Optional.</p></li>
+<li><p><strong>complump_df</strong> – Dataframe with COMPLUMP records. Optional.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>compdat_df now including WELOPEN actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.fill_parser">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.fill_parser" title="Link to this definition"></a></dt>
+<dd><p>Set up sys.argv parsers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parser</strong> – parser to fill with arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.compdat_main">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">compdat_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.Namespace</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#compdat_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.compdat_main" title="Link to this definition"></a></dt>
+<dd><p>Entry-point for module, for command line utility</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.compdat.df">
+<span class="sig-prename descclassname"><span class="pre">res2df.compdat.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../resdatafiles/index.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><span class="pre">res2df.resdatafiles.ResdataFiles</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">initvectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/compdat.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.compdat.df" title="Link to this definition"></a></dt>
+<dd><p>Main function for Python API users</p>
+<p>Supports only COMPDAT information for now. Will
+add a zone-name if a zonefile is found alongside.
+If a zonemap is passed it will override the zonefile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Dataframe with one row pr cell to well connection</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../common/index.html" class="btn btn-neutral float-left" title="res2df.common" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../csv2res/index.html" class="btn btn-neutral float-right" title="res2df.csv2res" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

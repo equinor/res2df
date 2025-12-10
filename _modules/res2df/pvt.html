@@ -5,14 +5,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.pvt &mdash; res2df 1.3.10.dev6+g04b894b40 documentation</title>
+  <title>res2df.pvt &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3d5d82b5"></script>
+      <script src="../../_static/documentation_options.js?v=21b8ffc7"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -52,7 +53,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df/index.html">res2df</a></li>
 </ul>
 
         </div>
@@ -160,7 +161,7 @@
 
 
 <div class="viewcode-block" id="pvtw_fromdeck">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtw_fromdeck">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.pvtw_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pvtw_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -180,7 +181,7 @@
 
 
 <div class="viewcode-block" id="density_fromdeck">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.density_fromdeck">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.density_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">density_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -200,7 +201,7 @@
 
 
 <div class="viewcode-block" id="rock_fromdeck">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.rock_fromdeck">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.rock_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rock_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -220,7 +221,7 @@
 
 
 <div class="viewcode-block" id="pvto_fromdeck">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvto_fromdeck">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.pvto_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pvto_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -241,7 +242,7 @@
 
 
 <div class="viewcode-block" id="pvdo_fromdeck">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdo_fromdeck">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.pvdo_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pvdo_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -262,7 +263,7 @@
 
 
 <div class="viewcode-block" id="pvdg_fromdeck">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdg_fromdeck">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.pvdg_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pvdg_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -283,7 +284,7 @@
 
 
 <div class="viewcode-block" id="pvtg_fromdeck">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtg_fromdeck">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.pvtg_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pvtg_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -304,7 +305,7 @@
 
 
 <div class="viewcode-block" id="df">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -353,7 +354,7 @@
 
 
 <div class="viewcode-block" id="fill_parser">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_parser">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.fill_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for parsing :term:`.DATA file` or</span>
 <span class="sd">    :term:`include files &lt;include file&gt;` into dataframes</span>
@@ -388,7 +389,7 @@
 
 
 <div class="viewcode-block" id="fill_reverse_parser">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_reverse_parser">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.fill_reverse_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for writing :term:`include files &lt;include file&gt;` from</span>
 <span class="sd">    dataframes (as CSV files)</span>
@@ -401,7 +402,7 @@
 
 
 <div class="viewcode-block" id="pvt_main">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_main">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.pvt_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pvt_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for Eclipse to CSV&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
@@ -436,7 +437,7 @@
 
 
 <div class="viewcode-block" id="pvt_reverse_main">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_reverse_main">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.pvt_reverse_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to simulator</span>
 <span class="sd">    :term:`deck`&quot;&quot;&quot;</span>
@@ -449,7 +450,7 @@
 
 
 <div class="viewcode-block" id="df2res">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res</span><span class="p">(</span>
     <span class="n">pvt_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -480,7 +481,7 @@
 
 
 <div class="viewcode-block" id="df2res_rock">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_rock">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res_rock">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_rock</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for ROCK keyword</span>
 
@@ -508,7 +509,7 @@
 
 
 <div class="viewcode-block" id="df2res_density">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_density">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res_density">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_density</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for DENSITY keyword</span>
 
@@ -540,7 +541,7 @@
 
 
 <div class="viewcode-block" id="df2res_pvtw">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtw">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res_pvtw">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvtw</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTW keyword</span>
 
@@ -576,7 +577,7 @@
 
 
 <div class="viewcode-block" id="df2res_pvtg">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtg">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res_pvtg">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvtg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTG keyword</span>
 
@@ -635,7 +636,7 @@
 
 
 <div class="viewcode-block" id="df2res_pvdg">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdg">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res_pvdg">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvdg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVDG keyword</span>
 
@@ -686,7 +687,7 @@
 
 
 <div class="viewcode-block" id="df2res_pvdo">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdo">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res_pvdo">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvdo</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVDO keyword</span>
 
@@ -734,7 +735,7 @@
 
 
 <div class="viewcode-block" id="df2res_pvto">
-<a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvto">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/pvt/index.html#res2df.pvt.df2res_pvto">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvto</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTO-data from a dataframe</span>
 

@@ -1,0 +1,56 @@
+res2df.fipreports
+=================
+
+.. py:module:: res2df.fipreports
+
+.. autoapi-nested-parse::
+
+   Extract FIP region reports from PRT file
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.fipreports.report_block_lineparser
+   res2df.fipreports.df
+   res2df.fipreports.fill_parser
+   res2df.fipreports.fipreports_main
+
+
+Module Contents
+---------------
+
+.. py:function:: report_block_lineparser(line: str) -> tuple
+
+   Parses single lines within region reports, splits data into a tuple.
+
+   Does not support many different phase configurations yet.
+
+
+.. py:function:: df(prtfile: str | res2df.resdatafiles.ResdataFiles, fipname: str = 'FIPNUM') -> pandas.DataFrame
+
+   Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and
+   organizes those numbers into a dataframe
+
+   Each row in the dataframe represents one parsed line in the PRT file, with
+   DATE and region index added.
+
+   :param prtfile: filename (PRT) or a ResdataFiles object
+   :param fipname: The name of the regport regions, FIPNUM, FIPZON or whatever
+                   Max length of the string is 8, the first three characters must be FIP,
+                   and the next 3 characters must be unique for a given :term:`.DATA file`.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Fill parser with command line arguments
+
+
+.. py:function:: fipreports_main(args: argparse.Namespace) -> None
+
+   Command line API
+
+

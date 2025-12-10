@@ -1,0 +1,124 @@
+res2df.pillars
+==============
+
+.. py:module:: res2df.pillars
+
+.. autoapi-nested-parse::
+
+   Extract statistics pr cornerpoint pillar (i,j)-pair
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.pillars.df
+   res2df.pillars.compute_volumes
+   res2df.pillars.compute_pillar_contacts
+   res2df.pillars.fill_parser
+   res2df.pillars.pillars_main
+
+
+Module Contents
+---------------
+
+.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles, region: str | None = None, rstdates: str | datetime.date | list[datetime.date] | None = None, soilcutoff: float = 0.2, sgascutoff: float = 0.7, swatcutoff: float = 0.7, stackdates: bool = False) -> pandas.DataFrame
+
+   Produce a dataframe with pillar information
+
+   This is the "main" function for Python API users
+   Produces a dataframe with data for each I-J combination
+   (in the column PILLAR), and if a region parameter is
+   supplied, also pr. region.
+
+   PORV is the summed porevolume of the pillar (in the region),
+   VOLUME is bulk volume, and PORO is porevolume weighted porosity
+   PERM columns contain unweighted value averages, use with caution.
+
+   If a restart date is picked, then SWAT and SGAS will
+   be used to compute volumes pr. phase, WATVOL, OILVOL and GASVOL. The
+   columns with dynamic data will include the date in the column headers
+   like SWAT@2009-01-01
+
+   :param region: A parameter the pillars will be split
+                  on. Typically EQLNUM or FIPNUM. Set to empty string
+                  or None to avoid any region grouping.
+   :param rstdates: Dates for which restart data
+                    is to be extracted. The string can
+                    be in ISO-format, or one of the mnenomics
+                    'first', 'last' or 'all'. It can also be a list
+                    of datetime.date.
+   :param soilcutoff: If not None, an oil-water contact will
+                      be estimated pr. pillar, based on the deepest cell with
+                      SOIL above the given cutoff. Value is put in column OWC.
+   :param sgascuttof: If not None, a gas contact will be
+                      estimated pr pillar, based on the deepest cell with
+                      SGAS above the given cutoff. Value is put in column GOC.
+   :param swatcutoff: OWC or GWC is only computed for pillars
+                      where at least one cell is above this value.
+   :param stackdates: If true, a column
+                      called DATE will be added and data for all restart
+                      dates will be added in a stacked manner.
+
+
+.. py:function:: compute_volumes(grid_df: pandas.DataFrame, datestr: str | None = None) -> pandas.DataFrame
+
+   Compute "dynamic" volumes, volumes for data coming from the
+   UNRST file (SWAT+SGAS)
+
+   SOIL is assumed not be present in grid_df, it will be computed here.
+
+   :param grid_df: A dataframe with the columns PORV, SWAT and SGAS
+   :param datestr: If not none, it should contain an ISO-8601 formatted date that
+                   will be appended to all columns with dynamic data, SWAT and SGAS
+                   in incoming grid_df must also be appended with the same date string.
+                   If datestr is "2009-01-02", then the columns will look
+                   like "SOIL@2009-01-02"
+
+
+.. py:function:: compute_pillar_contacts(grid_df: pandas.DataFrame, region: str | None = None, soilcutoff: float = 0.2, sgascutoff: float = 0.7, swatcutoff: float = 0.7, datestr: str | None = None) -> pandas.DataFrame
+
+   Compute contacts pr. pillar in a grid dataframe.
+
+   Requires the columns PILLAR, SOIL, SGAS and SWAT, I, J and Z
+
+   SOIL should be pre-computed in three-phase runs before calling this.
+   PILLAR must be pre-computed in grid_df.
+
+   OWC is deepest cell centre pr. pillar with oil saturation above soilcutoff,
+   among those pillars with at least one cell above swatcutoff.
+
+   GOC is the deepest cell centre pr. pillar with gas saturation above sgascutoff,
+   among those pillars with at least one cell with non-zero oil saturation
+
+   GWC is only computed when SOIL is not presented, and is the deepest
+   cell centre with gas saturation above sgascutoff, among those pillars
+   with at least one cell above swatcutoff.
+
+   :param grid_df: Representing the grid with geometry and properties
+   :param region: Region vector to group by, e.g. FIPNUM or EQLNUM
+   :param soilcutoff: OWC is deepest cell centre pr. pillar with oil
+                      saturation above this
+   :param sgascutoff: GOC/GWC is deepest cell centre pr. pillar with
+                      gas saturation above this
+   :param swatcutoff: Pillars must have this amount of water in (in one cell)
+                      them to be available for OWC/GWC computations.
+
+   :returns: Index is PILLAR with values I-J. Rows only for
+             pillars where a contact was found. Empty dataframe if no contacts found.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parser.
+
+   :param parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: pillars_main(args: argparse.Namespace) -> None
+
+   This is the command line API
+
+

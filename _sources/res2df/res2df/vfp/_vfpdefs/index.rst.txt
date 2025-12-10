@@ -1,0 +1,1149 @@
+res2df.vfp._vfpdefs
+===================
+
+.. py:module:: res2df.vfp._vfpdefs
+
+.. autoapi-nested-parse::
+
+   Some definitions and parameters used to define VFPPROD and VFPINJ keywords in Eclipse.
+   This includes definitions of rates, thp, wfr (water fractions), gfr (gas fractions),
+   alq (artificial-lift-quantities), units and so on. Used for consistency check in IO
+   routines for VFPPROD and VFPINJ keywords in res2df.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   res2df.vfp._vfpdefs.VFPTYPE
+   res2df.vfp._vfpdefs.VFPPROD_FLO
+   res2df.vfp._vfpdefs.VFPINJ_FLO
+   res2df.vfp._vfpdefs.WFR
+   res2df.vfp._vfpdefs.GFR
+   res2df.vfp._vfpdefs.ALQ
+   res2df.vfp._vfpdefs.UNITTYPE
+   res2df.vfp._vfpdefs.THPTYPE
+   res2df.vfp._vfpdefs.VFPPROD_TABTYPE
+   res2df.vfp._vfpdefs.VFPINJ_TABTYPE
+
+
+Module Contents
+---------------
+
+.. py:class:: VFPTYPE(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: VFPPROD
+      :value: 'VFPPROD'
+
+
+
+   .. py:attribute:: VFPINJ
+      :value: 'VFPINJ'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: VFPPROD_FLO(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: OIL
+      :value: 'OIL'
+
+
+
+   .. py:attribute:: LIQ
+      :value: 'LIQ'
+
+
+
+   .. py:attribute:: GAS
+      :value: 'GAS'
+
+
+
+   .. py:attribute:: WG
+      :value: 'WG'
+
+
+
+   .. py:attribute:: TM
+      :value: 'TM'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: VFPINJ_FLO(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: OIL
+      :value: 'OIL'
+
+
+
+   .. py:attribute:: WAT
+      :value: 'WAT'
+
+
+
+   .. py:attribute:: GAS
+      :value: 'GAS'
+
+
+
+   .. py:attribute:: WG
+      :value: 'WG'
+
+
+
+   .. py:attribute:: TM
+      :value: 'TM'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: WFR(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: WOR
+      :value: 'WOR'
+
+
+
+   .. py:attribute:: WCT
+      :value: 'WCT'
+
+
+
+   .. py:attribute:: WGR
+      :value: 'WGR'
+
+
+
+   .. py:attribute:: WWR
+      :value: 'WWR'
+
+
+
+   .. py:attribute:: WTF
+      :value: 'WTF'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: GFR(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: GOR
+      :value: 'GOR'
+
+
+
+   .. py:attribute:: GLR
+      :value: 'GLR'
+
+
+
+   .. py:attribute:: OGR
+      :value: 'OGR'
+
+
+
+   .. py:attribute:: MMW
+      :value: 'MMW'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: ALQ(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: GRAT
+      :value: 'GRAT'
+
+
+
+   .. py:attribute:: IGLR
+      :value: 'IGLR'
+
+
+
+   .. py:attribute:: TGLR
+      :value: 'TGLR'
+
+
+
+   .. py:attribute:: PUMP
+      :value: 'PUMP'
+
+
+
+   .. py:attribute:: COMP
+      :value: 'COMP'
+
+
+
+   .. py:attribute:: DENO
+      :value: 'DENO'
+
+
+
+   .. py:attribute:: DENG
+      :value: 'DENG'
+
+
+
+   .. py:attribute:: BEAN
+      :value: 'BEAN'
+
+
+
+   .. py:attribute:: UNDEFINED
+      :value: "''"
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: UNITTYPE(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: METRIC
+      :value: 'METRIC'
+
+
+
+   .. py:attribute:: FIELD
+      :value: 'FIELD'
+
+
+
+   .. py:attribute:: LAB
+      :value: 'LAB'
+
+
+
+   .. py:attribute:: PVTM
+      :value: 'PVT-M'
+
+
+
+   .. py:attribute:: DEFAULT
+      :value: 'DEFAULT'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: THPTYPE(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: THP
+      :value: 'THP'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: VFPPROD_TABTYPE(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: BHP
+      :value: 'BHP'
+
+
+
+   .. py:attribute:: THT
+      :value: 'TEMP'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+
+.. py:class:: VFPINJ_TABTYPE(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+
+   Create a collection of name/value pairs.
+
+   Example enumeration:
+
+   >>> class Color(Enum):
+   ...     RED = 1
+   ...     BLUE = 2
+   ...     GREEN = 3
+
+   Access them by:
+
+   - attribute access::
+
+   >>> Color.RED
+   <Color.RED: 1>
+
+   - value lookup:
+
+   >>> Color(1)
+   <Color.RED: 1>
+
+   - name lookup:
+
+   >>> Color['RED']
+   <Color.RED: 1>
+
+   Enumerations can be iterated over, and know how many members they have:
+
+   >>> len(Color)
+   3
+
+   >>> list(Color)
+   [<Color.RED: 1>, <Color.BLUE: 2>, <Color.GREEN: 3>]
+
+   Methods can be added to enumerations, and members can have their own
+   attributes -- see the documentation for details.
+
+
+   .. py:attribute:: BHP
+      :value: 'BHP'
+
+
+
+   .. py:method:: __new__(value)
+
+
+   .. py:method:: __init__(*args, **kwds)
+
+
+   .. py:method:: _generate_next_value_(start, count, last_values)
+
+      Generate the next value when not given.
+
+      name: the name of the member
+      start: the initial start value or None
+      count: the number of existing members
+      last_values: the list of values assigned
+
+
+
+   .. py:method:: _missing_(value)
+      :classmethod:
+
+
+
+   .. py:method:: __repr__()
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: __dir__()
+
+      Returns public methods and other interesting attributes.
+
+
+
+   .. py:method:: __format__(format_spec)
+
+
+   .. py:method:: __hash__()
+
+
+   .. py:method:: __reduce_ex__(proto)
+
+
+   .. py:method:: __deepcopy__(memo)
+
+
+   .. py:method:: __copy__()
+
+

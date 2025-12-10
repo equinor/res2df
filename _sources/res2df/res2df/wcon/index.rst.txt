@@ -1,0 +1,45 @@
+res2df.wcon
+===========
+
+.. py:module:: res2df.wcon
+
+.. autoapi-nested-parse::
+
+   Extract WCON* from a .DATA file
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.wcon.df
+   res2df.wcon.fill_parser
+   res2df.wcon.wcon_main
+
+
+Module Contents
+---------------
+
+.. py:function:: df(deck: ResdataFiles | opm.opmcommon_python.Deck) -> pandas.DataFrame
+
+   Loop through the :term:`deck` and pick up information found
+
+   The loop over the :term:`deck` is a state machine, as it has to pick up dates
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: parser to
+                  fill with arguments
+   :type parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: wcon_main(args: argparse.Namespace) -> None
+
+   Read from disk and write CSV back to disk
+
+

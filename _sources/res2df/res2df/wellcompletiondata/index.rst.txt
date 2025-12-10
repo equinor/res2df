@@ -1,0 +1,123 @@
+res2df.wellcompletiondata
+=========================
+
+.. py:module:: res2df.wellcompletiondata
+
+.. autoapi-nested-parse::
+
+   Aggregates completion data from layer to zone
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   res2df.wellcompletiondata.UnitSystem
+   res2df.wellcompletiondata.KHUnit
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.wellcompletiondata.df
+   res2df.wellcompletiondata.fill_parser
+   res2df.wellcompletiondata.wellcompletiondata_main
+
+
+Module Contents
+---------------
+
+.. py:class:: UnitSystem
+
+   Bases: :py:obj:`enum.StrEnum`
+
+
+   Enum where members are also (and must be) strings
+
+
+   .. py:attribute:: METRIC
+      :value: 'METRIC'
+
+
+
+   .. py:attribute:: FIELD
+      :value: 'FIELD'
+
+
+
+   .. py:attribute:: LAB
+      :value: 'LAB'
+
+
+
+   .. py:attribute:: PVTM
+      :value: 'PVT-M'
+
+
+
+.. py:class:: KHUnit
+
+   Bases: :py:obj:`enum.StrEnum`
+
+
+   Enum where members are also (and must be) strings
+
+
+   .. py:attribute:: METRIC
+      :value: 'mDm'
+
+
+
+   .. py:attribute:: FIELD
+      :value: 'mDft'
+
+
+
+   .. py:attribute:: LAB
+      :value: 'mDcm'
+
+
+
+   .. py:attribute:: PVTM
+      :value: 'mDm'
+
+
+
+.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles, zonemap: dict[int, str] | None = None, use_wellconnstatus: bool = False, excl_well_startswith: str | None = None) -> pandas.DataFrame
+
+   Aggregates compdat to zone level. If use_wellconnstatus is True,
+   the actual OP/SH status of a connection will be extracted from summary
+   data using the wellconnstatus module. If not, connection status is taken
+   directly from parsing the schedule file, using the compdat module.
+
+   The aggregation is done according to the following rules. A zone is
+   regarded as open if one or more connections are open, regardless of
+   if other connections are closed. And the KH is summed over open connections
+   only.
+
+   If no zonemap is provided, it will be looked for in the default location
+   (the same directory as the DATA file loaded in resdatafiles).
+
+   :param resdatafiles; ResdataFiles object:
+   :param zonemap: dictionary with layer->zone mapping
+   :param use_wellconnstatus: boolean
+
+   :returns: pd.DataFrame with one row per unique combination of well, zone and date.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: parser to fill with arguments
+
+
+.. py:function:: wellcompletiondata_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility
+
+

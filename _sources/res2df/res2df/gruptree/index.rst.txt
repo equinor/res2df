@@ -1,0 +1,132 @@
+res2df.gruptree
+===============
+
+.. py:module:: res2df.gruptree
+
+.. autoapi-nested-parse::
+
+   Extract GRUPTREE information from a :term:`.DATA file`
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.gruptree.df
+   res2df.gruptree.edge_dataframe2dict
+   res2df.gruptree.tree_from_dict
+   res2df.gruptree.dict2treelib
+   res2df.gruptree.fill_parser
+   res2df.gruptree.prettyprint
+   res2df.gruptree.gruptree_main
+
+
+Module Contents
+---------------
+
+.. py:function:: df(deck: ResdataFiles | opm.opmcommon_python.Deck, startdate: datetime.date | None = None, welspecs: bool = True) -> pandas.DataFrame
+
+   Extract all group information from a :term:`deck`
+   and present as a Pandas Dataframe of all edges.
+
+   Properties for nodes given in GRUPNET/NODEPROP will
+   be added as extra columns.
+
+   From WELSPECS, well names are extracted and added
+   as nodes with an edge to its group.
+
+   The gruptree is a time dependent property,
+   with accumulative effects from new occurences of
+   GRUPNET, WELSPECS, BRANPROP and NODEPROP.
+
+   Whenever the GRUPTREE or BRANPROP tree changes, the
+   previous tree is copied and a new complete tree is added
+   to the dataframe tagged with the new date.
+
+   startdate is only relevant when START is not in the :term:`deck`.
+
+   :param deck: opm.io Deck object or ResdataFiles
+
+   :returns: pd.DataFrame with one row pr edge. Empty dataframe if no
+             information is found in :term:`deck`.
+
+
+.. py:function:: edge_dataframe2dict(dframe: pandas.DataFrame) -> list[dict]
+
+   Convert list of edges in a dataframe into a
+   nested dictionary (tree).
+
+   The dataframe cannot have multiple DATEs, filter to the date you
+   want prior to calling this function.
+
+   Example::
+
+     [{
+       'FIELD': {'OP': {'OP_1': {},
+       'OP_2': {},
+       'OP_3': {},
+       'OP_4': {},
+       'OP_5': {}},
+       'WI': {'WI_1': {}, 'WI_2': {}, 'WI_3': {}}}
+     }]
+
+   Leaf nodes have empty dictionaries as their value.
+
+   :returns: List of nested dictionaries, as we in general
+             may have more than one root. The list sorted
+             alphabetically on the top level node name.
+
+
+.. py:function:: tree_from_dict(nested_dict: dict) -> treelib.Tree | str
+
+   Convert a dictionary to a treelib Tree.
+
+   The treelib representation of the trees is used
+   for pretty-printing (in ASCII) of the tree, you
+   only need to do str() of the returned result
+   from this function.
+
+   See `https://treelib.readthedocs.io/`
+
+   :param nested_dict: nested dictonary representing a tree.
+
+
+.. py:function:: dict2treelib(name: str, nested_dict: dict) -> treelib.Tree
+
+   Convert a nested dictonary to a treelib Tree
+   object. This function is recursive.
+
+   The treelib representation of the trees is used
+   for pretty-printing (in ASCII) of the tree, you
+   only need to do str() of the returned result
+   from this function.
+
+   See `https://treelib.readthedocs.io/`
+
+   :param name: name of root node
+   :param nested_dict: nested dictonary of the children at the root.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: parser
+                  to fill with arguments
+   :type parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: prettyprint(dframe: pandas.DataFrame) -> str
+
+   Returns a string with the prettyprint of a dataframe
+   possibly containing multiple dates and both GRUPTREE and
+   BRANPROP trees
+
+
+.. py:function:: gruptree_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility.
+
+

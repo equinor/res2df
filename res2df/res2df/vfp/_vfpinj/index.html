@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.vfp._vfpinj &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=21b8ffc7"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="res2df.vfp._vfpprod" href="../_vfpprod/index.html" />
+    <link rel="prev" title="res2df.vfp._vfpdefs" href="../_vfpdefs/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">res2df</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../common/index.html">res2df.common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../compdat/index.html">res2df.compdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../csv2res/index.html">res2df.csv2res</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../equil/index.html">res2df.equil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../faults/index.html">res2df.faults</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../fipreports/index.html">res2df.fipreports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid/index.html">res2df.grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gruptree/index.html">res2df.gruptree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hook_implementations/index.html">res2df.hook_implementations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../inferdims/index.html">res2df.inferdims</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../nnc/index.html">res2df.nnc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../opmkeywords/index.html">res2df.opmkeywords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameters/index.html">res2df.parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../pillars/index.html">res2df.pillars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../pvt/index.html">res2df.pvt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../res2csv/index.html">res2df.res2csv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../res2csvlogger/index.html">res2df.res2csvlogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../resdatafiles/index.html">res2df.resdatafiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../rft/index.html">res2df.rft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../satfunc/index.html">res2df.satfunc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../summary/index.html">res2df.summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../trans/index.html">res2df.trans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">res2df.version</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">res2df.vfp</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../wcon/index.html">res2df.wcon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../wellcompletiondata/index.html">res2df.wellcompletiondata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../wellconnstatus/index.html">res2df.wellconnstatus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">res2df</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">res2df.vfp</a></li>
+      <li class="breadcrumb-item active">res2df.vfp._vfpinj</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/res2df/res2df/vfp/_vfpinj/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-res2df.vfp._vfpinj">
+<span id="res2df-vfp-vfpinj"></span><h1>res2df.vfp._vfpinj<a class="headerlink" href="#module-res2df.vfp._vfpinj" title="Link to this heading"></a></h1>
+<p>Utilities to extract the VFPINJ data from an Eclipse (input) deck.
+Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
+basic_data (dictionary with basic data types), df (pandas DataFrame) or
+pyarrow_tables (pyarrow.Tables).</p>
+<p>Data can be extracted from a complete deck or from individual files.
+Supports output both in csv format as a pandas DataFrame or in pyarrow
+a pyarrow.Table. Also functionality to write pandas DataFrame and
+pyarrow.Table to file as Eclipse .Ecl format</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj._deckrecord2list" title="res2df.vfp._vfpinj._deckrecord2list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_deckrecord2list</span></code></a>(→ list[float])</p></td>
+<td><p>Parse an opm.opmcommon_python.DeckRecord belonging to a certain keyword</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj._stack_vfptable2df" title="res2df.vfp._vfpinj._stack_vfptable2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_stack_vfptable2df</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Return a dataframe from a list of interpolation ranges and tabulated values</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj._string2intlist" title="res2df.vfp._vfpinj._string2intlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_string2intlist</span></code></a>(→ _string2intlist.list[int])</p></td>
+<td><p>Produce a list of int from input string</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj._write_vfp_range" title="res2df.vfp._vfpinj._write_vfp_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_write_vfp_range</span></code></a>(→ str)</p></td>
+<td><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string of a resdata</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.basic_data" title="res2df.vfp._vfpinj.basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data</span></code></a>(→ dict[str, Any])</p></td>
+<td><p>Read and return all data for Eclipse VFPINJ keyword as basic data types</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.basic_data2df" title="res2df.vfp._vfpinj.basic_data2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data2df</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Return a pandas DataFrame from VFPINJ liftcurve data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.basic_data2pyarrow" title="res2df.vfp._vfpinj.basic_data2pyarrow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data2pyarrow</span></code></a>(→ pyarrow.Table)</p></td>
+<td><p>Return a pyarrow Table from VFPINJ record data</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.df2basic_data" title="res2df.vfp._vfpinj.df2basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2basic_data</span></code></a>(→ dict[str, Any])</p></td>
+<td><p>Return basic data type for VFPINJ from a pandas dataframe.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.pyarrow2basic_data" title="res2df.vfp._vfpinj.pyarrow2basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyarrow2basic_data</span></code></a>(→ dict[str, Any])</p></td>
+<td><p>Return basic data type for VFPINJ from a pyarrow.Table.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj._check_basic_data" title="res2df.vfp._vfpinj._check_basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_check_basic_data</span></code></a>(→ bool)</p></td>
+<td><p>Perform a check of the VFPINJ data contained in the dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.df" title="res2df.vfp._vfpinj.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame | None)</p></td>
+<td><p>Return a dataframes of a single VFPINJ table from a <a class="reference internal" href="../../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.pyarrow" title="res2df.vfp._vfpinj.pyarrow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyarrow</span></code></a>(→ pyarrow.Table | None)</p></td>
+<td><p>Return a pyarrow Table of a single VFPINJ table from a <a class="reference internal" href="../../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj._write_basic_record" title="res2df.vfp._vfpinj._write_basic_record"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_write_basic_record</span></code></a>(→ str)</p></td>
+<td><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string of the</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj._write_table_records" title="res2df.vfp._vfpinj._write_table_records"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_write_table_records</span></code></a>(→ str)</p></td>
+<td><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string representing</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfpinj.df2res" title="res2df.vfp._vfpinj.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(→ str)</p></td>
+<td><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj._deckrecord2list">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">_deckrecord2list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.opmcommon_python.DeckRecord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpcommon.html#_deckrecord2list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj._deckrecord2list" title="Link to this definition"></a></dt>
+<dd><p>Parse an opm.opmcommon_python.DeckRecord belonging to a certain keyword
+and return as list of numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> – Record be parsed</p></li>
+<li><p><strong>keyword</strong> – Which keyword this belongs to</p></li>
+<li><p><strong>recordindex</strong> – For keywords where itemlistname is ‘records’, this is a
+list index to the “record”.</p></li>
+<li><p><strong>recordname</strong> – Name of the record</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj._stack_vfptable2df">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">_stack_vfptable2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_names_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_values_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_values_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpcommon.html#_stack_vfptable2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj._stack_vfptable2df" title="Link to this definition"></a></dt>
+<dd><p>Return a dataframe from a list of interpolation ranges and tabulated values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_names_list</strong> – List with name of each interpolated
+quantity (i.e. THP, WFR, GFR, ALQ for VFPPROD
+or THP for VFPINJ)</p></li>
+<li><p><strong>index_values_list</strong> – List of list with values for
+each interpolated quantity for
+each row in vfp table (each record)
+(dim (no index names) x (no records))</p></li>
+<li><p><strong>flow_values_list</strong> – List of flow values (dim = no flow_values)</p></li>
+<li><p><strong>table_values_list</strong> – List of list with tabulated values
+(dim = (no records) x  (no flow_values))</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj._string2intlist">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">_string2intlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_def_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_string2intlist.list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpcommon.html#_string2intlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj._string2intlist" title="Link to this definition"></a></dt>
+<dd><p>Produce a list of int from input string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>list_def_str</strong> – String defining list of int
+Format “[1,2,6:9]” to define list [1,2,6,7,8,9]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj._write_vfp_range">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">_write_vfp_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'%10.6g'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_per_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpcommon.html#_write_vfp_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj._write_vfp_range" title="Link to this definition"></a></dt>
+<dd><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string of a resdata
+record for a given table range</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> – List/array with the range sorted</p></li>
+<li><p><strong>var_type</strong> – The Eclipse variable type defintion</p></li>
+<li><p><strong>unit_type</strong> – The unit type for the variable</p></li>
+<li><p><strong>format</strong> – Format string for values</p></li>
+<li><p><strong>values_per_line</strong> – Number of values per line in output</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.basic_data">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.opmcommon_python.DeckKeyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data" title="Link to this definition"></a></dt>
+<dd><p>Read and return all data for Eclipse VFPINJ keyword as basic data types</p>
+<p>Empty string returned if vfp table number does not match any number in list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keyword</strong> – <a class="reference internal" href="../../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> keyword</p></li>
+<li><p><strong>vfpnumbers_str</strong> – String with list of vfp table numbers to extract.
+Syntax “[0,1,8:11]” corresponds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.basic_data2df">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPINJ_FLO" title="res2df.vfp._vfpdefs.VFPINJ_FLO"><span class="pre">res2df.vfp._vfpdefs.VFPINJ_FLO</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.THPTYPE" title="res2df.vfp._vfpdefs.THPTYPE"><span class="pre">res2df.vfp._vfpdefs.THPTYPE</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.UNITTYPE" title="res2df.vfp._vfpdefs.UNITTYPE"><span class="pre">res2df.vfp._vfpdefs.UNITTYPE</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="res2df.vfp._vfpdefs.VFPINJ_TABTYPE"><span class="pre">res2df.vfp._vfpdefs.VFPINJ_TABTYPE</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#basic_data2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data2df" title="Link to this definition"></a></dt>
+<dd><p>Return a pandas DataFrame from VFPINJ liftcurve data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tableno</strong> – table number</p></li>
+<li><p><strong>datum</strong> – datum depth</p></li>
+<li><p><strong>rate_type</strong> – rate type used for flow values</p></li>
+<li><p><strong>thp_type</strong> – thp type used for THP values</p></li>
+<li><p><strong>unit_type</strong> – unit type</p></li>
+<li><p><strong>tab_type</strong> – type for tabulated (record) values</p></li>
+<li><p><strong>flow_values</strong> – rate values used to generate table</p></li>
+<li><p><strong>thp_type</strong> – thp type</p></li>
+<li><p><strong>thp_indices</strong> – which index in thp value table a given BHP value
+corresponds to (1-base)</p></li>
+<li><p><strong>tab_data</strong> – tabulated (BHP) data
+(ordered as thp- and flow-values)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.basic_data2pyarrow">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPINJ_FLO" title="res2df.vfp._vfpdefs.VFPINJ_FLO"><span class="pre">res2df.vfp._vfpdefs.VFPINJ_FLO</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.THPTYPE" title="res2df.vfp._vfpdefs.THPTYPE"><span class="pre">res2df.vfp._vfpdefs.THPTYPE</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.UNITTYPE" title="res2df.vfp._vfpdefs.UNITTYPE"><span class="pre">res2df.vfp._vfpdefs.UNITTYPE</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="res2df.vfp._vfpdefs.VFPINJ_TABTYPE"><span class="pre">res2df.vfp._vfpdefs.VFPINJ_TABTYPE</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pyarrow.Table</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#basic_data2pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data2pyarrow" title="Link to this definition"></a></dt>
+<dd><p>Return a pyarrow Table from VFPINJ record data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tableno</strong> – table number</p></li>
+<li><p><strong>datum</strong> – datum depth</p></li>
+<li><p><strong>rate_type</strong> – rate type used for flow values</p></li>
+<li><p><strong>thp_type</strong> – thp type</p></li>
+<li><p><strong>unit_type</strong> – unit type</p></li>
+<li><p><strong>tab_type</strong> – type for tabulated (record) values</p></li>
+<li><p><strong>flow_values</strong> – rate values used to generate table</p></li>
+<li><p><strong>thp_values</strong> – THP values used to generate table</p></li>
+<li><p><strong>thp_indices</strong> – THP indices for each record in tabulated data</p></li>
+<li><p><strong>tab_data</strong> – tabulated (BHP) data
+(ordered according to thp- and flow-values)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.df2basic_data">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#df2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df2basic_data" title="Link to this definition"></a></dt>
+<dd><p>Return basic data type for VFPINJ from a pandas dataframe.</p>
+<p>Return format is a dictionary all data in VFPINJ in basic data types
+(str, int, float, numpy.array)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dframe</strong> – pandas DataFrame for VFPINJ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.pyarrow2basic_data">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyarrow.Table</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#pyarrow2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.pyarrow2basic_data" title="Link to this definition"></a></dt>
+<dd><p>Return basic data type for VFPINJ from a pyarrow.Table.</p>
+<p>Return format is a dictionary all data in VFPINJ in basic data types
+(str, int, float, numpy.array)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pa_table</strong> – pyarrow Table with data for VFPINJ</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj._check_basic_data">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">_check_basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vfp_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#_check_basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj._check_basic_data" title="Link to this definition"></a></dt>
+<dd><p>Perform a check of the VFPINJ data contained in the dictionary.
+Checks if all data is present and if the dimensions of the arrays
+are consisitent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vfp_data</strong> – Dictionary containing all data for a VFPINJ keyword in Eclipse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.df">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.opmcommon_python.DeckKeyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df" title="Link to this definition"></a></dt>
+<dd><p>Return a dataframes of a single VFPINJ table from a <a class="reference internal" href="../../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a></p>
+<p>Data from the VFPINJ keyword are stacked into a Pandas Dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keyword</strong> – <a class="reference internal" href="../../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> keyword</p></li>
+<li><p><strong>vfpnumbers_str</strong> – String with list of vfp table numbers to extract.
+Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.pyarrow">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.opmcommon_python.DeckKeyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pyarrow.Table</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.pyarrow" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Return a pyarrow Table of a single VFPINJ table from a <a class="reference internal" href="../../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a></dt><dd><p>If no VFPINJ table found, return None</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keyword</strong> – <a class="reference internal" href="../../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> keyword</p></li>
+<li><p><strong>vfpnumbers_str</strong> – String with list of vfp table numbers to extract.
+Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj._write_basic_record">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">_write_basic_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flo_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#_write_basic_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj._write_basic_record" title="Link to this definition"></a></dt>
+<dd><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string of the
+first record for the Eclipse VFPINJ keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tableno</strong> – VFPROD table number</p></li>
+<li><p><strong>datum</strong> – datum depth</p></li>
+<li><p><strong>pressure_type</strong> – THP type</p></li>
+<li><p><strong>unit_type</strong> – Unit type</p></li>
+<li><p><strong>tab_type</strong> – Table type (BHP)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj._write_table_records">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">_write_table_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'%10.6g'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_per_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#_write_table_records"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj._write_table_records" title="Link to this definition"></a></dt>
+<dd><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string representing
+for a VFPINJ table (BHP part)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thp_indices</strong> – array of int representing index for THP value for record</p></li>
+<li><p><strong>table</strong> – DataFrame with multiindex for table ranges and colums
+for tabulated values (BHP)</p></li>
+<li><p><strong>format</strong> – Format string for values</p></li>
+<li><p><strong>values_per_line</strong> – Number of values per line in output</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.vfp._vfpinj.df2res">
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/res2df/vfp/_vfpinj.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df2res" title="Link to this definition"></a></dt>
+<dd><p>Creates a <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string
+representing single VFPINJ Eclipse input from a dataframe</p>
+<p>All data for the keywords VFPINJ will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> – Dataframe containing complete description of single VFPINJ input</p></li>
+<li><p><strong>comment</strong> – Text that will be included as comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../_vfpdefs/index.html" class="btn btn-neutral float-left" title="res2df.vfp._vfpdefs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../_vfpprod/index.html" class="btn btn-neutral float-right" title="res2df.vfp._vfpprod" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

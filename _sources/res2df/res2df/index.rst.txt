@@ -1,0 +1,41 @@
+res2df
+======
+
+.. py:module:: res2df
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /res2df/res2df/common/index
+   /res2df/res2df/compdat/index
+   /res2df/res2df/csv2res/index
+   /res2df/res2df/equil/index
+   /res2df/res2df/faults/index
+   /res2df/res2df/fipreports/index
+   /res2df/res2df/grid/index
+   /res2df/res2df/gruptree/index
+   /res2df/res2df/hook_implementations/index
+   /res2df/res2df/inferdims/index
+   /res2df/res2df/nnc/index
+   /res2df/res2df/opmkeywords/index
+   /res2df/res2df/parameters/index
+   /res2df/res2df/pillars/index
+   /res2df/res2df/pvt/index
+   /res2df/res2df/res2csv/index
+   /res2df/res2df/res2csvlogger/index
+   /res2df/res2df/resdatafiles/index
+   /res2df/res2df/rft/index
+   /res2df/res2df/satfunc/index
+   /res2df/res2df/summary/index
+   /res2df/res2df/trans/index
+   /res2df/res2df/version/index
+   /res2df/res2df/vfp/index
+   /res2df/res2df/wcon/index
+   /res2df/res2df/wellcompletiondata/index
+   /res2df/res2df/wellconnstatus/index
+
+

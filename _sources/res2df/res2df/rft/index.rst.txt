@@ -1,0 +1,201 @@
+res2df.rft
+==========
+
+.. py:module:: res2df.rft
+
+.. autoapi-nested-parse::
+
+   Converter module for simulator RFT output files to Pandas Dataframes
+
+   If MULTISEG wells are found, the segment data associated to
+   a connection is merged onto the same row as additional columns,
+   assuming connections do not point to more than one segment.
+
+   If ICD segments are detected (recognized as branches only containing
+   one segment), they are merged into the same row that already contains
+   connection data (CONxxxxx) and its segment data (now giving
+   information for the conditions in the tubing).
+
+   The columns representing SEGxxxxx data on ICD segments are renamed
+   by adding the prefix ``ICD_``
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.rft.rftrecords
+   res2df.rft.get_con_seg_data
+   res2df.rft.count_wellbranches
+   res2df.rft.process_seg_topology
+   res2df.rft.seg2dicttree
+   res2df.rft.pretty_print_well
+   res2df.rft.split_seg_icd
+   res2df.rft.merge_icd_seg_conseg
+   res2df.rft.add_extras
+   res2df.rft.df
+   res2df.rft.fill_parser
+   res2df.rft.rft_main
+
+
+Module Contents
+---------------
+
+.. py:function:: rftrecords(rftfile: resdata.resfile.ResdataFile) -> collections.abc.Iterable[dict[str, Any]]
+
+   Generator for looping over RFT records in a ResdataFile object.
+
+   Each returned RFT record is represented as a dict with the keys:
+       headers: pd.DataFrame, indexed by recordname
+
+   :param ResdataFile made from a binary RFT file.:
+
+
+.. py:function:: get_con_seg_data(rftrecord: dict[str, Any], rftfile: resdata.resfile.ResdataFile, datatype: str) -> pandas.DataFrame
+
+   Build a dataframe of CON* or SEG* data for a specific RFT record,
+   that is for one well at one date.
+
+   Dataframe will for datatype=="CON" look like::
+
+     DEPTH, SWAT, CONKH, CONIDX, ..
+     2300,  0.3, 3000, 1
+     2310, 0.2, 1231, 2
+
+   and number of rows will equal the number of connected cells (COMPDAT lines)
+
+   If it is for SEG data, all columns are prefixed by SEG
+   and row count will be the number of segments defined in WELSEGS
+
+   :param rftrecord: Data for one RFT record, provided by rftrecords()
+   :param rftfile:
+   :param datatype: Either "CON" or "SEG"
+
+
+.. py:function:: count_wellbranches(seg_data: pandas.DataFrame) -> int
+
+   From a segment dataframe, coming from get_con_seg_data(..., "SEG")
+   determine the number of well branche.
+
+   ICD segments must be split out first using split_seg_icd(), otherwise
+   results are not reliable.
+
+   :param pd.DataFrame:
+   :param with at least the columns SEGIDX:
+   :param SEGNXT and SEGBRNO:
+
+
+.. py:function:: process_seg_topology(seg_data: pandas.DataFrame) -> pandas.DataFrame
+
+   Determine and process the segment topology.
+
+   The topology of the well segments are determined by the SEGNXT column in
+   incoming dataframe, which corresponds to SEGIDX.
+
+   SEGNXT points to the next segment downstream in a production well (and
+   injector wells are treated as production here). Downstream is thus *upwards*
+   in space, towards the sea.
+
+   The last segment in a non-icd well gets the type TUBING.
+
+   :param seg_data: Segment structure defined as a table with at least
+                    the columns SEGIDX, SEGNXT
+
+   :returns: Augmented dataframe, extra columns and perhaps extra rows.
+
+
+.. py:function:: seg2dicttree(seg_data: pandas.DataFrame) -> dict
+
+   Generate a nested dictionary representing the
+   well through its segment topology
+
+   :param seg_data: topology determined by SEGIDX
+                    and SEGIDX_upstream
+
+   :returns: Nested dict,
+
+
+.. py:function:: pretty_print_well(seg_data: pandas.DataFrame) -> str
+
+   Return a multiline string with the segment structure
+   pretty printed as an ASCII tree.
+
+   :param seg_data: Segment dataframe
+
+   :returns: Multiline string
+
+
+.. py:function:: split_seg_icd(seg_data: pandas.DataFrame) -> tuple[pandas.DataFrame, pandas.DataFrame]
+
+   Split a segment dataframe into a dataframe
+   with non-ICD segments and one with.
+
+   The segment properties (data) are merged into the downstream segments
+   dataset, with the SEG prefixed switched to ICD.
+
+   :returns: Dataframe with the ICD segments only. Empty if no ICDs found.
+             and wider.
+
+
+.. py:function:: merge_icd_seg_conseg(con_data: pandas.DataFrame, seg_data: pandas.DataFrame | None = None, icd_data: pandas.DataFrame | None = None) -> pandas.DataFrame
+
+   Merge ICD segments to the CONxxxxx data. We will be
+   connection-centric in the outputted rows, that is
+   one row pr. connection. If the setup is with more
+   than one segment pr. connection (e.g. reservoir
+   cell), then we would have to be smarter. Either
+   averaging the properties, or be segment-centric in
+   the output.
+
+   Petrel happily puts many ICD segments to the same
+   connection. This setup is a bug, with partially
+   unknown effects when simulated in Eclipse. Should we
+   warn the user??
+
+   :param con_data: Connection data (CONxxxx columns). One
+                    row pr. reservoir connection
+   :param seg_data: Segment data, SEGxxxxx cols, one row pr. segment, and
+                    each segment should correspond to one ICD or to one reservoir connection.
+                    Supply empty or None if no segments found.
+   :param icd_data: ICD data, ICD_SEGxxxx columns. One row pr
+                    ICD segment. One-to-one correspondence to con_data through ICD_SEGBRNO
+                    and CONBRNO required. Can be empty or None if no ICD present.
+
+
+.. py:function:: add_extras(dframe: pandas.DataFrame, inplace: bool = True) -> pandas.DataFrame
+
+   Add extra nice-to-have columns to the dataframe
+   with tubing, icd-segments, and reservoir  connections matched
+   on rows
+
+   :param dframe: Dataframe typically obtained from merge_icd_seg()
+   :param inplace: Set to False if the original should not be modified.
+
+   :returns: The (possibly) augmented incoming dataframe.
+
+
+.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles, wellname: str | None = None, date: str | None = None) -> pandas.DataFrame
+
+   Loop over an RFT file and construct a dataframe representation
+   of the data, ordered by well and date.
+
+   :param resdatafiles: Object used to locate the RFT file
+   :param wellname: If provided, only wells matching this string exactly
+                    will be included
+   :param date: If provided, all other dates will be ignored. YYYY-MM-DD.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser to fill with arguments:
+
+
+.. py:function:: rft_main(args: argparse.Namespace) -> None
+
+   Entry-point for module, for command line utility
+
+

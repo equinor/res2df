@@ -5,14 +5,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.rft &mdash; res2df 1.3.10.dev6+g04b894b40 documentation</title>
+  <title>res2df.rft &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3d5d82b5"></script>
+      <script src="../../_static/documentation_options.js?v=21b8ffc7"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -52,7 +53,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df/index.html">res2df</a></li>
 </ul>
 
         </div>
@@ -185,7 +186,7 @@
 
 
 <div class="viewcode-block" id="rftrecords">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.rftrecords">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.rftrecords">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rftrecords</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generator for looping over RFT records in a ResdataFile object.</span>
 
@@ -221,7 +222,7 @@
 
 
 <div class="viewcode-block" id="get_con_seg_data">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.get_con_seg_data">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.get_con_seg_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_con_seg_data</span><span class="p">(</span>
     <span class="n">rftrecord</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">,</span> <span class="n">datatype</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -282,7 +283,7 @@
 
 
 <div class="viewcode-block" id="count_wellbranches">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.count_wellbranches">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.count_wellbranches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">count_wellbranches</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;From a segment dataframe, coming from get_con_seg_data(..., &quot;SEG&quot;)</span>
 <span class="sd">    determine the number of well branche.</span>
@@ -308,7 +309,7 @@
 
 
 <div class="viewcode-block" id="process_seg_topology">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.process_seg_topology">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.process_seg_topology">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine and process the segment topology.</span>
 
@@ -371,7 +372,7 @@
 
 
 <div class="viewcode-block" id="seg2dicttree">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.seg2dicttree">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.seg2dicttree">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">seg2dicttree</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a nested dictionary representing the</span>
 <span class="sd">    well through its segment topology</span>
@@ -407,7 +408,7 @@
 
 
 <div class="viewcode-block" id="pretty_print_well">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.pretty_print_well">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.pretty_print_well">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pretty_print_well</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a multiline string with the segment structure</span>
 <span class="sd">    pretty printed as an ASCII tree.</span>
@@ -424,7 +425,7 @@
 
 
 <div class="viewcode-block" id="split_seg_icd">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.split_seg_icd">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.split_seg_icd">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_seg_icd</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Split a segment dataframe into a dataframe</span>
 <span class="sd">    with non-ICD segments and one with.</span>
@@ -477,7 +478,7 @@
 
 
 <div class="viewcode-block" id="merge_icd_seg_conseg">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.merge_icd_seg_conseg">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.merge_icd_seg_conseg">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">merge_icd_seg_conseg</span><span class="p">(</span>
     <span class="n">con_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -567,7 +568,7 @@
 
 
 <div class="viewcode-block" id="add_extras">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.add_extras">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.add_extras">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_extras</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add extra nice-to-have columns to the dataframe</span>
 <span class="sd">    with tubing, icd-segments, and reservoir  connections matched</span>
@@ -618,7 +619,7 @@
 
 
 <div class="viewcode-block" id="df">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.df">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.df">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span>
     <span class="n">wellname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -751,7 +752,7 @@
 
 
 <div class="viewcode-block" id="fill_parser">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.fill_parser">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.fill_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
@@ -783,7 +784,7 @@
 
 
 <div class="viewcode-block" id="rft_main">
-<a class="viewcode-back" href="../../res2df/res2df.rft.html#res2df.rft.rft_main">[docs]</a>
+<a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.rft_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>

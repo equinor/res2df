@@ -1,0 +1,34 @@
+res2df.csv2res
+==============
+
+.. py:module:: res2df.csv2res
+
+.. autoapi-nested-parse::
+
+   Convert dataframes (in res2df format) to include files,
+   for selected keywords
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.csv2res.get_parser
+   res2df.csv2res.main
+
+
+Module Contents
+---------------
+
+.. py:function:: get_parser() -> argparse.ArgumentParser
+
+   Make parser
+
+
+.. py:function:: main() -> None
+
+   Entry point
+
+

@@ -1,0 +1,84 @@
+res2df.inferdims
+================
+
+.. py:module:: res2df.inferdims
+
+.. autoapi-nested-parse::
+
+   Support module for inferring EQLDIMS and TABDIMS from incomplete
+   reservoir simulator decks (typically single include-files)
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.inferdims.guess_dim
+   res2df.inferdims.inject_dimcount
+   res2df.inferdims.inject_xxxdims_ntxxx
+
+
+Module Contents
+---------------
+
+.. py:function:: guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int
+
+   Guess the correct dimension count for an incoming :term:`deck` (string)
+
+   The incoming :term:`deck` must in string form, if not, extra data is most
+   likely already removed by the opm.io parser. TABDIMS or EQLDIMS
+   must not be present
+
+   This function will inject TABDIMS or EQLDIMS into it and reparse it in a
+   stricter mode, to detect the correct table dimensionality
+
+   :param deck: String containing a :term:`.DATA file` or only a few keywords
+   :param dimkeyword: Either TABDIMS or EQLDIMS
+   :param dimitem: The element number in TABDIMS/EQLDIMS to modify
+
+   :returns: The lowest number for which stricter opm.io parsing succeeds
+
+
+.. py:function:: inject_dimcount(deckstr: str, dimkeyword: str, dimitem: int, dimvalue: int, nowarn: bool = False) -> str
+
+   Insert a TABDIMS with NTSFUN into a :term:`deck` string
+
+   This is simple string manipulation, not opm.io
+   :term:`deck` manipulation (which might be possible to do).
+
+   This function is to be wrapped by inject_xxxdims_ntxxx()
+
+   :param deckstr: A string containing a partial :term:`deck` (f.ex only
+                   the SWOF keyword).
+   :param dimkeyword: Either TABDIMS or EQLDIMS
+   :param dimitem: Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.
+   :param dimvalue: The NTSFUN/NTPVT/NTEQUIL number to use
+                    (this function does not care if it is correct or not but
+                    it must be larger than zero)
+   :param nowarn: By default it will warn if this function
+                  is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.
+
+   :returns: New :term:`deck` string with TABDIMS/EQLDIMS prepended.
+
+
+.. py:function:: inject_xxxdims_ntxxx(xxxdims: str, ntxxx_name: str, deck: str | opm.opmcommon_python.Deck, ntxxx_value: int | None = None) -> opm.opmcommon_python.Deck
+
+   Ensures TABDIMS/EQLDIMS is present in a :term:`deck`.
+
+   If ntxxx_value=None and ntxxx_name not in the :term:`deck`, ntxxx_name will
+   be inferred through trial-and-error parsing of the :term:`deck`, and then injected
+   into the :term:`deck`.
+
+   :param xxxdims: TABDIMS or EQLDIMS
+   :param ntxxx_name: NTPVT, NTEQUL or NTSFUN
+   :param deck: A data :term:`deck`. If ntxxx_name is to be
+                estimated this *must* be a string and not a fully parsed :term:`deck`.
+   :param npxxx_value: Supply this if ntxxx_name is known, but not present in the
+                       deck, this will override any guessing. If the :term:`deck` already
+                       contains XXXDIMS, this will be ignored.
+
+   :returns: opm.io Deck object
+
+

@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.inferdims &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=21b8ffc7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="res2df.nnc" href="../nnc/index.html" />
+    <link rel="prev" title="res2df.hook_implementations.forward_model_steps" href="../hook_implementations/forward_model_steps/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">res2df</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../common/index.html">res2df.common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compdat/index.html">res2df.compdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../csv2res/index.html">res2df.csv2res</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../equil/index.html">res2df.equil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faults/index.html">res2df.faults</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fipreports/index.html">res2df.fipreports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../grid/index.html">res2df.grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gruptree/index.html">res2df.gruptree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hook_implementations/index.html">res2df.hook_implementations</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">res2df.inferdims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../nnc/index.html">res2df.nnc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opmkeywords/index.html">res2df.opmkeywords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parameters/index.html">res2df.parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pillars/index.html">res2df.pillars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pvt/index.html">res2df.pvt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csv/index.html">res2df.res2csv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csvlogger/index.html">res2df.res2csvlogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resdatafiles/index.html">res2df.resdatafiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rft/index.html">res2df.rft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../satfunc/index.html">res2df.satfunc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../summary/index.html">res2df.summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trans/index.html">res2df.trans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">res2df.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vfp/index.html">res2df.vfp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wcon/index.html">res2df.wcon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellcompletiondata/index.html">res2df.wellcompletiondata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellconnstatus/index.html">res2df.wellconnstatus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.inferdims</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/res2df/res2df/inferdims/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-res2df.inferdims">
+<span id="res2df-inferdims"></span><h1>res2df.inferdims<a class="headerlink" href="#module-res2df.inferdims" title="Link to this heading"></a></h1>
+<p>Support module for inferring EQLDIMS and TABDIMS from incomplete
+reservoir simulator decks (typically single include-files)</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.inferdims.guess_dim" title="res2df.inferdims.guess_dim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">guess_dim</span></code></a>(→ int)</p></td>
+<td><p>Guess the correct dimension count for an incoming <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> (string)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.inferdims.inject_dimcount" title="res2df.inferdims.inject_dimcount"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inject_dimcount</span></code></a>(→ str)</p></td>
+<td><p>Insert a TABDIMS with NTSFUN into a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> string</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.inferdims.inject_xxxdims_ntxxx" title="res2df.inferdims.inject_xxxdims_ntxxx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inject_xxxdims_ntxxx</span></code></a>(→ opm.opmcommon_python.Deck)</p></td>
+<td><p>Ensures TABDIMS/EQLDIMS is present in a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.inferdims.guess_dim">
+<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">guess_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deckstring</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimkeyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimitem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../../_modules/res2df/inferdims.html#guess_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.guess_dim" title="Link to this definition"></a></dt>
+<dd><p>Guess the correct dimension count for an incoming <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> (string)</p>
+<p>The incoming <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> must in string form, if not, extra data is most
+likely already removed by the opm.io parser. TABDIMS or EQLDIMS
+must not be present</p>
+<p>This function will inject TABDIMS or EQLDIMS into it and reparse it in a
+stricter mode, to detect the correct table dimensionality</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> – String containing a <a class="reference internal" href="../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or only a few keywords</p></li>
+<li><p><strong>dimkeyword</strong> – Either TABDIMS or EQLDIMS</p></li>
+<li><p><strong>dimitem</strong> – The element number in TABDIMS/EQLDIMS to modify</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The lowest number for which stricter opm.io parsing succeeds</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.inferdims.inject_dimcount">
+<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">inject_dimcount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deckstr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimkeyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimitem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimvalue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nowarn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/inferdims.html#inject_dimcount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.inject_dimcount" title="Link to this definition"></a></dt>
+<dd><p>Insert a TABDIMS with NTSFUN into a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> string</p>
+<p>This is simple string manipulation, not opm.io
+<a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> manipulation (which might be possible to do).</p>
+<p>This function is to be wrapped by inject_xxxdims_ntxxx()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deckstr</strong> – A string containing a partial <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> (f.ex only
+the SWOF keyword).</p></li>
+<li><p><strong>dimkeyword</strong> – Either TABDIMS or EQLDIMS</p></li>
+<li><p><strong>dimitem</strong> – Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.</p></li>
+<li><p><strong>dimvalue</strong> – The NTSFUN/NTPVT/NTEQUIL number to use
+(this function does not care if it is correct or not but
+it must be larger than zero)</p></li>
+<li><p><strong>nowarn</strong> – By default it will warn if this function
+is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> string with TABDIMS/EQLDIMS prepended.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.inferdims.inject_xxxdims_ntxxx">
+<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">inject_xxxdims_ntxxx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xxxdims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntxxx_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">opm.opmcommon_python.Deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntxxx_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">opm.opmcommon_python.Deck</span></span></span><a class="reference internal" href="../../../_modules/res2df/inferdims.html#inject_xxxdims_ntxxx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.inject_xxxdims_ntxxx" title="Link to this definition"></a></dt>
+<dd><p>Ensures TABDIMS/EQLDIMS is present in a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p>
+<p>If ntxxx_value=None and ntxxx_name not in the <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, ntxxx_name will
+be inferred through trial-and-error parsing of the <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, and then injected
+into the <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xxxdims</strong> – TABDIMS or EQLDIMS</p></li>
+<li><p><strong>ntxxx_name</strong> – NTPVT, NTEQUL or NTSFUN</p></li>
+<li><p><strong>deck</strong> – A data <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. If ntxxx_name is to be
+estimated this <em>must</em> be a string and not a fully parsed <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
+<li><p><strong>npxxx_value</strong> – Supply this if ntxxx_name is known, but not present in the
+deck, this will override any guessing. If the <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> already
+contains XXXDIMS, this will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>opm.io Deck object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../hook_implementations/forward_model_steps/index.html" class="btn btn-neutral float-left" title="res2df.hook_implementations.forward_model_steps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../nnc/index.html" class="btn btn-neutral float-right" title="res2df.nnc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

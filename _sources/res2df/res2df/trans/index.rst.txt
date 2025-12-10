@@ -1,0 +1,85 @@
+res2df.trans
+============
+
+.. py:module:: res2df.trans
+
+.. autoapi-nested-parse::
+
+   Extract transmissibility information from output files as Dataframes.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.trans.df
+   res2df.trans.make_nx_graph
+   res2df.trans.fill_parser
+   res2df.trans.trans_main
+
+
+Module Contents
+---------------
+
+.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles, vectors: str | list[str] | None = None, boundaryfilter: bool = False, group: bool = False, coords: bool = False, onlykdir: bool = False, onlyijdir: bool = False, addnnc: bool = False) -> pandas.DataFrame
+
+   Make a dataframe of the neighbour transmissibilities.
+
+   The TRANX, TRANY and TRANZ (whenever nonzero) will be used
+   to produce a row representing a cell-pair where there is
+   transmissibility.
+
+   You will get a dataframe with the columns::
+
+       I1, J1, K1, I2, J2, K2, DIR, TRAN
+
+   similar to what you get from non-neighbour connection export.
+
+   If you ask for coordinates, you will also get the distance (DX,
+   DY, DZ) for each connection.
+
+   The DIR column indicates the direction, and can take the
+   string values I, J or K.
+
+   If you ask for additional vectors, like FIPNUM, then
+   you will get a corresponding FIPNUM1 and FIPNUM2 added.
+
+   :param resdatafiles: An object representing your simulator run
+   :param vectors: simulator INIT vectors that you want to include
+   :param boundaryfilter: Set to true if you want to filter where one INIT
+                          vector change. Only use for integer INIT vectors.
+   :param group: Set to true if you want to sum transmissibilities over
+                 boundary interfaces. Implies boundaryfilter and requires only one integer
+                 INIT vector.
+   :param coords: Set to true if you want to add coordinates for the
+                  average of the two cells centerpoint and the distance between
+                  the two cells centerpoints (X, Y, Z, DX, DY, DZ)
+   :param onlykdir: Set to true if you only want transmissibilities in
+                    K direction
+   :param onlyijdir: Set to true if you only want transmissibilities
+                     in the IJ-plane
+   :param addnnc: Set to true if NNC connection should be concatenated to
+                  the dataframe
+
+   :returns: Dataframe with one cell-pair pr. row. Empty dataframe if error.
+
+
+.. py:function:: make_nx_graph(resdatafiles: res2df.resdatafiles.ResdataFiles, region: str = 'FIPNUM') -> networkx.Graph
+
+   Construct a networkx graph for the transmissibilities.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parser.
+
+   :param parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: trans_main(args: argparse.Namespace) -> None
+
+   This is the command line API
+
+

@@ -1,0 +1,46 @@
+res2df.faults
+=============
+
+.. py:module:: res2df.faults
+
+.. autoapi-nested-parse::
+
+   Extract the contents of the FAULTS keyword into
+   a DataFrame
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.faults.df
+   res2df.faults.fill_parser
+   res2df.faults.faults_main
+
+
+Module Contents
+---------------
+
+.. py:function:: df(deck: ResdataFiles | opm.opmcommon_python.Deck) -> pandas.DataFrame
+
+   Produce a dataframe of fault data from a :term:`deck`
+
+   All data for the keyword FAULTS will be returned.
+
+   :param deck: A :term:`deck`
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parsers.
+
+   :param parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: faults_main(args: argparse.Namespace) -> None
+
+   Read from disk and write CSV back to disk
+
+

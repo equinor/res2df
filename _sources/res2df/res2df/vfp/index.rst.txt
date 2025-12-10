@@ -1,0 +1,25 @@
+res2df.vfp
+==========
+
+.. py:module:: res2df.vfp
+
+.. autoapi-nested-parse::
+
+   Module with interface for res2df to VFPPROD and VFPINJ
+   keywords in Eclipse.
+
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /res2df/res2df/vfp/_vfp/index
+   /res2df/res2df/vfp/_vfpcommon/index
+   /res2df/res2df/vfp/_vfpdefs/index
+   /res2df/res2df/vfp/_vfpinj/index
+   /res2df/res2df/vfp/_vfpprod/index
+
+

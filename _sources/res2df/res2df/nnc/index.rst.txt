@@ -1,0 +1,122 @@
+res2df.nnc
+==========
+
+.. py:module:: res2df.nnc
+
+.. autoapi-nested-parse::
+
+   Extract non-neighbour connection (NNC) information from reservoir
+   simulator :term:`output files <output file>`.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.nnc.df
+   res2df.nnc.add_nnc_coords
+   res2df.nnc.filter_vertical
+   res2df.nnc.fill_parser
+   res2df.nnc.df2res_editnnc
+   res2df.nnc.nnc_main
+
+
+Module Contents
+---------------
+
+.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles, coords: bool = False, pillars: bool = False) -> pandas.DataFrame
+
+   Produce a Pandas Dataframe with NNC information
+
+   A NNC is a pair of cells that are not next to each other
+   in the index space (I, J, K), and are associated to a
+   non-zero transmissibility.
+
+   Columns: I1, J1, K1 (first cell in cell pair)
+   I2, J2, K2 (second cell in cell pair), TRAN (transmissibility
+   between the two cells)
+
+   :param resdatafiles: object that can serve
+                        :term:`reservoir simulator output files <output file>` on demand.
+   :param coords: Set to True if you want the midpoint of the two
+                  connected cells to be computed and added to the columns
+                  X, Y and Z.
+   :param pillars: Set to True if you want to filter to vertical
+                   (along pillars) connections only.
+
+   :returns: Empty if no NNC information found.
+
+
+.. py:function:: add_nnc_coords(nncdf: pandas.DataFrame, resdatafiles: res2df.resdatafiles.ResdataFiles) -> pandas.DataFrame
+
+   Add columns X, Y and Z for the connection midpoint
+
+   This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)
+   and computes the average in each direction.
+
+   :param nncdf: With grid index columns (I1, J1, K1, I2, J2, K2)
+   :param resdatafiles: Object used to fetch grid data from EGRID.
+
+   :returns: Incoming dataframe augmented with the columns X, Y and Z.
+
+
+.. py:function:: filter_vertical(nncdf: pandas.DataFrame) -> pandas.DataFrame
+
+   Filter to vertical connections
+
+   :param nncdf: A dataframe with the columns
+                 I1, J1, K1, I2, J2, K2.
+
+   :returns: Filtered copy of incoming dataframe.
+
+
+.. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser
+
+   Set up sys.argv parser
+
+   :param parser: argparse.ArgumentParser or argparse.subparser
+
+
+.. py:function:: df2res_editnnc(nnc_df: pandas.DataFrame, filename: str | None = None, nocomments: bool = False) -> str
+
+   Write an EDITNNC keyword
+
+   This will write::
+
+       EDITNNC
+          IX IY IZ JX JY JZ TRANM /
+          ...
+       /
+
+   and return as string and/or dump to filename.
+
+   The column TRANM must be in the incoming dataframe
+   and it should be the multiplier to be written for
+   each connection.
+
+   If you want to edit only a subset of the non-neighbour
+   connections, filter the dataframe upfront.
+
+   Only rows where the column "DIR" is "NNC" will be considered.
+
+   :param nnc_df: Dataframe with I1, J1, K1, I2, J2, K2 and a TRANM
+                  column, where the multiplier to be written is in TRANM. If the DIR
+                  column is present, only the rows with 'NNC' in the DIR column
+                  are included.
+   :type nnc_df: pd.DataFrame
+   :param filename: Filename to write to
+   :type filename: str
+   :param nocomments: Set to True if you don't want any comments
+                      in the produced string/file
+   :type nocomments: bool
+
+   :returns: :term:`include file` content string with the EDITNNC keyword.
+
+
+.. py:function:: nnc_main(args: argparse.Namespace) -> None
+
+   Command line access point from main() or from res2csv via subparser
+
+

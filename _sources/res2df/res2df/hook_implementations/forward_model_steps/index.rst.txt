@@ -1,0 +1,233 @@
+res2df.hook_implementations.forward_model_steps
+===============================================
+
+.. py:module:: res2df.hook_implementations.forward_model_steps
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   res2df.hook_implementations.forward_model_steps.Res2Csv
+   res2df.hook_implementations.forward_model_steps.Csv2Res
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.hook_implementations.forward_model_steps.ert_plugin
+   res2df.hook_implementations.forward_model_steps.installable_forward_model_steps
+
+
+Module Contents
+---------------
+
+.. py:function:: ert_plugin(name: str = '') -> collections.abc.Callable[[collections.abc.Callable[P, Any]], collections.abc.Callable[P, Any]]
+
+.. py:class:: Res2Csv
+
+   Bases: :py:obj:`ert.ForwardModelStepPlugin`
+
+
+   Holds information to execute one step of a forward model
+
+   .. attribute:: executable
+
+      The name of the executable to be run
+
+   .. attribute:: stdin_file
+
+      File where this forward model step's stdin is written
+
+   .. attribute:: stdout_file
+
+      File where this forward model step's stdout is written
+
+   .. attribute:: stderr_file
+
+      File where this forward model step's stderr is written
+
+   .. attribute:: target_file
+
+      Name of file expected to be produced after the forward
+      model step is executed successfully.
+      This file is used for the legacy ERT queue driver, and may be deprecated.
+
+   .. attribute:: error_file
+
+      Name of file expected to be produced after a forward
+      model step errors.
+      This file is used for the legacy ERT queue driver, and may be deprecated.
+
+   .. attribute:: start_file
+
+      Name of file expected to be produced upon start of
+      a forward model step's execution.
+      This file is used for the legacy ERT queue driver, and may be deprecated.
+
+   .. attribute:: max_running_minutes
+
+      Maximum runtime in minutes. If the forward model step
+      takes longer than this, the step is requested to be cancelled.
+
+   .. attribute:: min_arg
+
+      The minimum number of arguments
+
+   .. attribute:: max_arg
+
+      The maximum number of arguments
+
+   .. attribute:: arglist
+
+      The arglist with which the executable is invoked
+
+   .. attribute:: required_keywords
+
+      Keywords that are required to be supplied by the user
+
+   .. attribute:: arg_types
+
+      Types of user-provided arguments, this list must have indices
+      corresponding to the number of args that are user specified
+      and thus also subject to substitution.
+
+   .. attribute:: environment
+
+      Dictionary representing environment variables to inject into the
+      environment of the forward model step run
+
+   .. attribute:: default_mapping
+
+      Default values for optional arguments provided by the user.
+      For example { "A": "default_A" }
+
+   .. attribute:: private_args
+
+      A dictionary of user-provided keyword arguments.
+      For example, if the user provides <A>=2, the dictionary will contain
+      { "A": "2" }
+
+
+   .. py:method:: validate_pre_experiment(fm_json: ert.ForwardModelStepJSON) -> None
+
+      Raise errors pertaining to the environment not being
+      as the forward model step requires it to be. For example
+      a missing FLOW version.
+
+
+
+   .. py:method:: documentation() -> ert.ForwardModelStepDocumentation | None
+      :staticmethod:
+
+
+      Returns the documentation for the plugin forward model
+
+
+
+.. py:class:: Csv2Res
+
+   Bases: :py:obj:`ert.ForwardModelStepPlugin`
+
+
+   Holds information to execute one step of a forward model
+
+   .. attribute:: executable
+
+      The name of the executable to be run
+
+   .. attribute:: stdin_file
+
+      File where this forward model step's stdin is written
+
+   .. attribute:: stdout_file
+
+      File where this forward model step's stdout is written
+
+   .. attribute:: stderr_file
+
+      File where this forward model step's stderr is written
+
+   .. attribute:: target_file
+
+      Name of file expected to be produced after the forward
+      model step is executed successfully.
+      This file is used for the legacy ERT queue driver, and may be deprecated.
+
+   .. attribute:: error_file
+
+      Name of file expected to be produced after a forward
+      model step errors.
+      This file is used for the legacy ERT queue driver, and may be deprecated.
+
+   .. attribute:: start_file
+
+      Name of file expected to be produced upon start of
+      a forward model step's execution.
+      This file is used for the legacy ERT queue driver, and may be deprecated.
+
+   .. attribute:: max_running_minutes
+
+      Maximum runtime in minutes. If the forward model step
+      takes longer than this, the step is requested to be cancelled.
+
+   .. attribute:: min_arg
+
+      The minimum number of arguments
+
+   .. attribute:: max_arg
+
+      The maximum number of arguments
+
+   .. attribute:: arglist
+
+      The arglist with which the executable is invoked
+
+   .. attribute:: required_keywords
+
+      Keywords that are required to be supplied by the user
+
+   .. attribute:: arg_types
+
+      Types of user-provided arguments, this list must have indices
+      corresponding to the number of args that are user specified
+      and thus also subject to substitution.
+
+   .. attribute:: environment
+
+      Dictionary representing environment variables to inject into the
+      environment of the forward model step run
+
+   .. attribute:: default_mapping
+
+      Default values for optional arguments provided by the user.
+      For example { "A": "default_A" }
+
+   .. attribute:: private_args
+
+      A dictionary of user-provided keyword arguments.
+      For example, if the user provides <A>=2, the dictionary will contain
+      { "A": "2" }
+
+
+   .. py:method:: validate_pre_experiment(fm_json: ert.ForwardModelStepJSON) -> None
+
+      Raise errors pertaining to the environment not being
+      as the forward model step requires it to be. For example
+      a missing FLOW version.
+
+
+
+   .. py:method:: documentation() -> ert.ForwardModelStepDocumentation | None
+      :staticmethod:
+
+
+      Returns the documentation for the plugin forward model
+
+
+
+.. py:function:: installable_forward_model_steps() -> list[type[ert.ForwardModelStepPlugin]]
+

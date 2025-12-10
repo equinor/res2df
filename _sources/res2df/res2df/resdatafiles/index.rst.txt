@@ -1,0 +1,166 @@
+res2df.resdatafiles
+===================
+
+.. py:module:: res2df.resdatafiles
+
+.. autoapi-nested-parse::
+
+   Module to hold simulator input and output filenames
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   res2df.resdatafiles.ResdataFiles
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.resdatafiles.rreplace
+
+
+Module Contents
+---------------
+
+.. py:class:: ResdataFiles(eclbase: str | pathlib.Path)
+
+   Class for holding reservoir simulator :term:`output files <output file>`
+
+   Exists only for convenience, so that loading of
+   ResdataFile/Summary objects is easy for users, and with
+   caching if wanted.
+
+   Various functions that needs some of the simulator :term:`output <output file>`
+   (or :term:`include file`) should be able to ask this class, and
+   it should be loaded or served from cache.
+
+
+   .. py:method:: get_path() -> pathlib.Path
+
+      Return the full path to the directory with the .DATA file
+
+
+
+   .. py:method:: get_deck() -> opm.opmcommon_python.Deck
+
+      Return a opm.io :term:`deck` of the .DATA file
+
+
+
+   .. py:method:: str2deck(string: str, parsecontext: list[tuple[str, Any]] | None = None) -> opm.opmcommon_python.Deck
+      :staticmethod:
+
+
+      Produce a opm.io :term:`deck` from a string, using permissive
+      parsing by default
+
+
+
+   .. py:method:: file2deck(filename: str | pathlib.Path) -> opm.opmcommon_python.Deck
+      :staticmethod:
+
+
+      Try to convert standalone files into opm.io Deck objects
+
+
+
+   .. py:method:: get_egrid() -> resdata.grid.Grid
+
+      Find and return EGRID file as a Grid object
+
+
+
+   .. py:method:: get_egridfile() -> resdata.resfile.ResdataFile
+
+      Find and return the EGRID file as a ResdataFile object
+
+      This gives access to data vectors defined on the grid.
+
+
+
+   .. py:method:: get_summary(include_restart: bool = True) -> resdata.summary.Summary
+
+      Find and return the summary file and
+      return as Summary object
+
+      :param include_restart: Sent to resdata for whether restart files
+                              should be traversed.
+
+
+
+   .. py:method:: get_initfile() -> resdata.resfile.ResdataFile
+
+      Find and return the INIT file as a ResdataFile object
+
+
+
+   .. py:method:: get_rftfile() -> resdata.resfile.ResdataFile
+
+      Find and return the RFT file as a ResdataFile object
+
+
+
+   .. py:method:: get_rstfile() -> resdata.resfile.ResdataFile
+
+      Find and return the UNRST file as a ResdataFile object
+
+
+
+   .. py:method:: get_rstfilename() -> str
+
+      Return the inferred name of the UNRST file
+
+
+
+   .. py:method:: get_prtfilename() -> str
+
+      Return the inferred name of the PRT file
+
+
+
+   .. py:method:: close() -> None
+
+      Close any opened files. Most files are opened though ecl with
+      an option to close the stream as possible, leaving not much work
+      for this function.
+
+
+
+   .. py:method:: get_zonemap(filename: str | None = None) -> dict[int, str]
+
+      Return a dictionary from (int) K layers in the simgrid to strings
+
+      Typical usage is to map from grid layer to zone names.
+
+      The layer filename must currently follow format::
+
+        'ZoneA' 1-4
+        'ZoneB' 5-10
+
+      where the single quotes are optional for zones without spaces.
+      Write single layer zones as 11-11. NB: ResInsight requires single
+      quotes always.
+
+      :param filename: Name of file. If relative path, relative to DATA
+                       file location. If nonexisting file, an empty dict will be
+                       returned and a warning issued.
+      :type filename: str
+
+      :returns:
+
+                dict, integer keys which are the K layers. Every layer mentioned
+                    in the interval in the input file is present. Can be empty.
+
+
+
+.. py:function:: rreplace(pat: str, sub: str, string: str) -> str
+
+   Variant of str.replace() that only replaces at the end of the string
+
+

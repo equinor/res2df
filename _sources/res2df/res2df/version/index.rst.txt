@@ -1,0 +1,28 @@
+res2df.version
+==============
+
+.. py:module:: res2df.version
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   res2df.version.version
+   res2df.version.version_tuple
+   res2df.version.commit_id
+
+
+Module Contents
+---------------
+
+.. py:data:: version
+   :type:  str
+
+.. py:data:: version_tuple
+   :type:  VERSION_TUPLE
+
+.. py:data:: commit_id
+   :type:  COMMIT_ID
+

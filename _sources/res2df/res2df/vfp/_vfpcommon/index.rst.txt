@@ -1,0 +1,78 @@
+res2df.vfp._vfpcommon
+=====================
+
+.. py:module:: res2df.vfp._vfpcommon
+
+.. autoapi-nested-parse::
+
+   Common functionality for vfp module to extract VFPPROD/VFPINJ data from input
+   deck to extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas
+   Dataframes
+
+   Data can be extracted from a complete deck or from individual files. Supports
+   output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   res2df.vfp._vfpcommon._string2intlist
+   res2df.vfp._vfpcommon._deckrecord2list
+   res2df.vfp._vfpcommon._stack_vfptable2df
+   res2df.vfp._vfpcommon._write_vfp_range
+
+
+Module Contents
+---------------
+
+.. py:function:: _string2intlist(list_def_str: str) -> _string2intlist.list[int]
+
+   Produce a list of int from input string
+
+   :param list_def_str: String defining list of int
+                        Format "[1,2,6:9]" to define list [1,2,6,7,8,9]
+
+
+.. py:function:: _deckrecord2list(record: opm.opmcommon_python.DeckRecord, keyword: str, recordindex: int, recordname: str) -> list[float]
+
+   Parse an opm.opmcommon_python.DeckRecord belonging to a certain keyword
+   and return as list of numbers
+
+   :param record: Record be parsed
+   :param keyword: Which keyword this belongs to
+   :param recordindex: For keywords where itemlistname is 'records', this is a
+                       list index to the "record".
+   :param recordname: Name of the record
+
+
+.. py:function:: _stack_vfptable2df(index_names_list: list[str], index_values_list: numpy.ndarray | list[list[float]], flow_values_list: numpy.ndarray | list[float], table_values_list: numpy.ndarray | list[list[float]]) -> pandas.DataFrame
+
+   Return a dataframe from a list of interpolation ranges and tabulated values
+
+   :param index_names_list: List with name of each interpolated
+                            quantity (i.e. THP, WFR, GFR, ALQ for VFPPROD
+                            or THP for VFPINJ)
+   :param index_values_list: List of list with values for
+                             each interpolated quantity for
+                             each row in vfp table (each record)
+                             (dim (no index names) x (no records))
+   :param flow_values_list: List of flow values (dim = no flow_values)
+   :param table_values_list: List of list with tabulated values
+                             (dim = (no records) x  (no flow_values))
+
+
+.. py:function:: _write_vfp_range(values: list[float], var_type: str, unit_type: str, format: str = '%10.6g', values_per_line: int = 5) -> str
+
+   Creates a :term:`include file` content string of a resdata
+   record for a given table range
+
+   :param values: List/array with the range sorted
+   :param var_type: The Eclipse variable type defintion
+   :param unit_type: The unit type for the variable
+   :param format: Format string for values
+   :param values_per_line: Number of values per line in output
+
+

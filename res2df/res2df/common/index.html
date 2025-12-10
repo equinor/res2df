@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.common &mdash; res2df 1.3.10.dev11+g2dd31ab3a documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=21b8ffc7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="res2df.compdat" href="../compdat/index.html" />
+    <link rel="prev" title="res2df" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">res2df</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">res2df.common</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../compdat/index.html">res2df.compdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../csv2res/index.html">res2df.csv2res</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../equil/index.html">res2df.equil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faults/index.html">res2df.faults</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fipreports/index.html">res2df.fipreports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../grid/index.html">res2df.grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gruptree/index.html">res2df.gruptree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hook_implementations/index.html">res2df.hook_implementations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../inferdims/index.html">res2df.inferdims</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nnc/index.html">res2df.nnc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opmkeywords/index.html">res2df.opmkeywords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parameters/index.html">res2df.parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pillars/index.html">res2df.pillars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pvt/index.html">res2df.pvt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csv/index.html">res2df.res2csv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../res2csvlogger/index.html">res2df.res2csvlogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resdatafiles/index.html">res2df.resdatafiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rft/index.html">res2df.rft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../satfunc/index.html">res2df.satfunc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../summary/index.html">res2df.summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trans/index.html">res2df.trans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">res2df.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vfp/index.html">res2df.vfp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wcon/index.html">res2df.wcon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellcompletiondata/index.html">res2df.wellcompletiondata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wellconnstatus/index.html">res2df.wellconnstatus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.common</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/res2df/res2df/common/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-res2df.common">
+<span id="res2df-common"></span><h1>res2df.common<a class="headerlink" href="#module-res2df.common" title="Link to this heading"></a></h1>
+<p>Common functions for res2df modules</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.write_dframe_stdout_file" title="res2df.common.write_dframe_stdout_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_dframe_stdout_file</span></code></a>(→ None)</p></td>
+<td><p>Write a dataframe to either stdout or a file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.write_inc_stdout_file" title="res2df.common.write_inc_stdout_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_inc_stdout_file</span></code></a>(→ None)</p></td>
+<td><p>Write a string (typically an <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> string) to stdout</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.parse_month" title="res2df.common.parse_month"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_month</span></code></a>(→ int)</p></td>
+<td><p>Translate resdata month strings to integer months</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.datetime_to_ecldate" title="res2df.common.datetime_to_ecldate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime_to_ecldate</span></code></a>(→ str)</p></td>
+<td><p>Convert a Python timestamp or date to the Eclipse DATE format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.keyworddata_to_df" title="res2df.common.keyworddata_to_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keyworddata_to_df</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Extract data associated to a keyword into tabular form.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_deckrecord" title="res2df.common.parse_opmio_deckrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_deckrecord</span></code></a>(→ dict[str, Any])</p></td>
+<td><p>Parse an opm.io.DeckRecord belonging to a certain keyword</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_date_rec" title="res2df.common.parse_opmio_date_rec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_date_rec</span></code></a>(→ datetime.date)</p></td>
+<td><p>Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_tstep_rec" title="res2df.common.parse_opmio_tstep_rec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_tstep_rec</span></code></a>(→ list[float | int])</p></td>
+<td><p>Parse a record with TSTEP data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.merge_zones" title="res2df.common.merge_zones"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_zones</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>Merge in a column with zone names, from a dictionary mapping</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.comment_formatter" title="res2df.common.comment_formatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comment_formatter</span></code></a>(→ str)</p></td>
+<td><p>Prepends comment characters to every line in input</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.handle_wanted_keywords" title="res2df.common.handle_wanted_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_wanted_keywords</span></code></a>(→ list[str])</p></td>
+<td><p>Handle three list of keywords, wanted, available and supported</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.fill_reverse_parser" title="res2df.common.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<td><p>A standardized submodule parser for the command line utility</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.df2res" title="res2df.common.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(→ str)</p></td>
+<td><p>Generate resdata <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content from dataframes in res2df format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.generic_deck_table" title="res2df.common.generic_deck_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_deck_table</span></code></a>(→ str)</p></td>
+<td><p>Construct string contents of a <a class="reference internal" href="../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> table.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.runlength_compress" title="res2df.common.runlength_compress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">runlength_compress</span></code></a>(→ str)</p></td>
+<td><p>Compress a string of space-separated elements so that</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.stack_on_colnames" title="res2df.common.stack_on_colnames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stack_on_colnames</span></code></a>(→ pandas.DataFrame)</p></td>
+<td><p>For a dataframe where some columns are multilevel, but where</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.is_color" title="res2df.common.is_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_color</span></code></a>(→ bool)</p></td>
+<td><p>Checks if the input string is a valid color.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_lyrfile" title="res2df.common.parse_lyrfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_lyrfile</span></code></a>(→ list[dict[str, Any]] | None)</p></td>
+<td><p>Return a list of dicts representation of the lyr file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.convert_lyrlist_to_zonemap" title="res2df.common.convert_lyrlist_to_zonemap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_lyrlist_to_zonemap</span></code></a>(→ dict[int, str] | None)</p></td>
+<td><p>Returns a layer to zone map as a dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.get_wells_matching_template" title="res2df.common.get_wells_matching_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wells_matching_template</span></code></a>(→ list[str])</p></td>
+<td><p>Returns the wells in the list that is matching the template</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.write_dframe_stdout_file">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">write_dframe_stdout_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">pyarrow.Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller_logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">logging.Logger</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logstr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#write_dframe_stdout_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.write_dframe_stdout_file" title="Link to this definition"></a></dt>
+<dd><p>Write a dataframe to either stdout or a file</p>
+<p>If output is the magic string “-”, output is written
+to stdout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> – Dataframe to write</p></li>
+<li><p><strong>output</strong> – Filename or “-”</p></li>
+<li><p><strong>index</strong> – Passed to to_csv()</p></li>
+<li><p><strong>caller_logger</strong> – Used if not stdout</p></li>
+<li><p><strong>logstr</strong> – Logged if not stdout.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.write_inc_stdout_file">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">write_inc_stdout_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfilename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#write_inc_stdout_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.write_inc_stdout_file" title="Link to this definition"></a></dt>
+<dd><p>Write a string (typically an <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> string) to stdout
+or to a named file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.parse_month">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_month</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rdmonth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#parse_month"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_month" title="Link to this definition"></a></dt>
+<dd><p>Translate resdata month strings to integer months</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.datetime_to_ecldate">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">datetime_to_ecldate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">datetime.datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">datetime.date</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#datetime_to_ecldate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.datetime_to_ecldate" title="Link to this definition"></a></dt>
+<dd><p>Convert a Python timestamp or date to the Eclipse DATE format</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.keyworddata_to_df">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">keyworddata_to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.opmcommon_python.Deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordcountername</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emptyrecordcountername</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#keyworddata_to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.keyworddata_to_df" title="Link to this definition"></a></dt>
+<dd><p>Extract data associated to a keyword into tabular form.</p>
+<p>Two modes of enumeration of tables in the keyworddata is supported, you
+will have to find out which one fits your particular keyword. Activate
+by setting recordcountername or emptyrecordcountername to some string, which
+will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> – Parsed <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
+<li><p><strong>keyword</strong> – Name of the keyword for which to extract data.</p></li>
+<li><p><strong>renamer</strong> – Mapping of names present in OPM json files for the
+keyword to desired column names in returned dataframe</p></li>
+<li><p><strong>recordcountername</strong> – If present, an extra column is added with this name
+with consecutive rows enumerated from 1. Use this to assign
+EQLNUM or similar when this should be consecutive pr. row (not
+the case for all keywords).</p></li>
+<li><p><strong>emptyrecordcountername</strong> – If supplied, an index is added to every parsed
+row based on how many empty records is encountered. For PVTO f.ex,
+this gives the PVTNUM indexing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.parse_opmio_deckrecord">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_deckrecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.opmcommon_python.DeckRecord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itemlistname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'items'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#parse_opmio_deckrecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_deckrecord" title="Link to this definition"></a></dt>
+<dd><p>Parse an opm.io.DeckRecord belonging to a certain keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> – Record be parsed</p></li>
+<li><p><strong>keyword</strong> – Which keyword this belongs to</p></li>
+<li><p><strong>itemlistname</strong> – The key in the json dict that describes the items,
+typically ‘items’ or ‘records’</p></li>
+<li><p><strong>recordindex</strong> – For keywords where itemlistname is ‘records’, this is a
+list index to the “record”.
+Beware, there are multiple concepts here for what we call a record.</p></li>
+<li><p><strong>renamer</strong> – If supplied, this dictionary will be used to remap
+the keys in returned dict. For items with name DATA, the dict
+value is assumed to be a list of strings to be mapped to
+each subitem.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.parse_opmio_date_rec">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_date_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.io.DeckRecord</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">datetime.date</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#parse_opmio_date_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_date_rec" title="Link to this definition"></a></dt>
+<dd><p>Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.parse_opmio_tstep_rec">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_tstep_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.io.DeckRecord</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#parse_opmio_tstep_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_tstep_rec" title="Link to this definition"></a></dt>
+<dd><p>Parse a record with TSTEP data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of floats or ints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.merge_zones">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">merge_zones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonedict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoneheader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ZONE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'K1'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#merge_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.merge_zones" title="Link to this definition"></a></dt>
+<dd><p>Merge in a column with zone names, from a dictionary mapping
+k-index to zone name. If the zonemap is not covering all
+zones, cells will be filled with NaN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – Dataframe where we should augment a column</p></li>
+<li><p><strong>zonedict</strong> – Dictionary with integer keys pointing to strings
+with zone names.</p></li>
+<li><p><strong>zoneheader</strong> – Name of the result column merged in,
+default: ZONE</p></li>
+<li><p><strong>kname</strong> – Column header in your dataframe that maps to dictionary keys.
+default K1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.comment_formatter">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">comment_formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multiline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'--</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#comment_formatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.comment_formatter" title="Link to this definition"></a></dt>
+<dd><p>Prepends comment characters to every line in input</p>
+<p>If nothing is supplied, an empty string is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>multiline</strong> – String that can contain newlines</p></li>
+<li><p><strong>prefix</strong> – Comment characters to prepend every line with
+Default is the Eclipse comment syntax ‘– ‘</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>string, with newlines preserved, and where each line</dt><dd><p>starts with the given prefix. Always ends with a newline.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.handle_wanted_keywords">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">handle_wanted_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wanted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">opm.io.Deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#handle_wanted_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.handle_wanted_keywords" title="Link to this definition"></a></dt>
+<dd><p>Handle three list of keywords, wanted, available and supported</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keywords</strong> – None, or list of strings of user-requested keywords</p></li>
+<li><p><strong>deck</strong> – Used to query which data is available</p></li>
+<li><p><strong>supported</strong> – Keywords that are supported by the module</p></li>
+<li><p><strong>modulename</strong> – Name of the module calling this function, used in logging</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.fill_reverse_parser">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultoutputfile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.fill_reverse_parser" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>A standardized submodule parser for the command line utility</dt><dd><p>to produce <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a> from a CSV file.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parser</strong> – parser to fill with arguments</p></li>
+<li><p><strong>modulename</strong> – Will be included in the help text</p></li>
+<li><p><strong>defaultoutputfile</strong> – Default <a class="reference internal" href="../../../glossary.html#term-output-file"><span class="xref std std-term">output file</span></a> name</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.df2res">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consecutive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.df2res" title="Link to this definition"></a></dt>
+<dd><p>Generate resdata <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content from dataframes in res2df format.</p>
+<p>This function hands over the actual text generation pr. keyword
+to functions named df2res_&lt;keywordname&gt; in the calling module.</p>
+<p>These functions may again use generic_deck_table() from this module
+for the actual string construction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> – Dataframe with res2df format.</p></li>
+<li><p><strong>keywords</strong> – List of keywords to include. Will be reduced
+to the set of keywords available in dataframe and to those supported</p></li>
+<li><p><strong>comments</strong> – Dictionary indexed by keyword with comments to be
+included pr. keyword. If a key named “master” is present
+it will be used as a master comment for the outputted file.</p></li>
+<li><p><strong>supported</strong> – List of strings of keywords which are
+supported in this invocation of this function.</p></li>
+<li><p><strong>consecutive</strong> – Column name for which we require the
+numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.</p></li>
+<li><p><strong>filename</strong> – If supplied, the generated text will also be dumped
+to file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string that can be used as contents of <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.generic_deck_table">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">generic_deck_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_trailing_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#generic_deck_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.generic_deck_table" title="Link to this definition"></a></dt>
+<dd><p>Construct string contents of a <a class="reference internal" href="../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> table.</p>
+<p>This function will <em>not</em> add a final slash after all rows, as
+this is keyword dependent. Some keywords require it, some keywords
+require it to not be there.</p>
+<p>The header is printed as a comment, with header names taken
+from the dataframe.</p>
+<p>The renamer is a map that is used to translate your dataframe column
+names into opm.common item names, and the dictionary should map
+from opm.common names into your chosen ones. If you have standard named
+dataframe columns, the renamer is only applied to the column header comment.</p>
+<p>Trailing columns that are all defaulted (that is either np.nan, None)
+or consisting of only “1*” will be dropped, as Eclipse will always
+interpret that as “1*”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.runlength_compress">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">runlength_compress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'</span>&#160; <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#runlength_compress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.runlength_compress" title="Link to this definition"></a></dt>
+<dd><p>Compress a string of space-separated elements so that</p>
+<blockquote>
+<div><p>2 2 2 2 2 3 3 4</p>
+</div></blockquote>
+<p>becomes</p>
+<blockquote>
+<div><p>5*2 2*3 4</p>
+</div></blockquote>
+<p>which is the format supported by Eclipse. The input
+string must be splittable with split(). Any newlines
+will be replaced by a space prior to split().</p>
+<p>See <a class="reference external" href="https:///en.wikipedia.org/wiki/Run-length_encoding">https:///en.wikipedia.org/wiki/Run-length_encoding</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> (<em>str</em>) – String of space-separated elements to compress</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Separator string used in output. Separator string in
+input is not conserved, but it must be compatible with
+str.split()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string, shorter or equal-length to the input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.stack_on_colnames">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">stack_on_colnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'&#64;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackcolname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'DATE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#stack_on_colnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.stack_on_colnames" title="Link to this definition"></a></dt>
+<dd><p>For a dataframe where some columns are multilevel, but where
+the second level is encoded in the column name, this function
+will stack the dataframe by putting the second level of the column
+multiindex into its own column, best understood by this example:</p>
+<p>A dframe like this</p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>PORV</p></th>
+<th class="head"><p><a class="reference external" href="mailto:OWC&#37;&#52;&#48;2000-01-01">OWC<span>&#64;</span>2000-01-01</a></p></th>
+<th class="head"><p><a class="reference external" href="mailto:OWC&#37;&#52;&#48;2020-01-01">OWC<span>&#64;</span>2020-01-01</a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>1000</p></td>
+<td><p>990</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>will be stacked to</p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>PORV</p></th>
+<th class="head"><p>OWC</p></th>
+<th class="head"><p>DATE</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>1000</p></td>
+<td><p>2000-01-01</p></td>
+</tr>
+<tr class="row-odd"><td><p>100</p></td>
+<td><p>990</p></td>
+<td><p>2020-01-01</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>(for the defaults values for <em>sep</em> and <em>stackcolname</em>)</p>
+<p>Column order is not guaranteed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> – A dataframe to stack</p></li>
+<li><p><strong>sep</strong> – The separator that is used in dframe.columns to define
+the multilevel column names.</p></li>
+<li><p><strong>stackcolname</strong> – Used as column name for the second level
+of the column multiindex</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.is_color">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">is_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#is_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.is_color" title="Link to this definition"></a></dt>
+<dd><p>Checks if the input string is a valid color.
+That is six-digit hexadecimal, three-digit hexadecimal or
+given as a SVG color keyword name</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.parse_lyrfile">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_lyrfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#parse_lyrfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_lyrfile" title="Link to this definition"></a></dt>
+<dd><p>Return a list of dicts representation of the lyr file.</p>
+<p>The lyr file contains data of the following format,
+where the color code is optional:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;ZoneA&#39;</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>     <span class="c1">#FFE5F7</span>
+<span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span>       <span class="n">red</span>
+</pre></div>
+</div>
+<p>Description of the lyr format:
+<a class="reference external" href="https://resinsight.org/3d-main-window/formations/#formation-names-description-files-_lyr_">https://resinsight.org/3d-main-window/formations/#formation-names-description-files-_lyr_</a></p>
+<p>The output has the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ZoneA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;from_layer&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;to_layer&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#FFE5F7&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ZoneB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;span&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> – Absolute path to a lyr file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries representing the information in the lyr file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.convert_lyrlist_to_zonemap">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">convert_lyrlist_to_zonemap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lyrlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#convert_lyrlist_to_zonemap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.convert_lyrlist_to_zonemap" title="Link to this definition"></a></dt>
+<dd><p>Returns a layer to zone map as a dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lyrlist</strong> – list of dicts coming from parse_lyrfile()</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>“zoneA”, 2: “zoneB”}</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Layer to zone mapping {1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.common.get_wells_matching_template">
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">get_wells_matching_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/res2df/common.html#get_wells_matching_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.get_wells_matching_template" title="Link to this definition"></a></dt>
+<dd><p>Returns the wells in the list that is matching the template
+containing wilcard characters. The wildcard charachters supported
+are * to match zero or more charachters and ? to match a single
+non-empty character. Any wildcards in the beginning of the template
+must be preceded with a .</p>
+<p>Well name templates starting with ? might be allowed in Eclipse
+in some contexts, but not in all and will not be permitted here to
+avoid confusion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – well name template with wildcard characters</p></li>
+<li><p><strong>wells</strong> – list of wells to match against the template</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of matched wells</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="res2df" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../compdat/index.html" class="btn btn-neutral float-right" title="res2df.compdat" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

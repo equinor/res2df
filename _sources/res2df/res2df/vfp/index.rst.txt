@@ -23,3 +23,18 @@ Submodules
    /res2df/res2df/vfp/_vfpprod/index
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   res2df.vfp.__all__
+
+
+Package Contents
+----------------
+
+.. py:data:: __all__
+   :value: ['basic_data', 'basic_data2df', 'basic_data2pyarrow', 'df', 'df2basic_data', 'df2res',...
+
+

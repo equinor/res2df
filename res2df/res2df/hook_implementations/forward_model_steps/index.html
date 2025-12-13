@@ -127,10 +127,10 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#res2df.hook_implementations.forward_model_steps.Res2Csv" title="res2df.hook_implementations.forward_model_steps.Res2Csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Res2Csv</span></code></a></p></td>
-<td><p>Holds information to execute one step of a forward model</p></td>
+<td><p>Represents a forward model step installed via external plugins.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#res2df.hook_implementations.forward_model_steps.Csv2Res" title="res2df.hook_implementations.forward_model_steps.Csv2Res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Csv2Res</span></code></a></p></td>
-<td><p>Holds information to execute one step of a forward model</p></td>
+<td><p>Represents a forward model step installed via external plugins.</p></td>
 </tr>
 </tbody>
 </table>
@@ -159,116 +159,10 @@
 <dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">res2df.hook_implementations.forward_model_steps.</span></span><span class="sig-name descname"><span class="pre">Res2Csv</span></span><a class="reference internal" href="../../../../_modules/res2df/hook_implementations/forward_model_steps.html#Res2Csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">ert.ForwardModelStepPlugin</span></code></p>
-<p>Holds information to execute one step of a forward model</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.executable">
-<span class="sig-name descname"><span class="pre">executable</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.executable" title="Link to this definition"></a></dt>
-<dd><p>The name of the executable to be run</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.stdin_file">
-<span class="sig-name descname"><span class="pre">stdin_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.stdin_file" title="Link to this definition"></a></dt>
-<dd><p>File where this forward model step’s stdin is written</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.stdout_file">
-<span class="sig-name descname"><span class="pre">stdout_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.stdout_file" title="Link to this definition"></a></dt>
-<dd><p>File where this forward model step’s stdout is written</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.stderr_file">
-<span class="sig-name descname"><span class="pre">stderr_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.stderr_file" title="Link to this definition"></a></dt>
-<dd><p>File where this forward model step’s stderr is written</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.target_file">
-<span class="sig-name descname"><span class="pre">target_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.target_file" title="Link to this definition"></a></dt>
-<dd><p>Name of file expected to be produced after the forward
-model step is executed successfully.
-This file is used for the legacy ERT queue driver, and may be deprecated.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.error_file">
-<span class="sig-name descname"><span class="pre">error_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.error_file" title="Link to this definition"></a></dt>
-<dd><p>Name of file expected to be produced after a forward
-model step errors.
-This file is used for the legacy ERT queue driver, and may be deprecated.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.start_file">
-<span class="sig-name descname"><span class="pre">start_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.start_file" title="Link to this definition"></a></dt>
-<dd><p>Name of file expected to be produced upon start of
-a forward model step’s execution.
-This file is used for the legacy ERT queue driver, and may be deprecated.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.max_running_minutes">
-<span class="sig-name descname"><span class="pre">max_running_minutes</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.max_running_minutes" title="Link to this definition"></a></dt>
-<dd><p>Maximum runtime in minutes. If the forward model step
-takes longer than this, the step is requested to be cancelled.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.min_arg">
-<span class="sig-name descname"><span class="pre">min_arg</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.min_arg" title="Link to this definition"></a></dt>
-<dd><p>The minimum number of arguments</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.max_arg">
-<span class="sig-name descname"><span class="pre">max_arg</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.max_arg" title="Link to this definition"></a></dt>
-<dd><p>The maximum number of arguments</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.arglist">
-<span class="sig-name descname"><span class="pre">arglist</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.arglist" title="Link to this definition"></a></dt>
-<dd><p>The arglist with which the executable is invoked</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.required_keywords">
-<span class="sig-name descname"><span class="pre">required_keywords</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.required_keywords" title="Link to this definition"></a></dt>
-<dd><p>Keywords that are required to be supplied by the user</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.arg_types">
-<span class="sig-name descname"><span class="pre">arg_types</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.arg_types" title="Link to this definition"></a></dt>
-<dd><p>Types of user-provided arguments, this list must have indices
-corresponding to the number of args that are user specified
-and thus also subject to substitution.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.environment">
-<span class="sig-name descname"><span class="pre">environment</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.environment" title="Link to this definition"></a></dt>
-<dd><p>Dictionary representing environment variables to inject into the
-environment of the forward model step run</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.default_mapping">
-<span class="sig-name descname"><span class="pre">default_mapping</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.default_mapping" title="Link to this definition"></a></dt>
-<dd><p>Default values for optional arguments provided by the user.
-For example { “A”: “default_A” }</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.private_args">
-<span class="sig-name descname"><span class="pre">private_args</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.private_args" title="Link to this definition"></a></dt>
-<dd><p>A dictionary of user-provided keyword arguments.
-For example, if the user provides &lt;A&gt;=2, the dictionary will contain
-{ “A”: “2” }</p>
-</dd></dl>
-
+<p>Represents a forward model step installed via external plugins.
+Instances of this class serialize only as references to the plugin by name, and
+the user-provided private_args, allowing them to dynamically update when plugins
+change, rather than being locked to a specific executable at serialization time.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.validate_pre_experiment">
 <span class="sig-name descname"><span class="pre">validate_pre_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fm_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ert.ForwardModelStepJSON</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../../_modules/res2df/hook_implementations/forward_model_steps.html#Res2Csv.validate_pre_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.validate_pre_experiment" title="Link to this definition"></a></dt>
@@ -289,116 +183,10 @@ a missing FLOW version.</p>
 <dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">res2df.hook_implementations.forward_model_steps.</span></span><span class="sig-name descname"><span class="pre">Csv2Res</span></span><a class="reference internal" href="../../../../_modules/res2df/hook_implementations/forward_model_steps.html#Csv2Res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">ert.ForwardModelStepPlugin</span></code></p>
-<p>Holds information to execute one step of a forward model</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.executable">
-<span class="sig-name descname"><span class="pre">executable</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.executable" title="Link to this definition"></a></dt>
-<dd><p>The name of the executable to be run</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.stdin_file">
-<span class="sig-name descname"><span class="pre">stdin_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.stdin_file" title="Link to this definition"></a></dt>
-<dd><p>File where this forward model step’s stdin is written</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.stdout_file">
-<span class="sig-name descname"><span class="pre">stdout_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.stdout_file" title="Link to this definition"></a></dt>
-<dd><p>File where this forward model step’s stdout is written</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.stderr_file">
-<span class="sig-name descname"><span class="pre">stderr_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.stderr_file" title="Link to this definition"></a></dt>
-<dd><p>File where this forward model step’s stderr is written</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.target_file">
-<span class="sig-name descname"><span class="pre">target_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.target_file" title="Link to this definition"></a></dt>
-<dd><p>Name of file expected to be produced after the forward
-model step is executed successfully.
-This file is used for the legacy ERT queue driver, and may be deprecated.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.error_file">
-<span class="sig-name descname"><span class="pre">error_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.error_file" title="Link to this definition"></a></dt>
-<dd><p>Name of file expected to be produced after a forward
-model step errors.
-This file is used for the legacy ERT queue driver, and may be deprecated.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.start_file">
-<span class="sig-name descname"><span class="pre">start_file</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.start_file" title="Link to this definition"></a></dt>
-<dd><p>Name of file expected to be produced upon start of
-a forward model step’s execution.
-This file is used for the legacy ERT queue driver, and may be deprecated.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.max_running_minutes">
-<span class="sig-name descname"><span class="pre">max_running_minutes</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.max_running_minutes" title="Link to this definition"></a></dt>
-<dd><p>Maximum runtime in minutes. If the forward model step
-takes longer than this, the step is requested to be cancelled.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.min_arg">
-<span class="sig-name descname"><span class="pre">min_arg</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.min_arg" title="Link to this definition"></a></dt>
-<dd><p>The minimum number of arguments</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.max_arg">
-<span class="sig-name descname"><span class="pre">max_arg</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.max_arg" title="Link to this definition"></a></dt>
-<dd><p>The maximum number of arguments</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.arglist">
-<span class="sig-name descname"><span class="pre">arglist</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.arglist" title="Link to this definition"></a></dt>
-<dd><p>The arglist with which the executable is invoked</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.required_keywords">
-<span class="sig-name descname"><span class="pre">required_keywords</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.required_keywords" title="Link to this definition"></a></dt>
-<dd><p>Keywords that are required to be supplied by the user</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.arg_types">
-<span class="sig-name descname"><span class="pre">arg_types</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.arg_types" title="Link to this definition"></a></dt>
-<dd><p>Types of user-provided arguments, this list must have indices
-corresponding to the number of args that are user specified
-and thus also subject to substitution.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.environment">
-<span class="sig-name descname"><span class="pre">environment</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.environment" title="Link to this definition"></a></dt>
-<dd><p>Dictionary representing environment variables to inject into the
-environment of the forward model step run</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.default_mapping">
-<span class="sig-name descname"><span class="pre">default_mapping</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.default_mapping" title="Link to this definition"></a></dt>
-<dd><p>Default values for optional arguments provided by the user.
-For example { “A”: “default_A” }</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.private_args">
-<span class="sig-name descname"><span class="pre">private_args</span></span><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.private_args" title="Link to this definition"></a></dt>
-<dd><p>A dictionary of user-provided keyword arguments.
-For example, if the user provides &lt;A&gt;=2, the dictionary will contain
-{ “A”: “2” }</p>
-</dd></dl>
-
+<p>Represents a forward model step installed via external plugins.
+Instances of this class serialize only as references to the plugin by name, and
+the user-provided private_args, allowing them to dynamically update when plugins
+change, rather than being locked to a specific executable at serialization time.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.validate_pre_experiment">
 <span class="sig-name descname"><span class="pre">validate_pre_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fm_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ert.ForwardModelStepJSON</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../../_modules/res2df/hook_implementations/forward_model_steps.html#Csv2Res.validate_pre_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.validate_pre_experiment" title="Link to this definition"></a></dt>

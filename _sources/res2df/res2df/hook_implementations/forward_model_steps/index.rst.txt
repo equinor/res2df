@@ -32,84 +32,10 @@ Module Contents
    Bases: :py:obj:`ert.ForwardModelStepPlugin`
 
 
-   Holds information to execute one step of a forward model
-
-   .. attribute:: executable
-
-      The name of the executable to be run
-
-   .. attribute:: stdin_file
-
-      File where this forward model step's stdin is written
-
-   .. attribute:: stdout_file
-
-      File where this forward model step's stdout is written
-
-   .. attribute:: stderr_file
-
-      File where this forward model step's stderr is written
-
-   .. attribute:: target_file
-
-      Name of file expected to be produced after the forward
-      model step is executed successfully.
-      This file is used for the legacy ERT queue driver, and may be deprecated.
-
-   .. attribute:: error_file
-
-      Name of file expected to be produced after a forward
-      model step errors.
-      This file is used for the legacy ERT queue driver, and may be deprecated.
-
-   .. attribute:: start_file
-
-      Name of file expected to be produced upon start of
-      a forward model step's execution.
-      This file is used for the legacy ERT queue driver, and may be deprecated.
-
-   .. attribute:: max_running_minutes
-
-      Maximum runtime in minutes. If the forward model step
-      takes longer than this, the step is requested to be cancelled.
-
-   .. attribute:: min_arg
-
-      The minimum number of arguments
-
-   .. attribute:: max_arg
-
-      The maximum number of arguments
-
-   .. attribute:: arglist
-
-      The arglist with which the executable is invoked
-
-   .. attribute:: required_keywords
-
-      Keywords that are required to be supplied by the user
-
-   .. attribute:: arg_types
-
-      Types of user-provided arguments, this list must have indices
-      corresponding to the number of args that are user specified
-      and thus also subject to substitution.
-
-   .. attribute:: environment
-
-      Dictionary representing environment variables to inject into the
-      environment of the forward model step run
-
-   .. attribute:: default_mapping
-
-      Default values for optional arguments provided by the user.
-      For example { "A": "default_A" }
-
-   .. attribute:: private_args
-
-      A dictionary of user-provided keyword arguments.
-      For example, if the user provides <A>=2, the dictionary will contain
-      { "A": "2" }
+   Represents a forward model step installed via external plugins.
+   Instances of this class serialize only as references to the plugin by name, and
+   the user-provided private_args, allowing them to dynamically update when plugins
+   change, rather than being locked to a specific executable at serialization time.
 
 
    .. py:method:: validate_pre_experiment(fm_json: ert.ForwardModelStepJSON) -> None
@@ -133,84 +59,10 @@ Module Contents
    Bases: :py:obj:`ert.ForwardModelStepPlugin`
 
 
-   Holds information to execute one step of a forward model
-
-   .. attribute:: executable
-
-      The name of the executable to be run
-
-   .. attribute:: stdin_file
-
-      File where this forward model step's stdin is written
-
-   .. attribute:: stdout_file
-
-      File where this forward model step's stdout is written
-
-   .. attribute:: stderr_file
-
-      File where this forward model step's stderr is written
-
-   .. attribute:: target_file
-
-      Name of file expected to be produced after the forward
-      model step is executed successfully.
-      This file is used for the legacy ERT queue driver, and may be deprecated.
-
-   .. attribute:: error_file
-
-      Name of file expected to be produced after a forward
-      model step errors.
-      This file is used for the legacy ERT queue driver, and may be deprecated.
-
-   .. attribute:: start_file
-
-      Name of file expected to be produced upon start of
-      a forward model step's execution.
-      This file is used for the legacy ERT queue driver, and may be deprecated.
-
-   .. attribute:: max_running_minutes
-
-      Maximum runtime in minutes. If the forward model step
-      takes longer than this, the step is requested to be cancelled.
-
-   .. attribute:: min_arg
-
-      The minimum number of arguments
-
-   .. attribute:: max_arg
-
-      The maximum number of arguments
-
-   .. attribute:: arglist
-
-      The arglist with which the executable is invoked
-
-   .. attribute:: required_keywords
-
-      Keywords that are required to be supplied by the user
-
-   .. attribute:: arg_types
-
-      Types of user-provided arguments, this list must have indices
-      corresponding to the number of args that are user specified
-      and thus also subject to substitution.
-
-   .. attribute:: environment
-
-      Dictionary representing environment variables to inject into the
-      environment of the forward model step run
-
-   .. attribute:: default_mapping
-
-      Default values for optional arguments provided by the user.
-      For example { "A": "default_A" }
-
-   .. attribute:: private_args
-
-      A dictionary of user-provided keyword arguments.
-      For example, if the user provides <A>=2, the dictionary will contain
-      { "A": "2" }
+   Represents a forward model step installed via external plugins.
+   Instances of this class serialize only as references to the plugin by name, and
+   the user-provided private_args, allowing them to dynamically update when plugins
+   change, rather than being locked to a specific executable at serialization time.
 
 
    .. py:method:: validate_pre_experiment(fm_json: ert.ForwardModelStepJSON) -> None

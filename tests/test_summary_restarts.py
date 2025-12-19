@@ -154,7 +154,7 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
             print(result.stdout.decode())
         if result.stderr:
             print(result.stderr.decode())
-        raise RuntimeError(f"reservoir simulator failed in {os.getcwd()}")
+        raise RuntimeError(f"reservoir simulator failed in {Path.cwd()}")
 
 
 def eightcells_deck(

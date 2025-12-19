@@ -143,6 +143,7 @@ select = [
   "ANN",  # flake8-annotations
   "FURB",  # refurb
   "PERF",  # perflint
+  "PTH",  # flake8-use-pathlib
 ]
 preview = true
 ignore = [

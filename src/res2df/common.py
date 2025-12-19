@@ -972,9 +972,6 @@ def get_wells_matching_template(template: str, wells: list[str]) -> list[str]:
             "Well template not allowed to start with a wildcard character: "
             f"Must be preceded with a \\: {template}"
         )
-    if template.startswith("\\"):
-        # Note that the two \\ are actually read as one and
-        # this will return True for f.ex '\*P1'
-        template = template[1:]
+    template = template.removeprefix("\\")
     regex = template.replace("*", ".*").replace("?", ".")
     return [well for well in wells if bool(re.match(regex, well))]

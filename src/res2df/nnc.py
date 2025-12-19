@@ -181,7 +181,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         help="Name of the .DATA input file for the reservoir simulator."
-        + " There must exist .INIT and .EGRID files with the same path and basename.",
+        " There must exist .INIT and .EGRID files with the same path and basename.",
     )
     parser.add_argument(
         "-c",
@@ -242,11 +242,7 @@ def df2res_editnnc(
     string = ""
     res2df_header = (
         "Output file printed by res2df.nnc"
-        + " "
-        + __version__
-        + "\n"
-        + " at "
-        + str(datetime.datetime.now())
+        " " + __version__ + "\n" + " at " + str(datetime.datetime.now())
     )
     if not nocomments:
         string += comment_formatter(res2df_header)

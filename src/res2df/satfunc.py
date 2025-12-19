@@ -103,15 +103,14 @@ def df(
 
     wanted_keywords = handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
-    frames = []
-    for keyword in wanted_keywords:
-        frames.append(
-            interpolate_defaults(
-                keyworddata_to_df(
-                    deck, keyword, renamer=RENAMERS[keyword], recordcountername="SATNUM"
-                ).assign(KEYWORD=keyword)
-            )
+    frames = [
+        interpolate_defaults(
+            keyworddata_to_df(
+                deck, keyword, renamer=RENAMERS[keyword], recordcountername="SATNUM"
+            ).assign(KEYWORD=keyword)
         )
+        for keyword in wanted_keywords
+    ]
     nonempty_frames = [frame for frame in frames if not frame.empty]
     if nonempty_frames:
         dframe = pd.concat(nonempty_frames, axis=0, sort=False, ignore_index=True)
@@ -167,7 +166,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         help="Name of .DATA input file for the reservoir simulator,"
-        + " or file with saturation functions.",
+        " or file with saturation functions.",
     )
     parser.add_argument(
         "-o",

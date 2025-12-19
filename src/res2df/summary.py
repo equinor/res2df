@@ -697,7 +697,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         help="Name of the .DATA input file for the reservoir simulator."
-        + " There must exist a UNSMRY file with the same path and basename.",
+        " There must exist a UNSMRY file with the same path and basename.",
     )
     parser.add_argument(
         "--time_index",
@@ -830,7 +830,7 @@ def summary_reverse_main(args: argparse.Namespace) -> None:
     eclbase = Path(args.output).name
 
     # Summary.fwrite() can only write to current directory:
-    cwd = os.getcwd()
+    cwd = Path.cwd()
     summary = df2ressum(summary_df, eclbase)
     try:
         os.chdir(outputdir)

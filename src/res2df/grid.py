@@ -544,7 +544,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         help="Name of the .DATA input file for the reservoir simulator."
-        + " There must exist .INIT and .EGRID files with the same path and basename.",
+        " There must exist .INIT and .EGRID files with the same path and basename.",
     )
     parser.add_argument(
         "--vectors",
@@ -556,8 +556,8 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--rstdates",
         type=str,
         help="Point in time to grab restart data from, "
-        + "either 'first' or 'last', 'all', or a date in "
-        + "YYYY-MM-DD format",
+        "either 'first' or 'last', 'all', or a date in "
+        "YYYY-MM-DD format",
         default="",
     )
     parser.add_argument(
@@ -610,10 +610,11 @@ def drop_constant_columns(
     if dframe.empty:
         return dframe
 
-    columnstodelete = []
-    for col in set(dframe.columns) - set(alwayskeep):
-        if len(dframe[col].unique()) == 1:
-            columnstodelete.append(col)
+    columnstodelete = [
+        col
+        for col in (set(dframe.columns) - set(alwayskeep))
+        if len(dframe[col].unique()) == 1
+    ]
     if columnstodelete:
         logging.info("Deleting constant columns %s", columnstodelete)
     return dframe.drop(columnstodelete, axis=1)
@@ -698,11 +699,7 @@ def df2res(
 
     res2df_header = (
         "Output file printed by "
-        + "res2df.grid "
-        + __version__
-        + "\n"
-        + " at "
-        + str(datetime.datetime.now())
+        "res2df.grid " + __version__ + "\n" + " at " + str(datetime.datetime.now())
     )
 
     string = ""

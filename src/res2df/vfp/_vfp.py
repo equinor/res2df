@@ -7,6 +7,7 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 import argparse
 import logging
 import sys
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -400,8 +401,7 @@ def df2res(
         str_vfps += "\n"
 
     if filename:
-        with open(filename, "w", encoding="utf-8") as fout:
-            fout.write(str_vfps)
+        Path(filename).write_text(str_vfps, encoding="utf-8")
 
     return str_vfps
 

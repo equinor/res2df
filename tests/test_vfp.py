@@ -33,11 +33,11 @@ VFPPROD_CASES = [
 VFPPROD
 
 -- Table  Datum Depth  Rate Type  WFR Type  GFR Type  THP Type  ALQ Type  """
-        + """UNITS   TAB Type
+        """UNITS   TAB Type
 -- -----  -----------  ---------  --------  --------  --------  --------  """
-        + """------  --------
+        """------  --------
        1       3000.0        GAS       WGR       GOR       THP        ''  """
-        + """METRIC       BHP /
+        """METRIC       BHP /
 
 -- GAS units - sm3/day ( 3 values )
      50000     500000      5e+06  /
@@ -759,11 +759,11 @@ MULTIPLE_VFP_CASES = [
 VFPPROD
 
 -- Table  Datum Depth  Rate Type  WFR Type  GFR Type  THP Type  ALQ Type  """
-        + """UNITS   TAB Type
+        """UNITS   TAB Type
 -- -----  -----------  ---------  --------  --------  --------  --------  """
-        + """------  --------
+        """------  --------
        1       3000.0        GAS       WGR       GOR       THP        ''  """
-        + """METRIC       BHP /
+        """METRIC       BHP /
 
 -- GAS units - sm3/day ( 1 values )
      50000 /
@@ -786,11 +786,11 @@ VFPPROD
 VFPPROD
 
 -- Table  Datum Depth  Rate Type  WFR Type  GFR Type  THP Type  ALQ Type  """
-        + """UNITS   TAB Type
+        """UNITS   TAB Type
 -- -----  -----------  ---------  --------  --------  --------  --------  """
-        + """------  --------
+        """------  --------
        2       4000.0        GAS       WGR       GOR       THP        ''  """
-        + """METRIC       BHP /
+        """METRIC       BHP /
 
 -- GAS units - sm3/day ( 1 values )
      10000 /

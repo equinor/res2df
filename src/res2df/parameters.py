@@ -47,7 +47,7 @@ def find_parameter_files(
         filebase + ".txt",
         filebase,
     ]
-    paths_to_check: list[Path] = [Path("."), Path(".."), Path("..") / Path("..")]
+    paths_to_check: list[Path] = [Path(), Path(".."), Path("..") / Path("..")]
     foundfiles = []
     for path in paths_to_check:
         for fname in files_to_lookfor:
@@ -147,7 +147,7 @@ def load(filename: str | Path) -> dict[str, Any]:
     if not params_dict:
         try:
             logger.debug("Trying to parse %s with json.load()", filename)
-            with open(filename, encoding="utf-8") as f_handle:
+            with Path(filename).open(encoding="utf-8") as f_handle:
                 params_dict = json.load(f_handle)
             assert isinstance(params_dict, dict)
             logger.debug(" - ok, parsed as yaml")

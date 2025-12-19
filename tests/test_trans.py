@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-import networkx
+import networkx as nx
 import pandas as pd
 
 from res2df import ResdataFiles, res2csv, trans
@@ -79,7 +79,7 @@ def test_nx(tmp_path):
     resdatafiles = ResdataFiles(REEK)
     network = trans.make_nx_graph(resdatafiles, region="FIPNUM")
     assert network.number_of_nodes() == 6
-    networkx.write_gexf(network, tmp_path / "reek-fipnum-trans.gxf", prettyprint=True)
+    nx.write_gexf(network, tmp_path / "reek-fipnum-trans.gxf", prettyprint=True)
     assert (tmp_path / "reek-fipnum-trans.gxf").is_file()
 
 

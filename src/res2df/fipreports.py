@@ -4,6 +4,7 @@ import argparse
 import datetime
 import logging
 import re
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -133,7 +134,7 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
         ".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)", re.IGNORECASE
     )
 
-    with open(prtfile, encoding="utf-8") as prt_fh:
+    with Path(prtfile).open(encoding="utf-8") as prt_fh:
         logger.info(
             "Parsing file %s for blocks starting with %s REPORT REGION",
             prtfile,

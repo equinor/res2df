@@ -830,7 +830,7 @@ def summary_reverse_main(args: argparse.Namespace) -> None:
     eclbase = Path(args.output).name
 
     # Summary.fwrite() can only write to current directory:
-    cwd = os.getcwd()
+    cwd = Path.cwd()
     summary = df2ressum(summary_df, eclbase)
     try:
         os.chdir(outputdir)

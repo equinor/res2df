@@ -38,7 +38,7 @@ def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
         raise ValueError("Only supports TABDIMS and EQLDIMS")
     if dimkeyword == "TABDIMS" and dimitem not in [0, 1]:
         raise ValueError("Only support item 0 and 1 in TABDIMS")
-    if dimkeyword == "EQLDIMS" and dimitem not in [0]:
+    if dimkeyword == "EQLDIMS" and dimitem != 0:
         raise ValueError("Only item 0 in EQLDIMS can be estimated")
 
     # A less than res2df-standard permissive opm.io, when using
@@ -112,7 +112,7 @@ def inject_dimcount(
         raise ValueError("Only supports TABDIMS and EQLDIMS")
     if dimkeyword == "TABDIMS" and dimitem not in [0, 1]:
         raise ValueError("Only support item 0 and 1 in TABDIMS")
-    if dimkeyword == "EQLDIMS" and dimitem not in [0]:
+    if dimkeyword == "EQLDIMS" and dimitem != 0:
         raise ValueError("Only item 0 in EQLDIMS can be injected")
 
     if dimkeyword in deckstr:

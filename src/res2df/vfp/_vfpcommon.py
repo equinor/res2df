@@ -30,19 +30,18 @@ def _string2intlist(list_def_str: str) -> list[int]:
         list_def_str: String defining list of int
                       Format "[1,2,6:9]" to define list [1,2,6,7,8,9]
     """
-    list = []
+    int_list: list[int] = []
     list_def = list_def_str.strip().strip("[").strip("]")
     if list_def.strip():
         list_items = list_def.split(",") if "," in list_def else [list_def]
         for item in list_items:
             if ":" in item:
                 item_split = item.split(":")
-                for value in item_split:
-                    list.append(int(value))
+                int_list.extend(int(value) for value in item_split)
             else:
-                list.append(int(item))
+                int_list.append(int(item))
 
-    return list
+    return int_list
 
 
 def _deckrecord2list(
@@ -128,11 +127,8 @@ def _stack_vfptable2df(
         df_vfptable.insert(i, index_names_list[i], index_values_list[i])
 
     #  create multi-index for columns
-    indextuples = []
-    for index_name in index_names_list:
-        indextuples.append((index_name, "DELETE"))
-    for flowvalue in flow_values_list:
-        indextuples.append(("TAB", str(flowvalue)))
+    indextuples = [(index_name, "DELETE") for index_name in index_names_list]
+    indextuples.extend(("TAB", str(flowvalue)) for flowvalue in flow_values_list)
 
     # Set the columns to a MultiIndex, to facilitate stacking
     df_vfptable.columns = pd.MultiIndex.from_tuples(indextuples)

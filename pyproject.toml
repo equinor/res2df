@@ -141,6 +141,8 @@ select = [
   "RUF",  # ruff specific rules
   "UP",  # pyupgrade
   "ANN",  # flake8-annotations
+  "FURB",  # refurb
+  "PERF",  # perflint
 ]
 preview = true
 ignore = [
@@ -162,7 +164,7 @@ ignore = [
 
 [tool.ruff.lint.extend-per-file-ignores]
 "src/res2df/__init__.py" = ["PLC0414"]
-"tests/*" = ["RUF005", "ANN"]
+"tests/*" = ["RUF005", "ANN", "FURB113", "PERF"]
 "docs/*" = ["ANN"]
 
 [tool.ruff.lint.pylint]

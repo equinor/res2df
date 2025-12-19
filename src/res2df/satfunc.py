@@ -166,7 +166,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         help="Name of .DATA input file for the reservoir simulator,"
-        + " or file with saturation functions.",
+        " or file with saturation functions.",
     )
     parser.add_argument(
         "-o",

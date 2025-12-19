@@ -144,7 +144,8 @@ select = [
   "FURB",  # refurb
   "PERF",  # perflint
   "PTH",  # flake8-use-pathlib
-  "ICN"  # flake8-import-conventions
+  "ICN",  # flake8-import-conventions
+  "ISC",  # flake8-implicit-str-concat
 ]
 preview = true
 ignore = [

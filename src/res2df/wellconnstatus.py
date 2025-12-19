@@ -96,7 +96,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "DATAFILE",
         type=str,
         help="Name of the .DATA input file for the reservoir simulator."
-        + " There must exist a UNSMRY file with the same path and basename.",
+        " There must exist a UNSMRY file with the same path and basename.",
     )
     parser.add_argument(
         "-o",

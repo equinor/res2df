@@ -252,7 +252,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         help="Name of the .DATA input file for the reservoir simulator,"
-        + " or file with PVT keywords.",
+        " or file with PVT keywords.",
     )
     parser.add_argument(
         "-o",

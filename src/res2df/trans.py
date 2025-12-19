@@ -6,7 +6,7 @@ Extract transmissibility information from output files as Dataframes.
 import argparse
 import logging
 
-import networkx
+import networkx as nx
 import pandas as pd
 
 from .common import write_dframe_stdout_file
@@ -221,12 +221,12 @@ def df(
     return trans_df
 
 
-def make_nx_graph(resdatafiles: ResdataFiles, region: str = "FIPNUM") -> networkx.Graph:
+def make_nx_graph(resdatafiles: ResdataFiles, region: str = "FIPNUM") -> nx.Graph:
     """Construct a networkx graph for the transmissibilities."""
     trans_df = df(resdatafiles, vectors=[region], coords=True, group=True)
     reg1 = region + "1"
     reg2 = region + "2"
-    graph: networkx.Graph = networkx.Graph()
+    graph: nx.Graph = nx.Graph()
     graph.add_weighted_edges_from(
         [tuple(row) for row in trans_df[[reg1, reg2, "TRAN"]].to_numpy()]
     )

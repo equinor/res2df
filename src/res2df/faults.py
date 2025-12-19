@@ -7,6 +7,7 @@ a DataFrame
 
 import argparse
 import logging
+from itertools import product
 
 # Needed for mypy
 import opm.io
@@ -36,7 +37,7 @@ def df(deck: "ResdataFiles | opm.opmcommon_python.Deck") -> pd.DataFrame:
 
     # In[91]: list(deck['FAULTS'][0])
     # Out[91]: [[u'F1'], [36], [36], [41], [42], [1], [14], [u'I']]
-    data = []
+    data: list[list[str | int]] = []
     # It is allowed in Eclipse to use the keyword FAULTS
     # as many times as needed. Thus we need to loop in some way:
     for keyword in deck:
@@ -47,10 +48,13 @@ def df(deck: "ResdataFiles | opm.opmcommon_python.Deck") -> pd.DataFrame:
                 frec_dict = parse_opmio_deckrecord(rec, "FAULTS")
                 faultname = frec_dict["NAME"]
                 faultface = frec_dict["FACE"]
-                for i_idx in range(frec_dict["IX1"], frec_dict["IX2"] + 1):
-                    for j_idx in range(frec_dict["IY1"], frec_dict["IY2"] + 1):
-                        for k_idx in range(frec_dict["IZ1"], frec_dict["IZ2"] + 1):
-                            data.append([faultname, i_idx, j_idx, k_idx, faultface])
+
+                indices = product(
+                    range(frec_dict["IX1"], frec_dict["IX2"] + 1),
+                    range(frec_dict["IY1"], frec_dict["IY2"] + 1),
+                    range(frec_dict["IZ1"], frec_dict["IZ2"] + 1),
+                )
+                data.extend([faultname, i, j, k, faultface] for i, j, k in indices)
     dframe = pd.DataFrame(columns=COLUMNS, data=data)
     logger.info("Extracted %i faults", len(dframe["NAME"].unique()))
     return dframe

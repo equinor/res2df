@@ -67,7 +67,7 @@ def df(
         deck = deck.get_deck()
 
     edgerecords = []  # list of dict of rows containing an edge.
-    nodedatarecords = []
+    nodedatarecords: list[dict[str, Any]] = []
 
     # In order for the GRUPTREE/BRANPROP keywords to accumulate, we
     # store the edges as dictionaries indexed by the edge
@@ -144,10 +144,10 @@ def df(
             renamer = (
                 {"PRESSURE": "TERMINAL_PRESSURE"} if kword.name == "NODEPROP" else None
             )
-            for rec in kword:
-                nodedatarecords.append(
-                    parse_opmio_deckrecord(rec, kword.name, renamer=renamer)
-                )
+            nodedatarecords.extend(
+                parse_opmio_deckrecord(rec, kword.name, renamer=renamer)
+                for rec in kword
+            )
             nodedata[kword.name] = (
                 pd.DataFrame(nodedatarecords)
                 .drop_duplicates(subset="NAME", keep="last")
@@ -254,7 +254,7 @@ def _merge_edges_and_nodeinfo(
 
     # Write WELSPECS edges
     welspecs_parents = set()
-    for (child, parent), _ in wellspecsedges.items():
+    for child, parent in wellspecsedges:  # noqa: PLE1141
         # For BRANPROP trees, only wells with a parent in the tree are added
         if (treetype == "BRANPROP" and parent in childs) or (treetype == "GRUPTREE"):
             rec_dict = {

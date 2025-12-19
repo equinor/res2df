@@ -395,9 +395,10 @@ def pyarrow2basic_data(pa_table: pa.Table) -> dict[str, Any]:
     """
 
     # Extract index data from colum metadata
-    thp_indices = []
-    for i in range(0, pa_table.num_columns):
-        thp_indices.append(int(pa_table.schema.field(i).metadata[b"thp_idx"]))
+    thp_indices = [
+        int(pa_table.schema.field(i).metadata[b"thp_idx"])
+        for i in range(0, pa_table.num_columns)
+    ]
 
     # Extract table data as numpy.array
     bhp_data = np.array(pa_table.columns)

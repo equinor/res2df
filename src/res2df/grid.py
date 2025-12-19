@@ -610,10 +610,11 @@ def drop_constant_columns(
     if dframe.empty:
         return dframe
 
-    columnstodelete = []
-    for col in set(dframe.columns) - set(alwayskeep):
-        if len(dframe[col].unique()) == 1:
-            columnstodelete.append(col)
+    columnstodelete = [
+        col
+        for col in (set(dframe.columns) - set(alwayskeep))
+        if len(dframe[col].unique()) == 1
+    ]
     if columnstodelete:
         logging.info("Deleting constant columns %s", columnstodelete)
     return dframe.drop(columnstodelete, axis=1)

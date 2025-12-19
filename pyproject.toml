@@ -144,6 +144,7 @@ select = [
   "FURB",  # refurb
   "PERF",  # perflint
   "PTH",  # flake8-use-pathlib
+  "ICN"  # flake8-import-conventions
 ]
 preview = true
 ignore = [

@@ -653,7 +653,7 @@ def generic_deck_table(
 
     # Start building the string we are to return:
     string = keyword + "\n"
-    if comment is not None and comment:
+    if comment:
         string += "\n".join(["-- " + line for line in comment.splitlines()]) + "\n"
 
     # Empty tables are ok with Eclipse (at least sometimes)
@@ -664,7 +664,7 @@ def generic_deck_table(
     # Pandas make a pretty txt table:
     dframe = dframe.copy()
 
-    # Column names are pr. ec2ldf standard, redo to opm.common in order to use
+    # Column names are pr. res2df standard, redo to opm.common in order to use
     # sorting from that:
     if renamer is not None:
         inv_renamer = {value: key for key, value in renamer.items()}
@@ -696,11 +696,14 @@ def generic_deck_table(
     dframe = dframe.fillna(value="1*")
 
     if drop_trailing_columns:
+        columns_to_drop = []
         for col_name in reversed(relevant_columns):
-            if set(dframe[col_name].to_numpy()) == {"1*"}:
-                del dframe[col_name]
+            if (dframe[col_name] == "1*").all():
+                columns_to_drop.append(col_name)
             else:
                 break
+        if columns_to_drop:
+            dframe = dframe.drop(columns=columns_to_drop)
 
     # It is critical for opm.common, maybe also E100 to have integers printed
     # as integers, for correct parsing. Ensure these are integer where the json
@@ -708,13 +711,15 @@ def generic_deck_table(
     integer_cols = {
         item["name"]
         for item in OPMKEYWORDS[keyword]["items"]
-        if item["value_type"] == "INT"  # and item["name"] in col_headers
+        if item["value_type"] == "INT"
     }
     for int_col in integer_cols.intersection(dframe.columns):
-        defaulted_rows = dframe[int_col] == "1*"
-        integer_values = dframe.loc[~defaulted_rows, int_col].astype(int)
+        mask = dframe[int_col] != "1*"
         dframe[int_col] = dframe[int_col].astype(str)
-        dframe.loc[~defaulted_rows, int_col] = integer_values
+        if mask.any():
+            dframe.loc[mask, int_col] = (
+                dframe.loc[mask, int_col].astype(float).astype(int).astype(str)
+            )
 
     # Quote all string data. This is not always needed, but needed
     # for some colums, for example well-names containing a slash.
@@ -726,9 +731,8 @@ def generic_deck_table(
     for str_col in string_cols.intersection(dframe.columns):
         # Ensure 1* is not quoted.
         non_defaulted_rows = dframe[str_col] != "1*"
-        dframe.loc[non_defaulted_rows, str_col].str.replace("'", "")
         dframe.loc[non_defaulted_rows, str_col] = (
-            "'" + dframe.loc[non_defaulted_rows, str_col] + "'"
+            "'" + dframe.loc[non_defaulted_rows, str_col].str.replace("'", "") + "'"
         )
 
     # Now rename again to have prettier column names:
@@ -739,8 +743,7 @@ def generic_deck_table(
     tablestring = dframe.to_string(header=True, index=False)
     # Indent all lines with two spaces:
     tablestring = "\n".join(
-        ["  " + line.strip().replace("  /", " /") for line in tablestring.splitlines()]
-        # The replace() in there is needed for py36/pandas==1.1.5 only.
+        "  " + line.strip().replace("  /", " /") for line in tablestring.splitlines()
     )
     # Eclipse comment for the header line:
     tablestring = "--" + tablestring[1:]
@@ -836,7 +839,7 @@ def stack_on_colnames(
     # Drop rows stemming from the NaNs in the second tuple-element for
     # static columns:
     dframe = dframe.dropna(axis="index", subset=["DATE"])
-    del dframe["level_0"]
+    dframe = dframe.drop(columns="level_0")
     dframe.index.name = ""
     return dframe
 

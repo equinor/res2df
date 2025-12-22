@@ -39,6 +39,7 @@ PD_FREQ_MNEMONICS: dict[str, str] = {
 See
 https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects
 """
+PANDAS_MAJOR_VERSION = int(pd.__version__.split(".")[0])
 
 
 def date_range(
@@ -617,23 +618,26 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
     dframe = dframe.copy()
     if "DATE" in dframe.columns:
         # Infer datatype (Pandas cannot answer it) based on the first element:
-        if isinstance(dframe["DATE"].to_numpy()[0], str):
-            # Do not use pd.Series.apply() here, Pandas would try to convert it to
-            # datetime64[ns] which is limited at year 2262.
-            dframe["DATE"] = pd.Series(
-                [dateutil.parser.parse(datestr) for datestr in dframe["DATE"]],
-                dtype="object",
-                index=dframe.index,
-            )
-        if isinstance(dframe["DATE"].to_numpy()[0], dt.date):
-            dframe["DATE"] = pd.Series(
-                [
-                    dt.datetime.combine(dateobj, dt.datetime.min.time())
-                    for dateobj in dframe["DATE"]
-                ],
-                dtype="object",
-                index=dframe.index,
-            )
+        if PANDAS_MAJOR_VERSION >= 3:
+            dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+        else:
+            if isinstance(dframe["DATE"].to_numpy()[0], str):
+                # Do not use pd.Series.apply() here, Pandas would try to convert it to
+                # datetime64[ns] which is limited at year 2262.
+                dframe["DATE"] = pd.Series(
+                    [dateutil.parser.parse(datestr) for datestr in dframe["DATE"]],
+                    dtype="object",
+                    index=dframe.index,
+                )
+            if isinstance(dframe["DATE"].to_numpy()[0], dt.date):
+                dframe["DATE"] = pd.Series(
+                    [
+                        dt.datetime.combine(dateobj, dt.datetime.min.time())
+                        for dateobj in dframe["DATE"]
+                    ],
+                    dtype="object",
+                    index=dframe.index,
+                )
 
         dframe = dframe.set_index("DATE")
     if not isinstance(

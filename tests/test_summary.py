@@ -32,6 +32,8 @@ SHORT_STEP_WITH_TIMESTEP_LONG = str(
     TESTDIR / "data/timesteps/SHORT_STEP_WITH_TIMESTEP_LONG"
 )
 
+PANDAS_MAJOR_VERSION = int(pd.__version__.split(".")[0])
+
 
 def test_df():
     """Test that dataframes are produced"""
@@ -39,7 +41,7 @@ def test_df():
     sumdf = summary.df(resdatafiles)
 
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
+    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64[us]", "datetime64"]
 
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
@@ -49,7 +51,7 @@ def test_df():
     sumdf = summary.df(resdatafiles, datetime=True)
     # (datetime=True is implicit when raw time reports are requested)
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
+    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64[us]", "datetime64"]
 
     # Metadata should be attached using the attrs attribute on a Pandas
     # Dataframe (considered experimental by Pandas)
@@ -103,7 +105,7 @@ def test_summary2df_dates():
         datetime=True,
     )
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
+    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64[s]", "datetime64"]
 
     assert len(sumdf) == 59
     assert str(sumdf.index.to_numpy()[0])[0:10] == "2002-01-02"
@@ -408,7 +410,7 @@ def test_extrapolation():
     )["FOPT"].to_numpy()[0]
     answer = pd.DataFrame(
         # This is the maximal date for datetime64[ns]
-        index=[np.datetime64("2262-04-11")],
+        index=[pd.to_datetime("2262-04-11")],
         columns=["FOPT", "FOPR"],
         data=[[lastfopt, 0.0]],
     ).rename_axis("DATE")
@@ -431,16 +433,27 @@ def test_extrapolation():
             datetime=True,
         ),
         answer,
+        check_index_type=False,
     )
 
-    # Pandas does not support DatetimeIndex beyound 2262:
-    with pytest.raises(pd.errors.OutOfBoundsDatetime):
-        summary.df(
+    if PANDAS_MAJOR_VERSION < 3:
+        # Pandas 2.x: datetime64[ns] cannot handle year 2300
+        with pytest.raises(pd.errors.OutOfBoundsDatetime):
+            summary.df(
+                resdatafiles,
+                column_keys=["FOPT"],
+                time_index=[datetime.date(2300, 1, 1)],
+                datetime=True,
+            )
+    else:
+        # Pandas 3.x: datetime64[us] handles year 2300 fine
+        result = summary.df(
             resdatafiles,
             column_keys=["FOPT"],
             time_index=[datetime.date(2300, 1, 1)],
             datetime=True,
         )
+        assert result["FOPT"].to_numpy()[0] == lastfopt
 
     # But without datetime, we can get it extrapolated by resdata:
     assert summary.df(
@@ -576,6 +589,7 @@ def test_fallback_date_roll(rollme, direction, freq, expected):
     assert _fallback_date_roll(rollme, direction, freq) == expected
 
 
+@pytest.mark.skipif(PANDAS_MAJOR_VERSION >= 3, reason="Requires pandas < 3")
 @pytest.mark.parametrize(
     "start, end, freq, expected",
     [
@@ -674,7 +688,9 @@ def test_fallback_date_roll(rollme, direction, freq, expected):
 )
 def test_date_range(start, end, freq, expected):
     """When dates are beyond year 2262,
-    the function _fallback_date_range() is triggered."""
+    the function _fallback_date_range() is triggered.
+    For pandas < 3 only.
+    """
     assert date_range(start, end, freq) == expected
 
 

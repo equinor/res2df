@@ -28,7 +28,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: _string2intlist(list_def_str: str) -> _string2intlist.list[int]
+.. py:function:: _string2intlist(list_def_str: str) -> list[int]
 
    Produce a list of int from input string
 

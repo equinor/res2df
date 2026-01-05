@@ -67,7 +67,7 @@ docs = [
     "ipython",
     "rstcheck",
     "setuptools",
-    "sphinx",
+    "sphinx < 9",
     "sphinx-argparse",
     "sphinx-autodoc-typehints",
     "sphinx_rtd_theme >= 3.1.0.rc1",

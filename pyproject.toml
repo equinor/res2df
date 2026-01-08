@@ -157,6 +157,7 @@ select = [
   "PTH",  # flake8-use-pathlib
   "PYI",  # flake8-pyi
   "Q",  # quotes
+  "RSE",  # raise
   "RUF",  # ruff specific rules
   "SIM",  # flake-8-simplify
   "SLOT", # flake8-slots

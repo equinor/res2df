@@ -382,7 +382,7 @@ def basic_data2pyarrow(
     # Column metadata is list of indices (THP,WFR,GFR,ALQ)
     col_metadata_list = []
     num_records = len(thp_values) * len(wfr_values) * len(gfr_values) * len(alq_values)
-    for i in range(0, num_records):
+    for i in range(num_records):
         thp_idx = thp_indices[i]
         wfr_idx = wfr_indices[i]
         gfr_idx = gfr_indices[i]
@@ -597,7 +597,7 @@ def pyarrow2basic_data(pa_table: pa.Table) -> dict[str, Any]:
     wfr_indices = []
     gfr_indices = []
     alq_indices = []
-    for i in range(0, pa_table.num_columns):
+    for i in range(pa_table.num_columns):
         thp_indices.append(int(pa_table.schema.field(i).metadata[b"thp_idx"]))
         wfr_indices.append(int(pa_table.schema.field(i).metadata[b"wfr_idx"]))
         gfr_indices.append(int(pa_table.schema.field(i).metadata[b"gfr_idx"]))
@@ -880,7 +880,7 @@ def _write_table_records(
     else:
         table = table.reshape(no_records, no_flow_values)
 
-    for row in range(0, no_records):
+    for row in range(no_records):
         thp = thp_indices[row]
         wfr = wfr_indices[row]
         gfr = gfr_indices[row]

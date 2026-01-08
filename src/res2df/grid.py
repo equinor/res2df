@@ -47,7 +47,7 @@ def get_available_rst_dates(resdatafiles: ResdataFiles) -> list[datetime.date]:
     )
     return [
         resdatafiles.get_rstfile().iget_restart_sim_time(index).date()
-        for index in range(0, len(report_indices))
+        for index in range(len(report_indices))
     ]
 
 

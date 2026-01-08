@@ -128,24 +128,42 @@ line-length = 88
 
 [tool.ruff.lint]
 select = [
+  "AIR",  # airflow
   "ANN",  # flake8-annotations
+  "ASYNC",  # flake8-async
   "B",  # flake-8-bugbear
   "C4",  # flake8-comprehensions
+  "DJ",  # django
   "E",  # pycodestyle
   "F",  # pyflakes
+  "FA",  # future-annotations
+  "FAST",  # fastapi
+  "FIX", # fixme
+  "FLY", # flynt
   "FURB",  # refurb
   "I",  # isort
   "ICN",  # flake8-import-conventions
+  "INT", # gettext
   "ISC",  # flake8-implicit-str-concat
   "NPY",  # numpy specific rules
   "PD",  # pandas-vet
   "PERF",  # perflint
+  "PGH",  # pygrep-hooks
   "PL",  # pylint
+  "PLC",  # pylint convention
+  "PLE",  # pylint error
+  "PLR",  # pylint refactor
+  "PLW",  # pylint warning
   "PTH",  # flake8-use-pathlib
+  "PYI",  # flake8-pyi
+  "Q",  # quotes
   "RUF",  # ruff specific rules
   "SIM",  # flake-8-simplify
+  "SLOT", # flake8-slots
+  "TD",  # todos
   "UP",  # pyupgrade
   "W",  # pycodestyle
+  "YTT",  # year 2020
 ]
 preview = true
 ignore = [

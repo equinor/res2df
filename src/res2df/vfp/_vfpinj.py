@@ -276,7 +276,7 @@ def basic_data2pyarrow(
 
     # Column metadata is index in THP array
     col_metadata_list = []
-    for i in range(0, len(thp_values)):
+    for i in range(len(thp_values)):
         col_name = str(i)
         col_dtype = pa.float64()
         col_metadata = {
@@ -397,7 +397,7 @@ def pyarrow2basic_data(pa_table: pa.Table) -> dict[str, Any]:
     # Extract index data from colum metadata
     thp_indices = [
         int(pa_table.schema.field(i).metadata[b"thp_idx"])
-        for i in range(0, pa_table.num_columns)
+        for i in range(pa_table.num_columns)
     ]
 
     # Extract table data as numpy.array
@@ -602,7 +602,7 @@ def _write_table_records(
     else:
         table = table.reshape(no_records, no_flow_values)
 
-    for row in range(0, no_records):
+    for row in range(no_records):
         thp = thp_indices[row]
         deck_str += f"{thp:2d}"
         for n, value in enumerate(table[row, :]):

@@ -123,7 +123,7 @@ def _stack_vfptable2df(
     no_indices = len(index_names_list)
 
     # insert index values as first columns in dataframe
-    for i in range(0, no_indices):
+    for i in range(no_indices):
         df_vfptable.insert(i, index_names_list[i], index_values_list[i])
 
     #  create multi-index for columns

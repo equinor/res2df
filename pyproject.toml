@@ -149,6 +149,7 @@ select = [
   "PD",  # pandas-vet
   "PERF",  # perflint
   "PGH",  # pygrep-hooks
+  "PIE",  # flake8-pie
   "PL",  # pylint
   "PLC",  # pylint convention
   "PLE",  # pylint error

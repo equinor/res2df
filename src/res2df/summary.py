@@ -650,9 +650,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
     if "Unnamed: 0" in dframe:
         dframe = dframe.drop("Unnamed: 0", axis="columns")
 
-    block_columns = [
-        col for col in dframe.columns if (col.startswith("B") or col.startswith("LB"))
-    ]
+    block_columns = [col for col in dframe.columns if (col.startswith(("B", "LB")))]
     if block_columns:
         dframe = dframe.drop(columns=block_columns)
         logger.warning(

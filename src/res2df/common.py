@@ -967,7 +967,7 @@ def get_wells_matching_template(template: str, wells: list[str]) -> list[str]:
     Returns:
         List of matched wells
     """
-    if template.startswith("*") or template.startswith("?"):
+    if template.startswith(("*", "?")):
         raise ValueError(
             "Well template not allowed to start with a wildcard character: "
             f"Must be preceded with a \\: {template}"

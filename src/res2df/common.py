@@ -912,11 +912,11 @@ def parse_lyrfile(filename: str | Path) -> list[dict[str, Any]] | None:
                     zonedict["to_layer"] = to_layer
                 else:
                     logger.error("From_layer higher than to_layer")
-                    raise ValueError()
+                    raise ValueError
             elif len(numbers) == 1:
                 zonedict["span"] = int(numbers[0])
             else:
-                raise ValueError()
+                raise ValueError
             lyrlist.append(zonedict)
         except ValueError:
             logger.error("Could not parse lyr file %s", filename)

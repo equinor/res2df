@@ -9,9 +9,7 @@ import warnings
 from typing import Any
 
 import numpy as np
-
-# Needed for mypy
-import opm.io
+import opm
 import pandas as pd
 import treelib
 
@@ -62,6 +60,9 @@ def df(
 
     date: datetime.date | None
     date = startdate if startdate is not None else None
+
+    if not isinstance(deck, (ResdataFiles, opm.opmcommon_python.Deck)):
+        raise TypeError("Input deck must be either ResdataFiles or an opm Deck.")
 
     if isinstance(deck, ResdataFiles):
         deck = deck.get_deck()

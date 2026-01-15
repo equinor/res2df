@@ -5,7 +5,7 @@ import json
 import logging
 import warnings
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import pandas as pd
 import yaml
@@ -79,11 +79,12 @@ def load_parameterstxt(filename: str | Path) -> dict[str, Any]:
                 engine="python",
                 names=["KEY", "VALUE"],
                 index_col=False,
+                dtype={"KEY": str},
             )
         except pd.errors.ParserWarning as txt_exc:
             raise pd.errors.ParserError(txt_exc) from txt_exc
 
-    return dframe.set_index("KEY")["VALUE"].to_dict()
+    return cast(dict[str, Any], dframe.set_index("KEY")["VALUE"].to_dict())
 
 
 def load_all(

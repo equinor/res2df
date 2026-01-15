@@ -417,6 +417,15 @@ def test_emptytree_strdeck():
     assert not treelibtree
 
 
+def test_non_deck_input_raises():
+    """Test giving in non valid input to df gives
+    reasonable error message"""
+    with pytest.raises(
+        TypeError, match="Input deck must be either ResdataFiles or an opm Deck"
+    ):
+        _ = gruptree.df("this should not be valid")
+
+
 def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
     """Test the command line tool on a .DATA file which is empty"""
     os.chdir(tmp_path)

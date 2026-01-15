@@ -10,7 +10,7 @@ on:
 
   schedule:
     # Run CI every night and check that tests are working with latest dependencies
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
 
 env:
   ERT_SHOW_BACKTRACE: 1
@@ -21,16 +21,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.11', '3.12', '3.13', '3.14']
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        pandas-version: [""]
         include:
           # For one of the Python versions we
           # install the extra dependency ert
           # (in order to not double the job matrix)
-          - python-version: '3.11'
+          - python-version: "3.11"
             install-ert: true
+          - python-version: "3.13"
+            pandas-version: ">=2,<3"
+          - python-version: "3.13"
+            pandas-version: ">=3.0.0"
+        exclude:
+          - python-version: "3.13"
+            pandas-version: ""
 
     steps:
-
       - name: Install Ubuntu dependencies
         run: |
           sudo apt-get update
@@ -59,10 +66,13 @@ jobs:
         run: |
           uv pip install ".[tests, docs]"
 
-
       - name: Install ert
         if: matrix.install-ert
         run: uv pip install ".[ert]"
+
+      - name: Pin pandas version
+        if: matrix.pandas-version
+        run: uv pip install "pandas${{ matrix.pandas-version }}"
 
       - name: List all installed packages
         run: uv pip freeze
@@ -84,22 +94,22 @@ jobs:
       - name: Update GitHub pages
         if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.11'
         run: |
-            cp -R ./build/sphinx/html ../html
+          cp -R ./build/sphinx/html ../html
 
-            git config --local user.email "res2df-github-action"
-            git config --local user.name "res2df-github-action"
-            git fetch origin gh-pages
-            git checkout --track origin/gh-pages
-            git clean -f -f -d -x
-            git rm -r *
+          git config --local user.email "res2df-github-action"
+          git config --local user.name "res2df-github-action"
+          git fetch origin gh-pages
+          git checkout --track origin/gh-pages
+          git clean -f -f -d -x
+          git rm -r *
 
-            cp -R ../html/* .
+          cp -R ../html/* .
 
-            git add .
+          git add .
 
-            if git diff-index --quiet HEAD; then
-              echo "No changes in documentation. Skip documentation deploy."
-            else
-              git commit -m "Update Github Pages"
-              git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
-            fi
+          if git diff-index --quiet HEAD; then
+            echo "No changes in documentation. Skip documentation deploy."
+          else
+            git commit -m "Update Github Pages"
+            git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+          fi

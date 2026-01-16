@@ -179,7 +179,6 @@ def df(
     # This happens with WELSPECS if both GRUPTREE and BRANPROP is defined
     # at the same timestep. And when a node is redirected to a new parent node
     dframe = dframe.drop_duplicates(subset=["DATE", "CHILD", "KEYWORD"], keep="last")
-    print(dframe)
     return dframe
 
 

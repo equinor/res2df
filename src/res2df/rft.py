@@ -212,7 +212,6 @@ def count_wellbranches(seg_data: pd.DataFrame) -> int:
         .unique()
     )
 
-    # logger.debug("Branches found: %d", count_wellbranches(merged))
     return max(1, branchcount)
 
 
@@ -269,7 +268,9 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
 
     # We also want to flag the segment that is upstream a junction,
     merged["JUNCTION_downstream"] = False
-    merged.loc[merged[merged["JUNCTION"]]["SEGIDX_upstream"], "JUNCTION_downstream"] = (
+    upstream_of_junction = merged.loc[merged["JUNCTION"], "SEGIDX_upstream"].unique()
+    upstream_of_junction = upstream_of_junction[upstream_of_junction > 0]  # Remove 0s
+    merged.loc[merged["SEGIDX"].isin(upstream_of_junction), "JUNCTION_downstream"] = (
         True
     )
 

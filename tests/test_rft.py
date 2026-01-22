@@ -531,3 +531,26 @@ def test_main_debugmode(tmp_path, mocker):
     assert not pd.read_csv("con.csv").empty
     assert Path("seg.csv").exists()  # too simple example data, no segments.
     assert Path("icd.csv").exists()  # too simple example data, no ICD
+
+
+def test_process_seg_topology_junction_downstream_non_consecutive():
+    """Test JUNCTION_downstream with non-consecutive SEGIDX values"""
+    wellseg = pd.DataFrame(
+        {
+            "SEGIDX": [10, 20, 30],
+            "SEGNXT": [None, 10, 10],
+            "SEGBRNO": [1, 1, 2],
+        }
+    )
+
+    result = rft.process_seg_topology(wellseg)
+
+    # Segments 20 and 30 feed into junction (segment 10)
+    seg20_rows = result[result["SEGIDX"] == 20]
+    seg30_rows = result[result["SEGIDX"] == 30]
+    assert seg20_rows["JUNCTION_downstream"].all()
+    assert seg30_rows["JUNCTION_downstream"].all()
+
+    # Segment 10 is the junction, feeds into wellhead
+    seg10_rows = result[result["SEGIDX"] == 10]
+    assert not seg10_rows["JUNCTION_downstream"].any()

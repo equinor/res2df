@@ -183,6 +183,7 @@ ignore = [
   "PLR1702",  # too-many-nested-blocks
   "PLW3201",  # bad-dunder-method-name
   "PD013",  # pandas-use-of-dot-stack
+  "RUF067",  # non-empty-init-module
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]

@@ -4,7 +4,6 @@ import argparse
 import logging
 from enum import StrEnum
 from pathlib import Path
-from typing import Any
 
 import pandas as pd
 import pyarrow as pa
@@ -52,7 +51,7 @@ def df(
     (the same directory as the DATA file loaded in resdatafiles).
 
     Args:
-        resdatafiles; ResdataFiles object
+        resdatafiles: ResdataFiles object
         zonemap: dictionary with layer->zone mapping
         use_wellconnstatus: boolean
 
@@ -65,8 +64,9 @@ def df(
     if "ZONE" not in compdat_df.columns:
         logger.warning(
             "ZONE column not generated in compdat table. "
-            "Empty dataframe will be returned."
-            f"Zonemap used: {zonemap}"
+            "Empty dataframe will be returned. "
+            "Zonemap used: %s",
+            zonemap,
         )
         return pd.DataFrame()
 
@@ -111,7 +111,7 @@ def _get_unit_system(resdatafiles: ResdataFiles) -> UnitSystem:
     return UnitSystem.METRIC
 
 
-def _get_metadata(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
+def _get_metadata(resdatafiles: ResdataFiles) -> dict[str, dict[str, str]]:
     """Provide metadata for the well completion data export"""
     meta: dict[str, dict[str, str]] = {}
     unitsystem = _get_unit_system(resdatafiles)
@@ -283,7 +283,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "--excl_well_startswith",
         type=str,
-        help="Exludes wells that starts with this string from the export.",
+        help="Excludes wells that start with this string from the export.",
         default=None,
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
@@ -305,7 +305,7 @@ def wellcompletiondata_main(args: argparse.Namespace) -> None:
             resdatafiles, zonemap, args.use_wellconnstatus, args.excl_well_startswith
         )
         logger.info(
-            f"Well completion data successfully generated with zonemap: {zonemap}"
+            "Well completion data successfully generated with zonemap: %s", zonemap
         )
 
     if args.arrow:

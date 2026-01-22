@@ -4,6 +4,8 @@ Extract the PVT data from a .DATA file as Pandas Dataframes
 Data can be extracted from a complete deck or from individual files.
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 from pathlib import Path
@@ -74,7 +76,7 @@ RENAMERS["ROCK"] = {"PREF": "PRESSURE", "COMPRESSIBILITY": "COMPRESSIBILITY"}
 
 
 def pvtw_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVTW from a :term:`deck`
 
@@ -91,7 +93,7 @@ def pvtw_fromdeck(
 
 
 def density_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract DENSITY from a :term:`deck`
 
@@ -108,7 +110,7 @@ def density_fromdeck(
 
 
 def rock_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract ROCK from a :term:`deck`
 
@@ -125,7 +127,7 @@ def rock_fromdeck(
 
 
 def pvto_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVTO from a :term:`deck`
 
@@ -143,7 +145,7 @@ def pvto_fromdeck(
 
 
 def pvdo_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVDO from a :term:`deck`
 
@@ -161,7 +163,7 @@ def pvdo_fromdeck(
 
 
 def pvdg_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVDG from a :term:`deck`
 
@@ -179,7 +181,7 @@ def pvdg_fromdeck(
 
 
 def pvtg_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVTG from a :term:`deck`
 
@@ -197,7 +199,7 @@ def pvtg_fromdeck(
 
 
 def df(
-    deck: "str | opm.opmcommon_python.Deck",
+    deck: str | ResdataFiles | opm.opmcommon_python.Deck,
     keywords: list[str] | None = None,
     ntpvt: int | None = None,
 ) -> pd.DataFrame:
@@ -289,8 +291,7 @@ def pvt_main(args: argparse.Namespace) -> None:
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
     logger.info("Parsed %s", args.DATAFILE)
-    if resdatafiles:
-        deck = resdatafiles.get_deck()
+    deck = resdatafiles.get_deck()
     if "TABDIMS" in deck:
         # Things are easier when a full deck with correct TABDIMS
         # is supplied:
@@ -303,7 +304,7 @@ def pvt_main(args: argparse.Namespace) -> None:
         pvt_df = df(stringdeck, keywords=args.keywords)
     if "PVTNUM" in pvt_df and "KEYWORD" in pvt_df:
         pvtnums = str(len(pvt_df["PVTNUM"].unique()))
-        keywords = str(pvt_df["KEYWORD"].unique())
+        keywords = str(pvt_df["KEYWORD"].unique().tolist())
     else:
         pvtnums = "-"
         keywords = "-"
@@ -374,8 +375,8 @@ def df2res_rock(dframe: pd.DataFrame, comment: str | None = None) -> str:
             return ""
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
-    for _, row in subset.iterrows():
-        string += f"  {row['PRESSURE']:20.7f} {row['COMPRESSIBILITY']:20.7f} /\n"
+    for row in subset.itertuples():
+        string += f"  {row.PRESSURE:20.7f} {row.COMPRESSIBILITY:20.7f} /\n"
     return string + "\n"
 
 
@@ -402,9 +403,9 @@ def df2res_density(dframe: pd.DataFrame, comment: str | None = None) -> str:
             return ""
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
-    for _, row in subset.iterrows():
-        string += f"  {row['OILDENSITY']:20.7f} {row['WATERDENSITY']:20.7f}"
-        string += f" {row['GASDENSITY']:20.7f} /\n"
+    for row in subset.itertuples():
+        string += f"  {row.OILDENSITY:20.7f} {row.WATERDENSITY:20.7f}"
+        string += f" {row.GASDENSITY:20.7f} /\n"
     return string + "\n"
 
 
@@ -434,10 +435,10 @@ def df2res_pvtw(dframe: pd.DataFrame, comment: str | None = None) -> str:
             return ""
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
-    for _, row in subset.iterrows():
-        string += f"  {row['PRESSURE']:20.7f} {row['VOLUMEFACTOR']:20.7f} "
-        string += f"{row['COMPRESSIBILITY']:20.7f} {row['VISCOSITY']:20.7f} "
-        string += f"{row['VISCOSIBILITY']:20.7f}/\n"
+    for row in subset.itertuples():
+        string += f"  {row.PRESSURE:20.7f} {row.VOLUMEFACTOR:20.7f} "
+        string += f"{row.COMPRESSIBILITY:20.7f} {row.VISCOSITY:20.7f} "
+        string += f"{row.VISCOSIBILITY:20.7f}/\n"
     return string + "\n"
 
 
@@ -532,9 +533,9 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: str | None = None) -> str:
         """
         string = ""
         dframe = dframe.sort_values("PRESSURE")
-        for _, row in dframe.iterrows():
-            string += f"  {row['PRESSURE']:20.7f} {row['VOLUMEFACTOR']:20.7f} "
-            string += f"{row['VISCOSITY']:20.7f}\n"
+        for row in dframe.itertuples():
+            string += f"  {row.PRESSURE:20.7f} {row.VOLUMEFACTOR:20.7f} "
+            string += f"{row.VISCOSITY:20.7f}\n"
         return string + "/\n"
 
     subset = subset.set_index("PVTNUM").sort_index()
@@ -577,9 +578,9 @@ def df2res_pvdo(dframe: pd.DataFrame, comment: str | None = None) -> str:
         """
         string = ""
         dframe = dframe.sort_values("PRESSURE")
-        for _, row in dframe.iterrows():
-            string += f"  {row['PRESSURE']:20.7f} {row['VOLUMEFACTOR']:20.7f} "
-            string += f"{row['VISCOSITY']:20.7f}\n"
+        for row in dframe.itertuples():
+            string += f"  {row.PRESSURE:20.7f} {row.VOLUMEFACTOR:20.7f} "
+            string += f"{row.VISCOSITY:20.7f}\n"
         return string + "/\n"
 
     subset = subset.set_index("PVTNUM").sort_index()

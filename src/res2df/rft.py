@@ -178,8 +178,8 @@ def get_con_seg_data(
 
     data = pd.DataFrame(
         {
-            row["recordname"]: list(rftfile[row["recordidx"]])
-            for _, row in data_headers.iterrows()
+            row.recordname: list(rftfile[row.recordidx])
+            for row in data_headers.itertuples()
         }
     )
 
@@ -251,7 +251,7 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
         right_on="SEGNXT",
         suffixes=("", "_upstream"),
     )
-    del merged["SEGNXT_upstream"]
+    merged = merged.drop(columns="SEGNXT_upstream")
     # Later this might be changed to use the Pandas nullable integer type, but
     # using zero for NaN works in this context.
     merged["SEGIDX_upstream"] = merged["SEGIDX_upstream"].fillna(value=0).astype(int)
@@ -293,10 +293,13 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
     if "LEAF" not in seg_data:
         seg_data = process_seg_topology(seg_data)
     subtrees: dict = collections.defaultdict(dict)
-    edges = []  # List of tuples
-    for _, row in seg_data.iterrows():
-        if "SEGIDX_upstream" in row and row["SEGIDX_upstream"] > 0:
-            edges.append((row["SEGIDX_upstream"], row["SEGIDX"]))
+    edges: list[tuple[int, int]] = []  # List of tuples
+    if "SEGIDX_upstream" in seg_data.columns:
+        edges.extend(
+            (row.SEGIDX_upstream, row.SEGIDX)  # type: ignore[misc]
+            for row in seg_data.itertuples()
+            if row.SEGIDX_upstream > 0  # type: ignore[operator]
+        )
     if not edges:
         return {seg_data["SEGIDX"].to_numpy()[0]: {}}
     for child, parent in edges:
@@ -304,9 +307,7 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
 
     children, parents = zip(*edges, strict=False)
     roots = set(parents).difference(children)
-    trees = []
-    trees.append({root: subtrees[root] for root in roots})
-    return trees[0]
+    return {root: subtrees[root] for root in roots}
 
 
 def pretty_print_well(seg_data: pd.DataFrame) -> str:
@@ -614,6 +615,8 @@ def df(
 
         rftdata.append(con_icd_seg)
 
+    if not rftdata:
+        return pd.DataFrame()
     rftdata_df = pd.concat(rftdata, ignore_index=True, sort=False)
 
     # Fill empty cells with zeros. This is to avoid Spotfire
@@ -628,7 +631,7 @@ def df(
         and len(rftdata_df.HOSTGRID.unique()) == 1
         and not rftdata_df.HOSTGRID.unique()[0].strip()
     ):
-        del rftdata_df["HOSTGRID"]
+        rftdata_df = rftdata_df.drop(columns="HOSTGRID")
 
     zonemap = resdatafiles.get_zonemap()
     if zonemap:

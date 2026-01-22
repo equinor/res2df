@@ -188,7 +188,7 @@ def df(
     if group:
         assert len(vectors) == 1  # This is checked above
         assert boundaryfilter
-        logger.info("Grouping transmissiblity over %s interfaces", vectors[0])
+        logger.info("Grouping transmissibility over %s interfaces", vectors[0])
         vec1 = vectors[0] + "1"
         vec2 = vectors[0] + "2"
         pairname = vectors[0] + "PAIR"

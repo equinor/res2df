@@ -2,6 +2,8 @@
 Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 from collections.abc import Container
@@ -79,7 +81,7 @@ PHASE_RENAMERS: Final[dict[str, dict[str, str]]] = {
 
 
 def df(
-    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
+    deck: str | ResdataFiles | opm.opmcommon_python.Deck,
     keywords: list[str] | None = None,
     ntequl: int | None = None,
 ) -> pd.DataFrame:
@@ -128,7 +130,7 @@ def df(
         dframe = pd.concat(nonempty_frames, axis=0, sort=False, ignore_index=True)
         logger.info(
             "Extracted keywords %s for %g EQLNUMs",
-            dframe["KEYWORD"].unique(),
+            dframe["KEYWORD"].unique().tolist(),
             len(dframe["EQLNUM"].unique()),
         )
         return dframe
@@ -137,7 +139,7 @@ def df(
 
 
 def rsvd_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract RSVD data from a :term:`deck`
 
@@ -154,7 +156,7 @@ def rsvd_fromdeck(
 
 
 def rvvd_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract RVVD data from a :term:`deck`
 
@@ -171,7 +173,7 @@ def rvvd_fromdeck(
 
 
 def pbvd_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract PBVD data from a :term:`deck`
 
@@ -188,7 +190,7 @@ def pbvd_fromdeck(
 
 
 def pdvd_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract PDVD data from a :term:`deck`
 
@@ -204,7 +206,7 @@ def pdvd_fromdeck(
     )
 
 
-def phases_from_deck(deck: "str | opm.opmcommon_python.Deck") -> str:
+def phases_from_deck(deck: str | opm.opmcommon_python.Deck) -> str:
     """Determined the set of phases from a :term:`deck`, as
     a string with values "oil-water-gas", "gas-water", "oil-water",
     or "oil-gas"
@@ -252,7 +254,7 @@ def phases_from_columns(columns: Container[str]) -> str:
 
 
 def equil_fromdeck(
-    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
+    deck: str | opm.opmcommon_python.Deck, ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract EQUIL data from a :term:`deck`
 
@@ -322,8 +324,7 @@ def equil_main(args: argparse.Namespace) -> None:
     """Read from disk and write CSV back to disk"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
-    if resdatafiles:
-        deck = resdatafiles.get_deck()
+    deck = resdatafiles.get_deck()
     if "EQLDIMS" in deck:
         # Things are easier when a full deck with (correct) EQLDIMS
         # is supplied:
@@ -335,7 +336,7 @@ def equil_main(args: argparse.Namespace) -> None:
 
     if "EQLNUM" in equil_df and "KEYWORD" in equil_df:
         eqlnums = str(len(equil_df["EQLNUM"].unique()))
-        keywords = str(equil_df["KEYWORD"].unique())
+        keywords = str(equil_df["KEYWORD"].unique().tolist())
     else:
         eqlnums = "-"
         keywords = "-"

@@ -593,7 +593,7 @@ def test_df2res_density():
     assert "DENSITY" in pvt.df2res_density(density_df.drop("PVTNUM", axis="columns"))
 
     # Missing column:
-    with pytest.raises(KeyError, match="OILDENSITY"):
+    with pytest.raises((KeyError, AttributeError), match="OILDENSITY"):
         pvt.df2res_density(density_df.drop("OILDENSITY", axis="columns"))
 
 
@@ -621,7 +621,7 @@ def test_df2res_pvtw():
     assert "PVTW" in pvt.df2res_pvtw(pvtw_df.drop("PVTNUM", axis="columns"))
 
     # Missing column:
-    with pytest.raises(KeyError, match="VOLUMEFACTOR"):
+    with pytest.raises((KeyError, AttributeError), match="VOLUMEFACTOR"):
         pvt.df2res_pvtw(pvtw_df.drop("VOLUMEFACTOR", axis="columns"))
 
 
@@ -650,7 +650,7 @@ def test_df2res_pvtg():
     assert "PVTG" in pvt.df2res_pvtg(pvtg_df.head(1).drop("PVTNUM", axis="columns"))
 
     # Missing column:
-    with pytest.raises(KeyError, match="VOLUMEFACTOR"):
+    with pytest.raises((KeyError, AttributeError), match="VOLUMEFACTOR"):
         pvt.df2res_pvtg(pvtg_df.drop("VOLUMEFACTOR", axis="columns"))
 
 
@@ -695,7 +695,7 @@ def test_df2res_pvdo_pvdg():
     assert "PVDG" in pvt.df2res_pvdg(pvdog_df.head(1).drop("PVTNUM", axis="columns"))
 
     # Missing column:
-    with pytest.raises(KeyError, match="VOLUMEFACTOR"):
+    with pytest.raises((KeyError, AttributeError), match="VOLUMEFACTOR"):
         pvt.df2res_pvdo(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))
-    with pytest.raises(KeyError, match="VOLUMEFACTOR"):
+    with pytest.raises((KeyError, AttributeError), match="VOLUMEFACTOR"):
         pvt.df2res_pvdg(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))

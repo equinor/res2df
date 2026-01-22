@@ -194,7 +194,7 @@ class ResdataFiles:
         return self._eclbase + ".PRT"
 
     def close(self) -> None:
-        """Close any opened files. Most files are opened though ecl with
+        """Close any opened files. Most files are opened though ResData with
         an option to close the stream as possible, leaving not much work
         for this function."""
         self._egridfile = None

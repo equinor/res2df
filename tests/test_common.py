@@ -264,8 +264,9 @@ def test_eclcompress():
     "template, wells, output",
     [
         ("OP*", ["OP1", "OP2", "WI"], ["OP1", "OP2"]),
-        ("B*H", ["B_1H", "BH", "B_23H", "WI"], ["B_1H", "BH", "B_23H"]),
+        ("B*H", ["B_1H", "BH", "B_23H", "WI", "B_1HX"], ["B_1H", "BH", "B_23H"]),
         ("B_1H*", ["B_1H", "B_1HT2", "OB_1H"], ["B_1H", "B_1HT2"]),
+        ("OP?", ["OP1", "OP12", "OP"], ["OP1"]),
         ("\\*P1", ["OP1", "WI"], ["OP1"]),
         ("B_?H", ["B_1H", "B_12H"], ["B_1H"]),
         ("\\????", ["B_1H", "D_2H", "OP1"], ["B_1H", "D_2H"]),

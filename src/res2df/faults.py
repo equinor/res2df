@@ -5,6 +5,8 @@ a DataFrame
 
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 from itertools import product
@@ -24,7 +26,7 @@ COLUMNS = ["NAME", "I", "J", "K", "FACE"]
 ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-"]
 
 
-def df(deck: "ResdataFiles | opm.opmcommon_python.Deck") -> pd.DataFrame:
+def df(deck: ResdataFiles | opm.opmcommon_python.Deck) -> pd.DataFrame:
     """Produce a dataframe of fault data from a :term:`deck`
 
     All data for the keyword FAULTS will be returned.
@@ -84,8 +86,7 @@ def faults_main(args: argparse.Namespace) -> None:
     """Read from disk and write CSV back to disk"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
-    if resdatafiles:
-        deck = resdatafiles.get_deck()
+    deck = resdatafiles.get_deck()
     faults_df = df(deck)
     write_dframe_stdout_file(
         faults_df,

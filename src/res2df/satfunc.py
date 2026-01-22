@@ -13,6 +13,8 @@ TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 from pathlib import Path
@@ -61,7 +63,7 @@ RENAMERS["SWOF"] = {"DATA": ["SW", "KRW", "KROW", "PCOW"]}
 
 
 def df(
-    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
+    deck: str | ResdataFiles | opm.opmcommon_python.Deck,
     keywords: list[str] | None = None,
     ntsfun: int | None = None,
 ) -> pd.DataFrame:
@@ -122,7 +124,7 @@ def df(
         dframe["KEYWORD"] = dframe["KEYWORD"].astype(str)
         logger.info(
             "Extracted keywords %s for %i SATNUMs",
-            dframe["KEYWORD"].unique(),
+            dframe["KEYWORD"].unique().tolist(),
             len(dframe["SATNUM"].unique()),
         )
         return dframe
@@ -197,12 +199,11 @@ def satfunc_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
-    if resdatafiles:
-        deck = resdatafiles.get_deck()
+    deck = resdatafiles.get_deck()
     if "TABDIMS" in deck:
         # Things are easier when a full deck with (correct) TABDIMS
         # is supplied:
-        satfunc_df = df(resdatafiles, keywords=args.keywords)
+        satfunc_df = df(deck, keywords=args.keywords)
     else:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string
@@ -211,7 +212,7 @@ def satfunc_main(args: argparse.Namespace) -> None:
         )
     if "SATNUM" in satfunc_df and "KEYWORD" in satfunc_df:
         satnums = str(len(satfunc_df["SATNUM"].unique()))
-        keywords = str(satfunc_df["KEYWORD"].unique())
+        keywords = str(satfunc_df["KEYWORD"].unique().tolist())
     else:
         satnums = "-"
         keywords = "-"
@@ -358,7 +359,11 @@ def _df2res_satfuncs(
     string += comment_formatter(comment)
 
     # Use everything if KEYWORD not in dframe ..
-    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == keyword]
+    subset = (
+        dframe.copy()
+        if "KEYWORD" not in dframe
+        else dframe[dframe["KEYWORD"] == keyword].copy()
+    )
     if "SATNUM" not in subset:
         subset["SATNUM"] = 1
     subset = subset.set_index("SATNUM").sort_index()

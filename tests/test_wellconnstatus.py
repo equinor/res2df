@@ -96,6 +96,54 @@ def test_eightcells_dataset():
                 columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
             ),
         ),
+        # Column with extra characters at the end should be ignored
+        (
+            pd.DataFrame(
+                [
+                    ["2000-01-01", 0, 0],
+                    ["2000-01-02", 1, 1],
+                ],
+                columns=["DATE", "CPI:OP1:1,1,1", "CPI:OP1:1,1,1X"],  # X at end
+            ),
+            pd.DataFrame(
+                [
+                    ["2000-01-02", "OP1", 1, 1, 1, "OPEN"],
+                ],
+                columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
+            ),
+        ),
+        # Column with prefix should be ignored
+        (
+            pd.DataFrame(
+                [
+                    ["2000-01-01", 0, 0],
+                    ["2000-01-02", 1, 1],
+                ],
+                columns=["DATE", "CPI:OP1:1,1,1", "XCPI:OP1:2,2,2"],  # X at start
+            ),
+            pd.DataFrame(
+                [
+                    ["2000-01-02", "OP1", 1, 1, 1, "OPEN"],
+                ],
+                columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
+            ),
+        ),
+        # Well name too long (>8 chars) should be ignored
+        (
+            pd.DataFrame(
+                [
+                    ["2000-01-01", 0, 0],
+                    ["2000-01-02", 1, 1],
+                ],
+                columns=["DATE", "CPI:OP1:1,1,1", "CPI:VERYLONGNAME:2,2,2"],
+            ),
+            pd.DataFrame(
+                [
+                    ["2000-01-02", "OP1", 1, 1, 1, "OPEN"],
+                ],
+                columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
+            ),
+        ),
     ],
 )
 def test_extract_status_changes(smry, expected_wellconnstatus):

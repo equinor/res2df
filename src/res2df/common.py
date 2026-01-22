@@ -1,5 +1,7 @@
 """Common functions for res2df modules"""
 
+from __future__ import annotations
+
 import argparse
 import datetime
 import inspect
@@ -185,7 +187,7 @@ def datetime_to_ecldate(timestamp: str | datetime.datetime | datetime.date) -> s
 
 
 def keyworddata_to_df(
-    deck: "opm.opmcommon_python.Deck",
+    deck: opm.opmcommon_python.Deck,
     keyword: str,
     renamer: Mapping[str, str | list[str]] | None = None,
     recordcountername: str | None = None,
@@ -267,7 +269,7 @@ def keyworddata_to_df(
 
 
 def parse_opmio_deckrecord(
-    record: "opm.opmcommon_python.DeckRecord",
+    record: opm.opmcommon_python.DeckRecord,
     keyword: str,
     itemlistname: str = "items",
     recordindex: int | None = None,
@@ -349,7 +351,7 @@ def parse_opmio_deckrecord(
     return rec_dict
 
 
-def parse_opmio_date_rec(record: "opm.io.DeckRecord") -> datetime.date:
+def parse_opmio_date_rec(record: opm.opmcommon_python.DeckRecord) -> datetime.date:
     """Parse a opm.io.DeckRecord under a DATES or START keyword in a deck."""
     day = record[0].get_int(0)
     month = record[1].get_str(0)
@@ -357,7 +359,7 @@ def parse_opmio_date_rec(record: "opm.io.DeckRecord") -> datetime.date:
     return datetime.date(year=year, month=parse_month(month), day=day)
 
 
-def parse_opmio_tstep_rec(record: "opm.io.DeckRecord") -> list[float | int]:
+def parse_opmio_tstep_rec(record: opm.opmcommon_python.DeckRecord) -> list[float | int]:
     """Parse a record with TSTEP data
 
     Return:
@@ -367,7 +369,10 @@ def parse_opmio_tstep_rec(record: "opm.io.DeckRecord") -> list[float | int]:
 
 
 def merge_zones(
-    df: pd.DataFrame, zonedict: dict, zoneheader: str = "ZONE", kname: str = "K1"
+    df: pd.DataFrame,
+    zonedict: dict[int, str],
+    zoneheader: str = "ZONE",
+    kname: str = "K1",
 ) -> pd.DataFrame:
     """Merge in a column with zone names, from a dictionary mapping
     k-index to zone name. If the zonemap is not covering all
@@ -397,11 +402,10 @@ def merge_zones(
     if kname not in df:
         logger.error("Can't merge on non-existing column %s", kname)
         return df
-    zone_df = pd.DataFrame.from_dict(zonedict, orient="index", columns=[zoneheader])
-    zone_df.index.name = "K"
-    zone_df = zone_df.reset_index()
 
-    df[zoneheader] = df[kname].map(defaultdict(lambda: None, zonedict))
+    df[zoneheader] = df[kname].map(
+        defaultdict(lambda: None, zonedict)  # type: ignore[return-value, arg-type]
+    )
     return df
 
 
@@ -426,7 +430,7 @@ def comment_formatter(multiline: str | None, prefix: str = "-- ") -> str:
 
 def handle_wanted_keywords(
     wanted: list[str] | None,
-    deck: "opm.io.Deck",
+    deck: opm.opmcommon_python.Deck,
     supported: list[str],
     modulename: str = "",
 ) -> list[str]:
@@ -977,4 +981,4 @@ def get_wells_matching_template(template: str, wells: list[str]) -> list[str]:
         )
     template = template.removeprefix("\\")
     regex = template.replace("*", ".*").replace("?", ".")
-    return [well for well in wells if bool(re.match(regex, well))]
+    return [well for well in wells if bool(re.fullmatch(regex, well))]

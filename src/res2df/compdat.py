@@ -10,6 +10,8 @@
 * WSEGVALV
 """
 
+from __future__ import annotations
+
 import argparse
 import datetime
 import logging
@@ -64,7 +66,7 @@ WSEG_RENAMER: dict[str, str] = {
 
 
 def deck2dfs(
-    deck: "opm.io.Deck",
+    deck: opm.opmcommon_python.Deck,
     start_date: str | datetime.date | None = None,
     unroll: bool = True,
 ) -> dict[str, pd.DataFrame]:

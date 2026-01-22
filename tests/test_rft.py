@@ -531,3 +531,55 @@ def test_main_debugmode(tmp_path, mocker):
     assert not pd.read_csv("con.csv").empty
     assert Path("seg.csv").exists()  # too simple example data, no segments.
     assert Path("icd.csv").exists()  # too simple example data, no ICD
+
+
+def test_process_seg_topology_junction_downstream():
+    """Test that JUNCTION_downstream is correctly set"""
+    # Well with a junction at segment 1
+    #     |       segidx 1 (junction)
+    #    / \      segidx 2 and 3 (feed into the junction)
+    wellseg = pd.DataFrame(
+        {
+            "SEGIDX": [1, 2, 3],
+            "SEGNXT": [None, 1, 1],
+            "SEGBRNO": [1, 1, 2],
+        }
+    )
+
+    result = rft.process_seg_topology(wellseg)
+
+    # Segment 1 is a junction (has multiple upstream segments)
+    assert result[result["SEGIDX"] == 1]["JUNCTION"].all()
+
+    # Segments 2 and 3 feed into the junction, so JUNCTION_downstream=True
+    seg2_rows = result[result["SEGIDX"] == 2]
+    seg3_rows = result[result["SEGIDX"] == 3]
+    assert seg2_rows["JUNCTION_downstream"].all()
+    assert seg3_rows["JUNCTION_downstream"].all()
+
+    # Segment 1 feeds into nothing (wellhead), so JUNCTION_downstream=False
+    seg1_rows = result[result["SEGIDX"] == 1]
+    assert not seg1_rows["JUNCTION_downstream"].any()
+
+
+def test_process_seg_topology_junction_downstream_non_consecutive():
+    """Test JUNCTION_downstream with non-consecutive SEGIDX values"""
+    wellseg = pd.DataFrame(
+        {
+            "SEGIDX": [10, 20, 30],
+            "SEGNXT": [None, 10, 10],
+            "SEGBRNO": [1, 1, 2],
+        }
+    )
+
+    result = rft.process_seg_topology(wellseg)
+
+    # Segments 20 and 30 feed into junction (segment 10)
+    seg20_rows = result[result["SEGIDX"] == 20]
+    seg30_rows = result[result["SEGIDX"] == 30]
+    assert seg20_rows["JUNCTION_downstream"].all()
+    assert seg30_rows["JUNCTION_downstream"].all()
+
+    # Segment 10 is the junction, feeds into wellhead
+    seg10_rows = result[result["SEGIDX"] == 10]
+    assert not seg10_rows["JUNCTION_downstream"].any()

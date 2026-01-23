@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.gruptree &mdash; res2df 1.3.12.dev6+g5c53b209c documentation</title>
+  <title>res2df.gruptree &mdash; res2df 1.3.12.dev11+g633b16b09 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=0ef6f5a2"></script>
+      <script src="../../_static/documentation_options.js?v=aea85c1c"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -92,9 +92,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="c1"># Needed for mypy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">opm.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">opm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">treelib</span>
 
@@ -147,6 +145,9 @@
 
     <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">startdate</span> <span class="k">if</span> <span class="n">startdate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="p">(</span><span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input deck must be either ResdataFiles or an opm Deck.&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">):</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
@@ -263,7 +264,6 @@
     <span class="c1"># This happens with WELSPECS if both GRUPTREE and BRANPROP is defined</span>
     <span class="c1"># at the same timestep. And when a node is redirected to a new parent node</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="s2">&quot;CHILD&quot;</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 

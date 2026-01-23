@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.common &mdash; res2df 1.3.12.dev6+g5c53b209c documentation</title>
+  <title>res2df.common &mdash; res2df 1.3.12.dev11+g633b16b09 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=0ef6f5a2"></script>
+      <script src="../../_static/documentation_options.js?v=aea85c1c"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -777,7 +777,7 @@
 
     <span class="c1"># Start building the string we are to return:</span>
     <span class="n">string</span> <span class="o">=</span> <span class="n">keyword</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="n">comment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">comment</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">comment</span><span class="p">:</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;-- &quot;</span> <span class="o">+</span> <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">comment</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 
     <span class="c1"># Empty tables are ok with Eclipse (at least sometimes)</span>
@@ -788,7 +788,7 @@
     <span class="c1"># Pandas make a pretty txt table:</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="c1"># Column names are pr. ec2ldf standard, redo to opm.common in order to use</span>
+    <span class="c1"># Column names are pr. res2df standard, redo to opm.common in order to use</span>
     <span class="c1"># sorting from that:</span>
     <span class="k">if</span> <span class="n">renamer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">inv_renamer</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">renamer</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -820,11 +820,14 @@
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;1*&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">drop_trailing_columns</span><span class="p">:</span>
+        <span class="n">columns_to_drop</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">relevant_columns</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot;1*&quot;</span><span class="p">}:</span>
-                <span class="k">del</span> <span class="n">dframe</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="n">columns_to_drop</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_name</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">break</span>
+        <span class="k">if</span> <span class="n">columns_to_drop</span><span class="p">:</span>
+            <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns_to_drop</span><span class="p">)</span>
 
     <span class="c1"># It is critical for opm.common, maybe also E100 to have integers printed</span>
     <span class="c1"># as integers, for correct parsing. Ensure these are integer where the json</span>
@@ -832,13 +835,15 @@
     <span class="n">integer_cols</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INT&quot;</span>  <span class="c1"># and item[&quot;name&quot;] in col_headers</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INT&quot;</span>
     <span class="p">}</span>
     <span class="k">for</span> <span class="n">int_col</span> <span class="ow">in</span> <span class="n">integer_cols</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-        <span class="n">defaulted_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">int_col</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1*&quot;</span>
-        <span class="n">integer_values</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">defaulted_rows</span><span class="p">,</span> <span class="n">int_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">int_col</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;1*&quot;</span>
         <span class="n">dframe</span><span class="p">[</span><span class="n">int_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">int_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">defaulted_rows</span><span class="p">,</span> <span class="n">int_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">integer_values</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">int_col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">int_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+            <span class="p">)</span>
 
     <span class="c1"># Quote all string data. This is not always needed, but needed</span>
     <span class="c1"># for some colums, for example well-names containing a slash.</span>
@@ -850,9 +855,8 @@
     <span class="k">for</span> <span class="n">str_col</span> <span class="ow">in</span> <span class="n">string_cols</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="c1"># Ensure 1* is not quoted.</span>
         <span class="n">non_defaulted_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">str_col</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;1*&quot;</span>
-        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">non_defaulted_rows</span><span class="p">,</span> <span class="n">str_col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">non_defaulted_rows</span><span class="p">,</span> <span class="n">str_col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">non_defaulted_rows</span><span class="p">,</span> <span class="n">str_col</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+            <span class="s2">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">non_defaulted_rows</span><span class="p">,</span> <span class="n">str_col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
         <span class="p">)</span>
 
     <span class="c1"># Now rename again to have prettier column names:</span>
@@ -863,8 +867,7 @@
     <span class="n">tablestring</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="c1"># Indent all lines with two spaces:</span>
     <span class="n">tablestring</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="p">[</span><span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;  /&quot;</span><span class="p">,</span> <span class="s2">&quot; /&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tablestring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
-        <span class="c1"># The replace() in there is needed for py36/pandas==1.1.5 only.</span>
+        <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;  /&quot;</span><span class="p">,</span> <span class="s2">&quot; /&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tablestring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="c1"># Eclipse comment for the header line:</span>
     <span class="n">tablestring</span> <span class="o">=</span> <span class="s2">&quot;--&quot;</span> <span class="o">+</span> <span class="n">tablestring</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -966,7 +969,7 @@
     <span class="c1"># Drop rows stemming from the NaNs in the second tuple-element for</span>
     <span class="c1"># static columns:</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
-    <span class="k">del</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;level_0&quot;</span><span class="p">]</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;level_0&quot;</span><span class="p">)</span>
     <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">return</span> <span class="n">dframe</span></div>
 

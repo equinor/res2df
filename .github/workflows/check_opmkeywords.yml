@@ -1,0 +1,34 @@
+name: Check OPM Keywords
+
+on:
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+
+jobs:
+  check-opmkeywords:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Run opmkeywords sync script
+        run: |
+          set -euo pipefail
+          cd scripts
+          bash runmetoupdate.sh src/res2df/opmkeywords
+
+      - name: Check for changes
+        run: |
+          if [ -n "$(git status --porcelain src/res2df/opmkeywords/)" ]; then
+            echo "::error::OPM keywords are out of date!"
+            echo "The following files have changed:"
+            git status --porcelain src/res2df/opmkeywords/
+            echo ""
+            echo "Please run 'cd scripts && bash runmetoupdate.sh' locally and commit the changes."
+            git diff src/res2df/opmkeywords/
+            exit 1
+          else
+            echo "OPM keywords are up to date."
+          fi

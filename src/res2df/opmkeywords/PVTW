@@ -22,7 +22,7 @@
     {
       "name": "WATER_COMPRESSIBILITY",
       "value_type": "DOUBLE",
-      "default": 4e-05,
+      "default": 0.00004,
       "dimension": "1/Pressure"
     },
     {

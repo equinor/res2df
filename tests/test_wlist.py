@@ -47,7 +47,7 @@ from res2df import ResdataFiles, compdat
                     {
                         "NAME": "OP",
                         "ACTION": "NEW",
-                        "WELLS": "",
+                        "WELLS": None,
                         "DATE": datetime.date(2001, 5, 1),
                     }
                 ]
@@ -119,7 +119,7 @@ from res2df import ResdataFiles, compdat
                     {
                         "NAME": "OPS",
                         "ACTION": "NEW",
-                        "WELLS": "",
+                        "WELLS": None,
                         "DATE": datetime.date(2001, 5, 2),
                     },
                     {

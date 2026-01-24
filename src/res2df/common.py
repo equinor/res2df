@@ -255,15 +255,18 @@ def keyworddata_to_df(
         else:
             dict_records.append(recdict)
         record_counter += 1
+    result_df: pd.DataFrame
     if df_records and dict_records:
         dict_df = pd.DataFrame(data=dict_records)
-        return pd.concat([*df_records, dict_df]).reset_index(drop=True)
+        result_df = pd.concat([*df_records, dict_df])
     elif df_records:  # trust that this is all one type?
-        return pd.concat(df_records).reset_index(drop=True)
+        result_df = pd.concat(df_records)
     elif dict_records:  # records contain lists.
-        return pd.DataFrame(data=dict_records).reset_index(drop=True)
+        result_df = pd.DataFrame(data=dict_records)
     else:
         return pd.DataFrame()
+    # Drop columns that are entirely NaN/None (e.g., unused optional keyword items)
+    return result_df.reset_index(drop=True).dropna(axis=1, how="all")
 
 
 def parse_opmio_deckrecord(

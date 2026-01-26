@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Extract grid information from grid files as Dataframes.
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Convert dataframes (in res2df format) to include files,
 for selected keywords

@@ -29,11 +29,11 @@ from .gruptree import tree_from_dict
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
-logger: logging.Logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # In debug mode, these columns will be exported to three csv files.
-CON_TOPOLOGY_COLS: set = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}
-SEG_TOPOLOGY_COLS: set = {
+CON_TOPOLOGY_COLS: set[str] = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}
+SEG_TOPOLOGY_COLS: set[str] = {
     "SEGIDX",
     "SEGIDX_upstream",
     "SEGBRNO",
@@ -46,7 +46,7 @@ SEG_TOPOLOGY_COLS: set = {
     "LEAF",
     "SEGDEPTH",
 }
-ICD_TOPOLOGY_COLS: set = {
+ICD_TOPOLOGY_COLS: set[str] = {
     "ICD_SEGBRNO_upstream",
     "ICD_SEGIDX_upstream",
     "ICD_LEAF",

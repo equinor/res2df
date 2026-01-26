@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Extract the contents of the FAULTS keyword into
 a DataFrame

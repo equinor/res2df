@@ -6,7 +6,6 @@ simulator :term:`output files <output file>`.
 import argparse
 import datetime
 import logging
-import os
 from pathlib import Path
 
 import pandas as pd
@@ -17,7 +16,7 @@ from .grid import gridgeometry2df
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
-logger: logging.Logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def df(
@@ -241,8 +240,8 @@ def df2res_editnnc(
 
     string = ""
     res2df_header = (
-        "Output file printed by res2df.nnc"
-        " " + __version__ + "\n" + " at " + str(datetime.datetime.now())
+        f"Output file printed by res2df.nnc {__version__}\n"
+        f" at {datetime.datetime.now()}"
     )
     if not nocomments:
         string += comment_formatter(res2df_header)
@@ -253,15 +252,15 @@ def df2res_editnnc(
 
     if "TRANM" not in nnc_df:
         raise ValueError("TRANM not supplied in nnc_df")
-    string += "EDITNNC" + os.linesep
+    string += "EDITNNC\n"
     table_str = nnc_df[["I1", "J1", "K1", "I2", "J2", "K2", "TRANM"]].to_string(
         header=True, index=False
     )
-    lines = table_str.rstrip().split(os.linesep)
+    lines = table_str.rstrip().split("\n")
     indent = "   "
-    string += "-- " + lines[0] + os.linesep
-    string += os.linesep.join([indent + line + " /" for line in lines[1:]])
-    string += os.linesep
+    string += "-- " + lines[0] + "\n"
+    string += "\n".join([indent + line + " /" for line in lines[1:]])
+    string += "\n"
     string += "/"
     if not nocomments:
         string += " "
@@ -288,4 +287,3 @@ def nnc_main(args: argparse.Namespace) -> None:
         caller_logger=logger,
         logstr=f"Wrote to {args.output}",
     )
-    nncdf.to_csv(args.output, index=False)

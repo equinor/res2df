@@ -18,7 +18,6 @@ from importlib import resources
 from pathlib import Path
 from typing import Any, cast
 
-import dateutil.parser
 import numpy as np
 import opm.io.deck
 import pandas as pd
@@ -112,7 +111,7 @@ MONTH2NUM = {
 }
 NUM2MONTH = {num: month for month, num in MONTH2NUM.items()}
 
-logger: logging.Logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def write_dframe_stdout_file(
@@ -174,10 +173,7 @@ def parse_month(rdmonth: str) -> int:
 def datetime_to_ecldate(timestamp: str | datetime.datetime | datetime.date) -> str:
     """Convert a Python timestamp or date to the Eclipse DATE format"""
     if isinstance(timestamp, str):
-        if list(map(len, timestamp.split(" ")[0].split("-"))) != [4, 2, 2]:
-            # Need this as dateutil.parser.isoparse() is not in Python 3.6.
-            raise ValueError("Use ISO-format for dates")
-        timestamp = dateutil.parser.parse(timestamp)
+        timestamp = datetime.datetime.fromisoformat(timestamp)
     if not isinstance(timestamp, (datetime.datetime, datetime.date)):
         raise TypeError("Require string or datetime")
     string = f"{timestamp.day} '{NUM2MONTH[timestamp.month]}' {timestamp.year}"
@@ -337,7 +333,7 @@ def parse_opmio_deckrecord(
                     if record[item_idx].__defaulted(idx):
                         rec_dict[item_name][idx] = np.nan
         else:
-            rec_dict[item_name] = jsonitem.get("default", None)
+            rec_dict[item_name] = jsonitem.get("default")
 
     if renamer:
         renamed_dict: dict[str, Any] = {}

@@ -193,7 +193,7 @@ ignore = [
 
 [tool.ruff.lint.extend-per-file-ignores]
 "src/res2df/__init__.py" = ["PLC0414"]
-"tests/*" = ["RUF005", "ANN", "FURB113", "PERF", "ARG"]
+"tests/*" = ["RUF005", "ANN", "FURB113", "PERF", "ARG", "RUF069"]
 "docs/*" = ["ANN", "ARG", "INP"]
 
 [tool.ruff.lint.pylint]

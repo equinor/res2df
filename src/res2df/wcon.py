@@ -1,5 +1,7 @@
 """Extract WCON* from a .DATA file"""
 
+from __future__ import annotations
+
 import argparse
 import datetime
 import logging
@@ -22,7 +24,7 @@ logger = logging.getLogger(__name__)
 WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
 
-def df(deck: "ResdataFiles | opm.opmcommon_python.Deck") -> pd.DataFrame:
+def df(deck: ResdataFiles | opm.opmcommon_python.Deck) -> pd.DataFrame:
     """Loop through the :term:`deck` and pick up information found
 
     The loop over the :term:`deck` is a state machine, as it has to pick up dates
@@ -55,10 +57,6 @@ def df(deck: "ResdataFiles | opm.opmcommon_python.Deck") -> pd.DataFrame:
                 rec_data["KEYWORD"] = kword.name
                 wconrecords.append(rec_data)
 
-        elif kword.name == "TSTEP":
-            logger.warning("WARNING: Possible premature stop at first TSTEP")
-            break
-
     wcon_df = pd.DataFrame(wconrecords)
 
     return wcon_df
@@ -86,8 +84,7 @@ def wcon_main(args: argparse.Namespace) -> None:
     """Read from disk and write CSV back to disk"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
-    if resdatafiles:
-        deck = resdatafiles.get_deck()
+    deck = resdatafiles.get_deck()
     wcon_df = df(deck)
     write_dframe_stdout_file(
         wcon_df,

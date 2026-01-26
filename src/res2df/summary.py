@@ -1,11 +1,11 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 
 import argparse
+import contextlib
 
 # The name 'datetime' is in use by a function argument:
 import datetime as dt
 import logging
-import os
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
@@ -327,13 +327,13 @@ def df(
             start_date will always be included.
         end_date: str or date with last date to be included.
             Dates past this date will be dropped, supplied
-            end_date will always be included. Overriden if time_index
+            end_date will always be included. Overridden if time_index
             is 'last'.
         include_restart: boolean sent to resdata for whether restart
             files should be traversed
         params: If set, parameters.txt will be attempted loaded
             and merged with the summary data.
-        paramsfile: Explicit path to parameters file if autodiscovery is
+        paramfile: Explicit path to parameters file if autodiscovery is
             not wanted. Implies params=True
         datetime: If True, the time index of the returned DataFrame
             is always of datetime type. If not, it will be datetime
@@ -378,7 +378,7 @@ def df(
 
     if time_index_arg is None:
         time_index_str = ""
-    if isinstance(time_index_arg, (list, np.ndarray)):
+    elif isinstance(time_index_arg, (list, np.ndarray)):
         if len(time_index_arg) < 6:
             time_index_str = str(time_index_arg)
         else:
@@ -386,7 +386,6 @@ def df(
 
     if not column_keys or not column_keys[0]:
         column_keys_str = "*"
-        # column_keys = [column_keys_str]
     else:
         column_keys_str = ",".join(filter(None, column_keys))
     logger.info(
@@ -454,8 +453,9 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
             logger.info(
                 "Dataframe of summary data contained duplicate timestamps due to "
                 "limited output resolution. Vector TIMESTEP exists, utilizing it to "
-                "create discrete timestamps."
-                f"Original duplicates were:{index_duplicate_log_string}"
+                "create discrete timestamps. "
+                "Original duplicates were: %s",
+                index_duplicate_log_string,
             )
             index_as_list = dframe.index.to_list()
 
@@ -466,7 +466,9 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
                     )
             elif dframe.attrs["meta"]["TIMESTEP"]["unit"] == "HOURS":
                 for idx in np.where(index_duplicates)[0]:
-                    index_as_list[idx] += dt.timedelta(hours=dframe["TIMESTEP"][idx])
+                    index_as_list[idx] += dt.timedelta(
+                        hours=dframe["TIMESTEP"].iloc[idx]
+                    )
             else:
                 raise ValueError(
                     "Dataframe of smry data contained duplicate timestamps. "
@@ -651,7 +653,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
     # This column will appear if dataframes are naively written to CSV
     # files and read back in again.
     if "Unnamed: 0" in dframe:
-        dframe = dframe.drop("Unnamed: 0", axis="columns")
+        dframe = dframe.drop(columns="Unnamed: 0")
 
     block_columns = [col for col in dframe.columns if (col.startswith(("B", "LB")))]
     if block_columns:
@@ -667,7 +669,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
 def df2ressum(
     dframe: pd.DataFrame,
     casename: str = "SYNTHETIC",
-) -> Summary:
+) -> Summary | None:
     """Convert a dataframe to a Summary object
 
     Args:
@@ -831,12 +833,10 @@ def summary_reverse_main(args: argparse.Namespace) -> None:
     eclbase = Path(args.output).name
 
     # Summary.fwrite() can only write to current directory:
-    cwd = Path.cwd()
     summary = df2ressum(summary_df, eclbase)
-    try:
-        os.chdir(outputdir)
+    outputdir.mkdir(parents=True, exist_ok=True)
+
+    with contextlib.chdir(outputdir):
         Summary.fwrite(summary)
-    finally:
-        os.chdir(cwd)
 
     logger.info("Wrote to %s and %s", args.output + ".UNSMRY", args.output + ".SMSPEC")

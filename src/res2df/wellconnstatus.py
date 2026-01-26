@@ -1,4 +1,4 @@
-"""Exctracts connection status history for each well connections"""
+"""Extracts connection status history for each well connections"""
 
 import argparse
 import logging
@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def df(resdatafiles: ResdataFiles) -> pd.DataFrame:
-    """Exctracts connection status history for each compdat connection that
-    is included in the summary data on the form CPI:WELL,I,J,K. CPI stands for
+    """Extracts connection status history for each compdat connection that
+    is included in the summary data on the form CPI:WELL:I,J,K. CPI stands for
     connection productivity index.
 
     One line is added to the export every time a connection changes status. It
@@ -38,9 +38,10 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
     cpi_columns = [
         col
         for col in smry.columns
-        if re.match(r"^CPI:[A-Z0-9_-]{1,8}:[0-9]+,[0-9]+,[0-9]+$", col)
+        if re.fullmatch(r"CPI:[A-Z0-9_-]{1,8}:[0-9]+,[0-9]+,[0-9]+", col)
     ]
-    dframe = pd.DataFrame(columns=["DATE", "WELL", "I", "J", "K", "OP/SH"])
+
+    rows: list[dict[str, Any]] = []
 
     for col in cpi_columns:
         colsplit = col.split(":")
@@ -51,11 +52,18 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
             smry.index, smry[col]
         )
         for date, status in status_changes:
-            dframe.loc[dframe.shape[0]] = [date, well, i, j, k, status]
+            rows.append(
+                {
+                    "DATE": date,
+                    "WELL": well,
+                    "I": int(i),
+                    "J": int(j),
+                    "K": int(k),
+                    "OP/SH": status,
+                }
+            )
 
-    dframe["I"] = dframe["I"].astype(int)
-    dframe["J"] = dframe["J"].astype(int)
-    dframe["K"] = dframe["K"].astype(int)
+    dframe = pd.DataFrame(rows)
 
     logger.info(
         "Dataframe with well connection status ready, %d rows",

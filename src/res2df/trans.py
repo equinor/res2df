@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Extract transmissibility information from output files as Dataframes.
 """

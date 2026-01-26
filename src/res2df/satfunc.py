@@ -35,7 +35,7 @@ from .inferdims import inject_xxxdims_ntxxx
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
-logger: logging.Logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 SUPPORTED_KEYWORDS: list[str] = [
     "SWOF",

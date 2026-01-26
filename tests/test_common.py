@@ -222,7 +222,7 @@ def test_df2res():
         pytest.param(
             "",
             None,
-            marks=pytest.mark.xfail(raises=ValueError, match="ISO string too short"),
+            marks=pytest.mark.xfail(raises=ValueError, match="Invalid isoformat"),
         ),
         ("2021-02-01", "1 'FEB' 2021"),
         ("2021-02-01 010203", "1 'FEB' 2021 01:02:03"),
@@ -235,7 +235,7 @@ def test_df2res():
         pytest.param(
             "01/02/2021",
             None,
-            marks=pytest.mark.xfail(raises=ValueError, match="Use ISO"),
+            marks=pytest.mark.xfail(raises=ValueError, match="Invalid isoformat"),
         ),
     ],
 )

@@ -21,7 +21,7 @@ from .parameters import find_parameter_files, load, load_all
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
-logger: logging.Logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # Frequency mnemonics for the API consumer to use:
 FREQ_RAW: str = "raw"
@@ -834,6 +834,10 @@ def summary_reverse_main(args: argparse.Namespace) -> None:
 
     # Summary.fwrite() can only write to current directory:
     summary = df2ressum(summary_df, eclbase)
+
+    if summary is None:
+        logger.warning("No data to write. The input CSV file may be empty.")
+        return
 
     with contextlib.chdir(outputdir):
         Summary.fwrite(summary)

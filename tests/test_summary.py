@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import os
 from datetime import datetime as dt
@@ -1275,6 +1276,24 @@ def test_df2ressum_errors():
     # No date included:
     with pytest.raises(ValueError, match="dataframe must have a datetime index"):
         df2ressum(pd.DataFrame([{"FOPT": 1000}]))
+
+
+def test_summary_reverse_main_empty_csv(tmp_path, monkeypatch):
+    """Test that summary_reverse_main handles an empty CSV gracefully
+    instead of crashing when df2ressum returns None."""
+    empty_csv = tmp_path / "empty.csv"
+    pd.DataFrame(columns=["DATE", "FOPT"]).to_csv(empty_csv, index=False)
+
+    monkeypatch.chdir(tmp_path)
+    args = argparse.Namespace(
+        csvfile=str(empty_csv),
+        output="EMPTY",
+        verbose=0,
+    )
+    # Should return without crashing, not write any output files.
+    summary.summary_reverse_main(args)
+    assert not Path("EMPTY.UNSMRY").is_file()
+    assert not Path("EMPTY.SMSPEC").is_file()
 
 
 @pytest.mark.integration

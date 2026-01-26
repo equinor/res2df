@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 End-user command line tool for accessing functionality
 in res2df

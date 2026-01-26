@@ -63,7 +63,7 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
                 }
             )
 
-    dframe = pd.DataFrame(rows)
+    dframe = pd.DataFrame(rows, columns=["DATE", "WELL", "I", "J", "K", "OP/SH"])
 
     logger.info(
         "Dataframe with well connection status ready, %d rows",

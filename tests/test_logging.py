@@ -72,7 +72,9 @@ def test_default_logger_levels_and_split(capsys):
     "res2df_module, verbose, fileexport",
     itertools.product(res2df.SUBMODULES, [False, True], [True, False]),
 )
-def test_res2csv_logging(tmp_path, res2df_module, verbose, fileexport, mocker, capsys):
+def test_res2csv_logging(
+    tmp_path, res2df_module, verbose, fileexport, mocker, capsys, monkeypatch
+):
     """Test that the command line client for each submodule logs correctly.
 
     Each submodule should write logs to stdout for INFO and WARNING messages
@@ -86,6 +88,7 @@ def test_res2csv_logging(tmp_path, res2df_module, verbose, fileexport, mocker, c
     work, this is related (?) to loggers not being properly reset between each
     test invocation.
     """
+    monkeypatch.chdir(tmp_path)
     if res2df_module == "nnc":
         # There are no nnc's in EIGHTCELLS, so for that test
         # we need the REEK dataset:

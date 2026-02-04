@@ -2,7 +2,6 @@
 
 import datetime
 import logging
-import os
 from pathlib import Path
 
 import numpy as np
@@ -206,7 +205,7 @@ def test_that_grid_df_works_with_only_PORV():
     assert "PORV" in grid_df
 
 
-def test_df2res(tmp_path):
+def test_df2res(tmp_path, monkeypatch):
     """Test if we are able to output include files for grid data"""
     resdatafiles = ResdataFiles(REEK)
     grid_df = grid.df(resdatafiles)
@@ -244,7 +243,7 @@ def test_df2res(tmp_path):
     assert "3333" in fipnum_big_str
     assert len(fipnum_big_str) > len(fipnum_str)
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     grid.df2res(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
     assert Path("perm.inc").is_file()
     incstring = Path("perm.inc").read_text(encoding="utf8").splitlines()

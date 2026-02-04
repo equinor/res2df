@@ -1,7 +1,6 @@
 """Test module for fipreports"""
 
 import datetime
-import os
 from pathlib import Path
 
 import numpy as np
@@ -83,7 +82,7 @@ def test_mockprtfile():
         fipreports.df(MOCKPRTFILE, fipname="FIP456789")
 
 
-def test_prtstring(tmp_path):
+def test_prtstring(tmp_path, monkeypatch):
     """Test a PRT from string, verifying every detail of the dataframe"""
     prtstring = """
   REPORT   0     1 JAN 2000
@@ -107,7 +106,7 @@ def test_prtstring(tmp_path):
  :OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.:
  ====================================================================================================================================
 """  # noqa: E501
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT")
     expected_dframe = pd.DataFrame(
@@ -230,7 +229,7 @@ def test_prtstring(tmp_path):
     pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 
-def test_gaswater_report(tmp_path):
+def test_gaswater_report(tmp_path, monkeypatch):
     """Two-phase gas water run"""
     prtstring = """
                                               =================================
@@ -250,7 +249,7 @@ def test_gaswater_report(tmp_path):
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
  ====================================================================================================================================
 """  # noqa: E501
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
     print(dframe.to_string())
@@ -324,7 +323,7 @@ def test_gaswater_report(tmp_path):
     )
 
 
-def test_drygas_report(tmp_path):
+def test_drygas_report(tmp_path, monkeypatch):
     """Excerpt from a two-phase gas water run"""
     prtstring = """
                                                 =================================
@@ -344,7 +343,7 @@ def test_drygas_report(tmp_path):
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
  ====================================================================================================================================
 """  # noqa: E501
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
     assert dframe["REGION"].unique() == [2]
@@ -417,7 +416,7 @@ def test_drygas_report(tmp_path):
     )
 
 
-def test_rogue_eclipse_output(tmp_path):
+def test_rogue_eclipse_output(tmp_path, monkeypatch):
     """The stars in the material balance error line has been observed in reality."""
     prtstring = """
                                                 =================================
@@ -434,13 +433,13 @@ def test_rogue_eclipse_output(tmp_path):
  :MATERIAL BALANCE ERROR.  :                                   3419391.:        671761. :                              *************:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
 """  # noqa: E501
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
     assert np.isnan(dframe.loc["MATERIAL BALANCE ERROR.", "GIIP_TOTAL"])
 
 
-def test_prtstring_opmflow(tmp_path):
+def test_prtstring_opmflow(tmp_path, monkeypatch):
     """Test parsing the PRT output from OPM Flow."""
     prtstring = """
 Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
@@ -457,7 +456,7 @@ Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
 :Originally  in place    :      16530271             0      16530271:     60415965   :             0             0             0:
 :========================:==========================================:================:==========================================:
 """  # noqa: E501
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT")
     print(dframe.to_dict(orient="records"))
@@ -530,8 +529,9 @@ def test_report_block_lineparser():
     assert int(tup[7]) == 22298026321
 
 
-def test_cmdline(tmp_path, mocker):
+def test_cmdline(tmp_path, mocker, monkeypatch):
     """Test command line interface"""
+    monkeypatch.chdir(tmp_path)
     tmpcsvfile = tmp_path / "TMP-fipreports.csv"
     mocker.patch(
         "sys.argv",

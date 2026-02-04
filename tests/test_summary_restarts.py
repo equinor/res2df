@@ -1,4 +1,3 @@
-import os
 import subprocess
 import time
 from contextlib import nullcontext as does_not_raise
@@ -74,7 +73,12 @@ from res2df import ResdataFiles
     ],
 )
 def test_summary_restarts(
-    history_case_len, history_is_abspath, eclipse_version, expectation, tmpdir
+    history_case_len,
+    history_is_abspath,
+    eclipse_version,
+    expectation,
+    tmpdir,
+    monkeypatch,
 ):
     # Generate a DATA filename with parametrized length
     history_case = ("E23456789" * 20)[0:history_case_len]
@@ -88,7 +92,7 @@ def test_summary_restarts(
     ):
         pytest.skip("pytest tmpdir is too long for this test to work")
 
-    os.chdir(tmpdir)
+    monkeypatch.chdir(tmpdir)
     Path(restartref + ".DATA").write_text(eightcells_deck(), encoding="utf-8")
 
     restartref = history_case if not history_is_abspath else str(tmpdir / history_case)

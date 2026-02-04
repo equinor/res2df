@@ -530,7 +530,6 @@ def pyarrow(
         tab_type=vfpinj_data["TAB_TYPE"],
         flow_values=vfpinj_data["FLOW_VALUES"],
         thp_values=vfpinj_data["THP_VALUES"],
-        thp_indices=vfpinj_data["THP_INDICES"],
         tab_data=vfpinj_data["BHP_TABLE"],
     )
 

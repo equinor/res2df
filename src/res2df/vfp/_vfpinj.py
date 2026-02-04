@@ -232,7 +232,6 @@ def basic_data2pyarrow(
     tab_type: VFPINJ_TABTYPE,
     flow_values: np.ndarray,
     thp_values: np.ndarray,
-    thp_indices: np.ndarray,
     tab_data: np.ndarray,
 ) -> pa.Table:
     """Return a pyarrow Table from VFPINJ record data
@@ -246,7 +245,6 @@ def basic_data2pyarrow(
         tab_type    : type for tabulated (record) values
         flow_values : rate values used to generate table
         thp_values  : THP values used to generate table
-        thp_indices : THP indices for each record in tabulated data
         tab_data    : tabulated (BHP) data
                       (ordered according to thp- and flow-values)
     """

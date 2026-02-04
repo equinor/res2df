@@ -616,7 +616,7 @@ def drop_constant_columns(
         if len(dframe[col].unique()) == 1
     ]
     if columnstodelete:
-        logging.info("Deleting constant columns %s", columnstodelete)
+        logger.info("Deleting constant columns %s", columnstodelete)
     return dframe.drop(columnstodelete, axis=1)
 
 

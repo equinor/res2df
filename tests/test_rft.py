@@ -1,7 +1,6 @@
 """Test module for rft"""
 
 import datetime
-import os
 import random
 from pathlib import Path
 
@@ -520,9 +519,9 @@ def test_main_subparsers(tmp_path, mocker):
     assert not disk_df.empty
 
 
-def test_main_debugmode(tmp_path, mocker):
+def test_main_debugmode(tmp_path, mocker, monkeypatch):
     """Test debug mode"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch(
         "sys.argv", ["res2csv", "rft", "--debug", EIGHTCELLS, "-o", "indebugmode.csv"]
     )

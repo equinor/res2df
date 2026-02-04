@@ -1,6 +1,5 @@
 """Test module for nnc2df"""
 
-import os
 from pathlib import Path
 
 import numpy as np
@@ -78,9 +77,9 @@ WELSPECS
     assert len(withstart) == 6
 
 
-def test_grupnet_rst_docs(tmp_path):
+def test_grupnet_rst_docs(tmp_path, monkeypatch):
     """Provide the input and output for the examples in the RST documentation"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     schstr = """
 START
  01 'JAN' 2000 /
@@ -426,9 +425,9 @@ def test_non_deck_input_raises():
         _ = gruptree.df("this should not be valid")
 
 
-def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
+def test_emptytree_commandlinetool(tmp_path, mocker, caplog, monkeypatch):
     """Test the command line tool on a .DATA file which is empty"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("EMPTY.DATA").write_text("", encoding="utf8")
     mocker.patch("sys.argv", ["res2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])
     res2csv.main()

@@ -1,6 +1,5 @@
 """Test module for satfunc2df"""
 
-import os
 import subprocess
 from pathlib import Path
 
@@ -239,7 +238,7 @@ def test_str2df(string, expected_df):
     pd.testing.assert_frame_equal(df_from_inc, expected_df)
 
 
-def test_sgof_satnuminferrer(tmp_path, mocker):
+def test_sgof_satnuminferrer(tmp_path, mocker, monkeypatch):
     """Test inferring of SATNUMS in SGOF strings"""
     sgofstr = """
 SGOF
@@ -255,7 +254,7 @@ SGOF
   1 1 0 0
 /
 """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
     sgofdf = satfunc.df(sgofstr)
     assert "SATNUM" in sgofdf
@@ -674,9 +673,9 @@ def test_main_subparsers(tmp_path, mocker):
     assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}
 
 
-def test_csv2res(tmp_path, mocker):
+def test_csv2res(tmp_path, mocker, monkeypatch):
     """Test command line interface for csv to include files"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     tmpcsvfile = "satfunc.csv"
 
     swof_df = pd.DataFrame(

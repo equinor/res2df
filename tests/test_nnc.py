@@ -1,7 +1,6 @@
 """Test module for nnc2df"""
 
 import io
-import os
 import subprocess
 from pathlib import Path
 
@@ -74,11 +73,11 @@ def test_nnc2df_faultnames():
     # Remove I_x, J_x, K_x (and _y) which is not needed
 
 
-def test_df2res_editnnc(tmp_path):
+def test_df2res_editnnc(tmp_path, monkeypatch):
     """Test generation of EDITNNC keyword"""
     resdatafiles = ResdataFiles(REEK)
     nncdf = nnc.df(resdatafiles)
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     nncdf["TRANM"] = 2
     editnnc = nnc.df2res_editnnc(nncdf, filename="editnnc.inc")
@@ -116,8 +115,9 @@ def test_main(tmp_path, mocker):
     assert "TRAN" in disk_df
 
 
-def test_magic_stdout():
+def test_magic_stdout(tmp_path, monkeypatch):
     """Test that we can pipe the output into a dataframe"""
+    monkeypatch.chdir(tmp_path)
     result = subprocess.run(
         ["res2csv", "nnc", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
     )

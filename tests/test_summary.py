@@ -298,7 +298,7 @@ def test_paramsupport(tmp_path, mocker):
     parametersyml.unlink()
 
 
-def test_paramsupport_explicitfile(tmp_path, mocker):
+def test_paramsupport_explicitfile(tmp_path, mocker, monkeypatch):
     """Test explicit naming of parameters file from command line.
 
     This is a little bit tricky because the parameter file is assumed to be
@@ -326,7 +326,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
 
     # If we now change to tmp_path and give a relative filename to the parameter file,'
     # it will not be found:
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         [
@@ -461,11 +461,11 @@ def test_extrapolation():
     )["FOPT"].to_numpy() == [lastfopt]
 
 
-def test_foreseeable_future(tmp_path):
+def test_foreseeable_future(tmp_path, monkeypatch):
     """The foreseeable future in reservoir simulation is "defined" as 500 years.
 
     Check that we support summary files with this timespan"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     src_dframe = pd.DataFrame(
         [
             {"DATE": "2000-01-01", "FPR": 200},
@@ -1239,9 +1239,9 @@ def test_df2pyarrow_strings():
     pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
 
 
-def test_res2df_errors(tmp_path):
+def test_res2df_errors(tmp_path, monkeypatch):
     """Test error handling on bogus/corrupted summary files"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.UNSMRY").write_bytes(os.urandom(100))
     Path("FOO.SMSPEC").write_bytes(os.urandom(100))
     with pytest.raises(OSError, match="Failed to create summary instance"):
@@ -1278,7 +1278,7 @@ def test_df2ressum_errors():
 
 
 @pytest.mark.integration
-def test_csv2res_summary(tmp_path, mocker):
+def test_csv2res_summary(tmp_path, mocker, monkeypatch):
     """Check that we can call df2ressum through the csv2res command line
     utility"""
     dframe = pd.DataFrame(
@@ -1287,7 +1287,7 @@ def test_csv2res_summary(tmp_path, mocker):
             {"DATE": "2017-01-01", "FOPT": 1000, "FOPR": 100},
         ]
     )
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     dframe.to_csv("summary.csv")
     mocker.patch(
         "sys.argv",

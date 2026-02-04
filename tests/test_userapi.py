@@ -8,7 +8,7 @@ TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
-def test_userapi():
+def test_userapi(tmp_path, monkeypatch):
     """Test that we can act as human API user
 
     Functionality should be extensively tested in other code, but this is here
@@ -17,6 +17,7 @@ def test_userapi():
     To the user reading the source: Skip all 'assert' lines, read the rest.
 
     """
+    monkeypatch.chdir(tmp_path)
     resdatafiles = res2df.ResdataFiles(REEK)
 
     compdatdf = res2df.compdat.df(resdatafiles)

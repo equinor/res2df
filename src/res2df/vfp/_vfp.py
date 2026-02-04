@@ -188,7 +188,6 @@ def basic_data2pyarrow(data: dict[str, Any], /) -> pa.Table:
                 tab_type=data["TAB_TYPE"],
                 flow_values=data["FLOW_VALUES"],
                 thp_values=data["THP_VALUES"],
-                thp_indices=data["THP_INDICES"],
                 tab_data=data["BHP_TABLE"],
             )
         else:

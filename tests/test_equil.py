@@ -1,6 +1,5 @@
 """Test module for equil2df"""
 
-import os
 import subprocess
 from pathlib import Path
 
@@ -71,9 +70,9 @@ def test_equil2df():
     pd.testing.assert_frame_equal(equildf, df_from_inc, check_dtype=False)
 
 
-def test_df2res(tmp_path):
+def test_df2res(tmp_path, monkeypatch):
     """Test that we can write include files to disk"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     resdatafiles = ResdataFiles(EIGHTCELLS)
     equildf = equil.df(resdatafiles)
     equil.df2res(equildf, filename="equil.inc")
@@ -418,10 +417,10 @@ PDVD
     pd.testing.assert_frame_equal(pdvd_df.drop("KEYWORD", axis="columns"), pdvd_df2)
 
 
-def test_rsvd_via_file(tmp_path, mocker):
+def test_rsvd_via_file(tmp_path, mocker, monkeypatch):
     """Test that we can reparse RSVD with unknown TABDIMS
     from a file using the command line utility"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     deckstr = """
 RSVD
  10 100
@@ -531,9 +530,9 @@ def test_eclipse_rounding(somefloat, expected):
     assert expected in equil.df2res(dframe, withphases=False)
 
 
-def test_main_subparser(tmp_path, mocker):
+def test_main_subparser(tmp_path, mocker, monkeypatch):
     """Test command line interface"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     tmpcsvfile = "equil.csv"
     mocker.patch("sys.argv", ["res2csv", "equil", "-v", REEK, "-o", tmpcsvfile])
     res2csv.main()

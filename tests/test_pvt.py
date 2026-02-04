@@ -1,7 +1,6 @@
 """Test module for pvt"""
 
 import io
-import os
 import subprocess
 from pathlib import Path
 
@@ -380,9 +379,9 @@ def test_df():
     assert len(pvtdf["PVTNUM"].unique()) == 1
 
 
-def test_main(tmp_path, mocker):
+def test_main(tmp_path, mocker, monkeypatch):
     """Test command line interface"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     tmpcsvfile = tmp_path / "pvt.csv"
     mocker.patch(
         "sys.argv", ["res2csv", "pvt", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
@@ -435,9 +434,9 @@ def test_main(tmp_path, mocker):
     assert not Path("empty.csv").read_text(encoding="utf8").strip()
 
 
-def test_magic_stdout(tmp_path):
+def test_magic_stdout(tmp_path, monkeypatch):
     """Test writing dataframes and include files to stdout"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     result = subprocess.run(
         ["res2csv", "pvt", "-o", "-", EIGHTCELLS], check=True, stdout=subprocess.PIPE
     )
@@ -518,9 +517,9 @@ def test_df2res_pvto():
     # least it is well defined how to treat it)
 
 
-def test_df2res_rock(tmp_path):
+def test_df2res_rock(tmp_path, monkeypatch):
     """Test generation of ROCK include files from dataframes"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     rock_df = pd.DataFrame(
         columns=["PVTNUM", "KEYWORD", "PRESSURE", "COMPRESSIBILITY"],

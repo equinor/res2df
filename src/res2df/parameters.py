@@ -125,49 +125,50 @@ def load(filename: str | Path) -> dict[str, Any]:
     """
     params_dict = None
 
-    if not Path(filename).exists():
+    if not Path(filename).is_file():
         raise FileNotFoundError(str(filename) + " not found")
-
-    if not Path(filename).read_text(encoding="utf-8").strip():
+    file_content = Path(filename).read_text(encoding="utf-8")
+    if not file_content.strip():
         logger.warning("%s was empty", filename)
         return {}
 
     yaml_error = ""
     try:
         logger.debug("Trying to parse %s with yaml.safe_load()", filename)
-        params_dict = yaml.safe_load(Path(filename).read_text(encoding="utf-8"))
+        params_dict = yaml.safe_load(file_content)
         logger.debug(" - ok, parsed as yaml")
         if not isinstance(params_dict, dict):
             # yaml happily parses txt files into a single line, don't want that.
             params_dict = None
-    except Exception as yaml_exc:
+    except yaml.YAMLError as yaml_exc:
         yaml_error = str(yaml_exc)
         logger.debug("%s was not parseable with yaml, trying json.", filename)
 
     json_error = ""
-    if not params_dict:
+    if params_dict is None:
         try:
             logger.debug("Trying to parse %s with json.load()", filename)
-            with Path(filename).open(encoding="utf-8") as f_handle:
-                params_dict = json.load(f_handle)
-            assert isinstance(params_dict, dict)
-            logger.debug(" - ok, parsed as yaml")
-        except Exception as json_exc:
+            params_dict = json.loads(file_content)
+            if not isinstance(params_dict, dict):
+                params_dict = None
+            logger.debug(" - ok, parsed as json")
+        except json.JSONDecodeError as json_exc:
             json_error = str(json_exc)
             logger.debug("%s was not parseable with json, trying txt.", filename)
 
     txt_error = ""
-    if not params_dict:
+    if params_dict is None:
         try:
             logger.debug("Trying to parse %s as txt with pd.read_csv()", filename)
             params_dict = load_parameterstxt(filename)
-            assert isinstance(params_dict, dict)
+            if not isinstance(params_dict, dict):
+                params_dict = None
             logger.debug(" - ok, parsed as txt")
-        except Exception as txt_exc:
+        except (pd.errors.ParserError, ValueError) as txt_exc:
             txt_error = str(txt_exc)
             logger.debug("%s was not parseable as txt, no more options", filename)
 
-    if not params_dict:
+    if params_dict is None:
         logger.warning("%s could not be parsed as yaml, json or txt", filename)
         logger.warning("%s%s%s", yaml_error, json_error, txt_error)
         raise ValueError(f"Could not parse {filename}")

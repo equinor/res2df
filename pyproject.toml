@@ -130,8 +130,10 @@ line-length = 88
 select = [
   "AIR",  # airflow
   "ANN",  # flake8-annotations
+  "ARG",  # flake8-unused-arguments
   "ASYNC",  # flake8-async
   "B",  # flake-8-bugbear
+  "BLE",  # flake8-blind-except
   "C4",  # flake8-comprehensions
   "DJ",  # django
   "E",  # pycodestyle
@@ -141,10 +143,13 @@ select = [
   "FIX", # fixme
   "FLY", # flynt
   "FURB",  # refurb
+  "G",  # flake8-logging-format
   "I",  # isort
   "ICN",  # flake8-import-conventions
   "INT", # gettext
+  "INP", # flake8-no-pep420
   "ISC",  # flake8-implicit-str-concat
+  "LOG",  # flake8-logging
   "NPY",  # numpy specific rules
   "PD",  # pandas-vet
   "PERF",  # perflint
@@ -188,8 +193,8 @@ ignore = [
 
 [tool.ruff.lint.extend-per-file-ignores]
 "src/res2df/__init__.py" = ["PLC0414"]
-"tests/*" = ["RUF005", "ANN", "FURB113", "PERF"]
-"docs/*" = ["ANN"]
+"tests/*" = ["RUF005", "ANN", "FURB113", "PERF", "ARG"]
+"docs/*" = ["ANN", "ARG", "INP"]
 
 [tool.ruff.lint.pylint]
 max-args = 20

@@ -13,7 +13,7 @@ try:
     from ert import plugin as ert_plugin
 except ModuleNotFoundError:
     # ert is not installed, use dummy/transparent function decorator:
-    def ert_plugin(name: str = "") -> Callable[[Callable[P, Any]], Callable[P, Any]]:
+    def ert_plugin(name: str = "") -> Callable[[Callable[P, Any]], Callable[P, Any]]:  # noqa: ARG001
         def decorator(func: Callable[P, Any]) -> Callable[P, Any]:
             return func
 

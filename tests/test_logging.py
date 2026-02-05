@@ -1,22 +1,10 @@
 import itertools
-import logging
 
 import pytest
 
 import res2df
 
 from .test_grid import EIGHTCELLS, REEK
-
-
-@pytest.fixture(autouse=True)
-def cleanup_loggers():
-    """Clean up all logger handlers after each test
-    to avoid messing up the loggers for subsequent tests.
-    """
-    yield
-    for name in list(logging.Logger.manager.loggerDict.keys()):
-        logger = logging.getLogger(name)
-        logger.handlers.clear()
 
 
 def test_default_logger_levels_and_split(capsys):

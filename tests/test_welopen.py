@@ -1,5 +1,6 @@
 import datetime
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -1670,3 +1671,52 @@ def test_applywelopen(
         ),
         pd.DataFrame(expected_rows),
     )
+
+
+@pytest.mark.parametrize(
+    "na_value",
+    [
+        pytest.param(np.nan, id="npnan"),
+        pytest.param(pd.NaT, id="nat"),
+        pytest.param(pd.NA, id="pdna"),
+    ],
+)
+def test_welopen_nan_to_none_conversion(na_value):
+    """Verify that various NA types in WELOPEN coordinates are converted to None,
+    not np.nan, so that 'x is None' checks work correctly in applywelopen()."""
+
+    # Create a minimal compdat dataframe
+    compdat_df = pd.DataFrame(
+        {
+            "WELL": ["OP1"],
+            "I": [1],
+            "J": [1],
+            "K1": [1],
+            "K2": [1],
+            "OP/SH": ["OPEN"],
+            "DATE": [datetime.date(2000, 1, 1)],
+            "KEYWORD_IDX": [0],
+        }
+    )
+
+    # Create welopen with defaulted (NA) coordinates - simulates 'OP1' 'SHUT' /
+    welopen_df = pd.DataFrame(
+        {
+            "WELL": ["OP1"],
+            "STATUS": ["SHUT"],
+            "I": [na_value],
+            "J": [na_value],
+            "K": [na_value],
+            "C1": [na_value],
+            "C2": [na_value],
+            "DATE": [datetime.date(2000, 1, 1)],
+            "KEYWORD_IDX": [1],
+        }
+    )
+
+    # This should not raise - the NaN→None conversion must happen
+    # so that `all(x is None for x in (row["I"], row["J"], row["K"]))` works
+    result = compdat.applywelopen(compdat_df, welopen_df)
+
+    assert len(result) == 1
+    assert result.iloc[0]["OP/SH"] == "SHUT"

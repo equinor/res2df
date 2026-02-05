@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,17 @@ import res2df
 def path_to_res2df():
     """Path to installed res2df module"""
     return Path(res2df.__file__).parent
+
+
+@pytest.fixture(autouse=True)
+def cleanup_loggers():
+    """Clean up all logger handlers after each test
+    to avoid messing up the loggers for subsequent tests.
+    """
+    yield
+    for name in list(logging.Logger.manager.loggerDict.keys()):
+        logger = logging.getLogger(name)
+        logger.handlers.clear()
 
 
 def pytest_addoption(parser):

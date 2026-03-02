@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.3.12 documentation</title>
+  <title>res2df.summary &mdash; res2df 1.3.13.dev6+g776df153f documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=93b43ced"></script>
+      <script src="../../../_static/documentation_options.js?v=b32aa986"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -139,7 +139,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.smry_meta" title="res2df.summary.smry_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smry_meta</span></code></a>(→ dict[str, dict[str, Any]])</p></td>
 <td><p>Provide metadata for summary data vectors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.df2ressum" title="res2df.summary.df2ressum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2ressum</span></code></a>(→ resdata.summary.Summary)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.df2ressum" title="res2df.summary.df2ressum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2ressum</span></code></a>(→ resdata.summary.Summary | None)</p></td>
 <td><p>Convert a dataframe to a Summary object</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.fill_parser" title="res2df.summary.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
@@ -240,13 +240,13 @@ Dates prior to this date will be dropped, supplied
 start_date will always be included.</p></li>
 <li><p><strong>end_date</strong> – str or date with last date to be included.
 Dates past this date will be dropped, supplied
-end_date will always be included. Overriden if time_index
+end_date will always be included. Overridden if time_index
 is ‘last’.</p></li>
 <li><p><strong>include_restart</strong> – boolean sent to resdata for whether restart
 files should be traversed</p></li>
 <li><p><strong>params</strong> – If set, parameters.txt will be attempted loaded
 and merged with the summary data.</p></li>
-<li><p><strong>paramsfile</strong> – Explicit path to parameters file if autodiscovery is
+<li><p><strong>paramfile</strong> – Explicit path to parameters file if autodiscovery is
 not wanted. Implies params=True</p></li>
 <li><p><strong>datetime</strong> – If True, the time index of the returned DataFrame
 is always of datetime type. If not, it will be datetime
@@ -280,7 +280,7 @@ Summary object:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.summary.df2ressum">
-<span class="sig-prename descclassname"><span class="pre">res2df.summary.</span></span><span class="sig-name descname"><span class="pre">df2ressum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SYNTHETIC'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.summary.Summary</span></span></span><a class="reference internal" href="../../../_modules/res2df/summary.html#df2ressum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.summary.df2ressum" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.summary.</span></span><span class="sig-name descname"><span class="pre">df2ressum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SYNTHETIC'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">resdata.summary.Summary</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/res2df/summary.html#df2ressum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.summary.df2ressum" title="Link to this definition"></a></dt>
 <dd><p>Convert a dataframe to a Summary object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

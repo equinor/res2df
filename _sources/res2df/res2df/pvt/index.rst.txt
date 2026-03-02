@@ -104,7 +104,7 @@ Module Contents
                  be inferred if not present in :term:`deck`.
 
 
-.. py:function:: df(deck: str | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntpvt: int | None = None) -> pandas.DataFrame
+.. py:function:: df(deck: str | res2df.resdatafiles.ResdataFiles | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntpvt: int | None = None) -> pandas.DataFrame
 
    Extract all (most) PVT data from a :term:`deck`.
 

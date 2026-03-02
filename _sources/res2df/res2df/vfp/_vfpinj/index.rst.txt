@@ -119,7 +119,7 @@ Module Contents
                     (ordered as thp- and flow-values)
 
 
-.. py:function:: basic_data2pyarrow(tableno: int, datum: float, rate_type: res2df.vfp._vfpdefs.VFPINJ_FLO, thp_type: res2df.vfp._vfpdefs.THPTYPE, unit_type: res2df.vfp._vfpdefs.UNITTYPE, tab_type: res2df.vfp._vfpdefs.VFPINJ_TABTYPE, flow_values: numpy.ndarray, thp_values: numpy.ndarray, thp_indices: numpy.ndarray, tab_data: numpy.ndarray) -> pyarrow.Table
+.. py:function:: basic_data2pyarrow(tableno: int, datum: float, rate_type: res2df.vfp._vfpdefs.VFPINJ_FLO, thp_type: res2df.vfp._vfpdefs.THPTYPE, unit_type: res2df.vfp._vfpdefs.UNITTYPE, tab_type: res2df.vfp._vfpdefs.VFPINJ_TABTYPE, flow_values: numpy.ndarray, thp_values: numpy.ndarray, tab_data: numpy.ndarray) -> pyarrow.Table
 
    Return a pyarrow Table from VFPINJ record data
 
@@ -131,7 +131,6 @@ Module Contents
    :param tab_type: type for tabulated (record) values
    :param flow_values: rate values used to generate table
    :param thp_values: THP values used to generate table
-   :param thp_indices: THP indices for each record in tabulated data
    :param tab_data: tabulated (BHP) data
                     (ordered according to thp- and flow-values)
 

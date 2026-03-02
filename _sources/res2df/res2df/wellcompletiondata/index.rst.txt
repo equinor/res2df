@@ -102,7 +102,7 @@ Module Contents
    If no zonemap is provided, it will be looked for in the default location
    (the same directory as the DATA file loaded in resdatafiles).
 
-   :param resdatafiles; ResdataFiles object:
+   :param resdatafiles: ResdataFiles object
    :param zonemap: dictionary with layer->zone mapping
    :param use_wellconnstatus: boolean
 

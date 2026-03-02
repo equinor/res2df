@@ -22,7 +22,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: df(deck: ResdataFiles | opm.opmcommon_python.Deck) -> pandas.DataFrame
+.. py:function:: df(deck: res2df.resdatafiles.ResdataFiles | opm.opmcommon_python.Deck) -> pandas.DataFrame
 
    Loop through the :term:`deck` and pick up information found
 

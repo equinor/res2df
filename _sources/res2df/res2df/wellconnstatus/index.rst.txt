@@ -5,7 +5,7 @@ res2df.wellconnstatus
 
 .. autoapi-nested-parse::
 
-   Exctracts connection status history for each well connections
+   Extracts connection status history for each well connections
 
 
 
@@ -24,8 +24,8 @@ Module Contents
 
 .. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles) -> pandas.DataFrame
 
-   Exctracts connection status history for each compdat connection that
-   is included in the summary data on the form CPI:WELL,I,J,K. CPI stands for
+   Extracts connection status history for each compdat connection that
+   is included in the summary data on the form CPI:WELL:I,J,K. CPI stands for
    connection productivity index.
 
    One line is added to the export every time a connection changes status. It

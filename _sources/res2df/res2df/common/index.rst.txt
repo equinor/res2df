@@ -108,19 +108,19 @@ Module Contents
                    each subitem.
 
 
-.. py:function:: parse_opmio_date_rec(record: opm.io.DeckRecord) -> datetime.date
+.. py:function:: parse_opmio_date_rec(record: opm.opmcommon_python.DeckRecord) -> datetime.date
 
    Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.
 
 
-.. py:function:: parse_opmio_tstep_rec(record: opm.io.DeckRecord) -> list[float | int]
+.. py:function:: parse_opmio_tstep_rec(record: opm.opmcommon_python.DeckRecord) -> list[float | int]
 
    Parse a record with TSTEP data
 
    :returns: list of floats or ints
 
 
-.. py:function:: merge_zones(df: pandas.DataFrame, zonedict: dict, zoneheader: str = 'ZONE', kname: str = 'K1') -> pandas.DataFrame
+.. py:function:: merge_zones(df: pandas.DataFrame, zonedict: dict[int, str], zoneheader: str = 'ZONE', kname: str = 'K1') -> pandas.DataFrame
 
    Merge in a column with zone names, from a dictionary mapping
    k-index to zone name. If the zonemap is not covering all
@@ -151,7 +151,7 @@ Module Contents
                  starts with the given prefix. Always ends with a newline.
 
 
-.. py:function:: handle_wanted_keywords(wanted: list[str] | None, deck: opm.io.Deck, supported: list[str], modulename: str = '') -> list[str]
+.. py:function:: handle_wanted_keywords(wanted: list[str] | None, deck: opm.opmcommon_python.Deck, supported: list[str], modulename: str = '') -> list[str]
 
    Handle three list of keywords, wanted, available and supported
 

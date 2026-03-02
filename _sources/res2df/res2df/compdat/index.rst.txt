@@ -41,7 +41,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: deck2dfs(deck: opm.io.Deck, start_date: str | datetime.date | None = None, unroll: bool = True) -> dict[str, pandas.DataFrame]
+.. py:function:: deck2dfs(deck: opm.opmcommon_python.Deck, start_date: str | datetime.date | None = None, unroll: bool = True) -> dict[str, pandas.DataFrame]
 
    Loop through the :term:`deck` and pick up information found
 

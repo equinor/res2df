@@ -44,7 +44,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: df(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntsfun: int | None = None) -> pandas.DataFrame
+.. py:function:: df(deck: str | res2df.resdatafiles.ResdataFiles | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntsfun: int | None = None) -> pandas.DataFrame
 
    Extract the data in the saturation function keywords as a Pandas
    DataFrames.

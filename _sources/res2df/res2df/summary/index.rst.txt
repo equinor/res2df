@@ -99,14 +99,14 @@ Module Contents
                       start_date will always be included.
    :param end_date: str or date with last date to be included.
                     Dates past this date will be dropped, supplied
-                    end_date will always be included. Overriden if time_index
+                    end_date will always be included. Overridden if time_index
                     is 'last'.
    :param include_restart: boolean sent to resdata for whether restart
                            files should be traversed
    :param params: If set, parameters.txt will be attempted loaded
                   and merged with the summary data.
-   :param paramsfile: Explicit path to parameters file if autodiscovery is
-                      not wanted. Implies params=True
+   :param paramfile: Explicit path to parameters file if autodiscovery is
+                     not wanted. Implies params=True
    :param datetime: If True, the time index of the returned DataFrame
                     is always of datetime type. If not, it will be datetime
                     if raw dates are requested (which are at second accuracy),
@@ -134,7 +134,7 @@ Module Contents
    * wgname (str or None)
 
 
-.. py:function:: df2ressum(dframe: pandas.DataFrame, casename: str = 'SYNTHETIC') -> resdata.summary.Summary
+.. py:function:: df2ressum(dframe: pandas.DataFrame, casename: str = 'SYNTHETIC') -> resdata.summary.Summary | None
 
    Convert a dataframe to a Summary object
 

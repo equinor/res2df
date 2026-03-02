@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.equil &mdash; res2df 1.3.12 documentation</title>
+  <title>res2df.equil &mdash; res2df 1.3.13.dev6+g776df153f documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=93b43ced"></script>
+      <script src="../../_static/documentation_options.js?v=b32aa986"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -84,6 +84,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -164,7 +166,7 @@
 <div class="viewcode-block" id="df">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.df">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | ResdataFiles | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ResdataFiles</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -213,7 +215,7 @@
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">nonempty_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Extracted keywords </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%g</span><span class="s2"> EQLNUMs&quot;</span><span class="p">,</span>
-            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">dframe</span>
@@ -225,7 +227,7 @@
 <div class="viewcode-block" id="rsvd_fromdeck">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.rsvd_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rsvd_fromdeck</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RSVD data from a :term:`deck`</span>
 
@@ -245,7 +247,7 @@
 <div class="viewcode-block" id="rvvd_fromdeck">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.rvvd_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rvvd_fromdeck</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RVVD data from a :term:`deck`</span>
 
@@ -265,7 +267,7 @@
 <div class="viewcode-block" id="pbvd_fromdeck">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.pbvd_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pbvd_fromdeck</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PBVD data from a :term:`deck`</span>
 
@@ -285,7 +287,7 @@
 <div class="viewcode-block" id="pdvd_fromdeck">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.pdvd_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pdvd_fromdeck</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PDVD data from a :term:`deck`</span>
 
@@ -304,7 +306,7 @@
 
 <div class="viewcode-block" id="phases_from_deck">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.phases_from_deck">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determined the set of phases from a :term:`deck`, as</span>
 <span class="sd">    a string with values &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
 <span class="sd">    or &quot;oil-gas&quot;</span>
@@ -358,7 +360,7 @@
 <div class="viewcode-block" id="equil_fromdeck">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.equil_fromdeck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">equil_fromdeck</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract EQUIL data from a :term:`deck`</span>
 
@@ -437,8 +439,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">resdatafiles</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
+    <span class="n">deck</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># Things are easier when a full deck with (correct) EQLDIMS</span>
         <span class="c1"># is supplied:</span>
@@ -450,7 +451,7 @@
 
     <span class="k">if</span> <span class="s2">&quot;EQLNUM&quot;</span> <span class="ow">in</span> <span class="n">equil_df</span> <span class="ow">and</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">in</span> <span class="n">equil_df</span><span class="p">:</span>
         <span class="n">eqlnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">eqlnums</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
         <span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>

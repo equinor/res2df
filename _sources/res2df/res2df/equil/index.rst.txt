@@ -37,7 +37,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: df(deck: str | ResdataFiles | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntequl: int | None = None) -> pandas.DataFrame
+.. py:function:: df(deck: str | res2df.resdatafiles.ResdataFiles | opm.opmcommon_python.Deck, keywords: list[str] | None = None, ntequl: int | None = None) -> pandas.DataFrame
 
    Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
    PBVD and PDVD.

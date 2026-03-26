@@ -21,8 +21,8 @@ Module Contents
    :type:  str
 
 .. py:data:: version_tuple
-   :type:  VERSION_TUPLE
+   :type:  tuple[int | str, Ellipsis]
 
 .. py:data:: commit_id
-   :type:  COMMIT_ID
+   :type:  str | None
 

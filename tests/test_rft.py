@@ -5,6 +5,7 @@ import random
 from pathlib import Path
 
 import pandas as pd
+import pyarrow as pa
 import pytest
 
 from res2df import ResdataFiles, res2csv, rft
@@ -553,3 +554,113 @@ def test_process_seg_topology_junction_downstream_non_consecutive():
     # Segment 10 is the junction, feeds into wellhead
     seg10_rows = result[result["SEGIDX"] == 10]
     assert not seg10_rows["JUNCTION_downstream"].any()
+
+
+def _make_mock_rft(mocker, hostgrid_value):
+    """Create a mock RFT file with two STANDARD wells.
+
+    Well 1 has a HOSTGRID record with the given value.
+    Well 2 has no HOSTGRID record.
+    """
+    welletc = [
+        "  DAYS  ",
+        "OP1     ",
+        "        ",
+        " METRES ",
+        "  BARSA ",
+        "RPS     ",
+        "STANDARD",
+        " SM3/DAY",
+        " SM3/DAY",
+        " RM3/DAY",
+        " M/SEC  ",
+        "        ",
+        "   CP   ",
+        " KG/SM3 ",
+        " KG/DAY ",
+        "  KG/KG ",
+    ]
+    welletc2 = welletc.copy()
+    welletc2[1] = "OP2     "
+
+    base_headers = [
+        ("TIME", 1, "REAL"),
+        ("DATE", 3, "INTE"),
+        ("WELLETC", 16, "CHAR"),
+        ("CONIPOS", 1, "INTE"),
+        ("CONJPOS", 1, "INTE"),
+        ("CONKPOS", 1, "INTE"),
+    ]
+    tail_headers = [
+        ("DEPTH", 1, "REAL"),
+        ("PRESSURE", 1, "REAL"),
+        ("SWAT", 1, "REAL"),
+    ]
+    well1_headers = base_headers + [("HOSTGRID", 1, "CHAR")] + tail_headers
+    well2_headers = base_headers + tail_headers
+
+    all_data = {
+        0: [0.0],
+        1: [1, 1, 2000],
+        2: welletc,
+        3: [1],
+        4: [1],
+        5: [1],
+        6: [hostgrid_value],
+        7: [100.0],
+        8: [200.0],
+        9: [0.5],
+        10: [1.0],
+        11: [2, 1, 2000],
+        12: welletc2,
+        13: [2],
+        14: [2],
+        15: [1],
+        16: [110.0],
+        17: [210.0],
+        18: [0.6],
+    }
+
+    mock_rftfile = mocker.MagicMock()
+    mock_rftfile.headers = well1_headers + well2_headers
+    mock_rftfile.__getitem__ = lambda self, idx: all_data[idx]
+
+    mock_resdatafiles = mocker.MagicMock()
+    mock_resdatafiles.get_rftfile.return_value = mock_rftfile
+    mock_resdatafiles.get_zonemap.return_value = None
+    return mock_resdatafiles
+
+
+@pytest.mark.parametrize(
+    "hostgrid_value, expect_hostgrid_kept, expected_unique",
+    [
+        ("        ", False, None),
+        ("LGRGRID ", True, {"LGRGRID ", ""}),
+    ],
+    ids=["empty-hostgrid-dropped", "nonempty-hostgrid-kept"],
+)
+def test_rft_df_hostgrid_mixed_types(
+    mocker, hostgrid_value, expect_hostgrid_kept, expected_unique
+):
+    """Test that rft.df() handles HOSTGRID correctly when one well has
+    HOSTGRID and another doesn't (NaN after pd.concat).
+
+    Verifies no mixed types (str vs int) and correct pyarrow conversion.
+    """
+    mock_resdatafiles = _make_mock_rft(mocker, hostgrid_value)
+    rftdf = rft.df(mock_resdatafiles)
+
+    assert not rftdf.empty
+    assert set(rftdf["WELL"]) == {"OP1", "OP2"}
+
+    if expect_hostgrid_kept:
+        assert "HOSTGRID" in rftdf.columns
+        assert all(isinstance(v, str) for v in rftdf["HOSTGRID"]), (
+            f"HOSTGRID has mixed types: {rftdf['HOSTGRID'].tolist()}"
+        )
+        assert set(rftdf["HOSTGRID"].unique()) == expected_unique
+    else:
+        assert "HOSTGRID" not in rftdf.columns
+
+    # Must convert to pyarrow without error
+    pa.Table.from_pandas(rftdf)

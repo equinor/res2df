@@ -620,17 +620,17 @@ def df(
         return pd.DataFrame()
     rftdata_df = pd.concat(rftdata, ignore_index=True, sort=False)
 
-    # Fill empty cells with zeros. This is to avoid Spotfire
-    # interpreting columns with numbers as strings. An alternative
-    # solution that keeps NaN would be to add a second row in the
-    # output containing the datatype
-    rftdata_df = rftdata_df.fillna(0)
+    # Fill empty cells with zeros for numeric columns and empty
+    # strings for string/object columns. This avoids mixed types
+    # (e.g. 0 and '        ' in the same column) that break pyarrow conversion.
+    numeric_cols = rftdata_df.select_dtypes(include="number").columns
+    non_numeric_cols = rftdata_df.columns.difference(numeric_cols)
+    rftdata_df[numeric_cols] = rftdata_df[numeric_cols].fillna(0)
+    rftdata_df[non_numeric_cols] = rftdata_df[non_numeric_cols].fillna("")
 
     # The HOSTGRID data seems often to be empty, check if it is and delete if so:
-    if (
-        "HOSTGRID" in rftdata_df.columns
-        and len(rftdata_df.HOSTGRID.unique()) == 1
-        and not rftdata_df.HOSTGRID.unique()[0].strip()
+    if "HOSTGRID" in rftdata_df.columns and all(
+        not val.strip() for val in rftdata_df.HOSTGRID.unique()
     ):
         rftdata_df = rftdata_df.drop(columns="HOSTGRID")
 

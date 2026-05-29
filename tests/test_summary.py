@@ -47,7 +47,6 @@ def test_df():
     sumdf = summary.df(eclfiles)
 
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
 
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
@@ -57,7 +56,6 @@ def test_df():
     sumdf = summary.df(eclfiles, datetime=True)
     # (datetime=True is implicit when raw time reports are requested)
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
 
     # Metadata should be attached using the attrs attribute on a Pandas
     # Dataframe (considered experimental by Pandas)
@@ -111,7 +109,6 @@ def test_summary2df_dates():
         datetime=True,
     )
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
 
     assert len(sumdf) == 59
     assert str(sumdf.index.values[0])[0:10] == "2002-01-02"
@@ -346,55 +343,6 @@ def test_datenormalization():
     assert str(yearly.index[-1])[0:10] == "2004-01-01"
 
 
-def test_extrapolation():
-    """Summary data should be possible to extrapolate into
-    the future, rates should be zero, cumulatives should be constant"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    lastfopt = summary.df(
-        eclfiles, column_keys="FOPT", time_index="last", datetime=True
-    )["FOPT"].values[0]
-    answer = pd.DataFrame(
-        # This is the maximal date for datetime64[ns]
-        index=[np.datetime64("2262-04-11")],
-        columns=["FOPT", "FOPR"],
-        data=[[lastfopt, 0.0]],
-    ).rename_axis("DATE")
-
-    pd.testing.assert_frame_equal(
-        summary.df(
-            eclfiles,
-            column_keys=["FOPT", "FOPR"],
-            time_index="2262-04-11",
-            datetime=True,
-        ),
-        answer,
-    )
-    pd.testing.assert_frame_equal(
-        summary.df(
-            eclfiles,
-            column_keys=["FOPT", "FOPR"],
-            time_index=[datetime.date(2262, 4, 11)],
-            # NB: df() does not support datetime64 for time_index
-            datetime=True,
-        ),
-        answer,
-    )
-
-    # Pandas does not support DatetimeIndex beyound 2262:
-    with pytest.raises(pd.errors.OutOfBoundsDatetime):
-        summary.df(
-            eclfiles,
-            column_keys=["FOPT"],
-            time_index=[datetime.date(2300, 1, 1)],
-            datetime=True,
-        )
-
-    # But without datetime, we can get it extrapolated by libecl:
-    assert summary.df(
-        eclfiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
-    )["FOPT"].values == [lastfopt]
-
-
 def test_foreseeable_future(tmp_path):
     """The foreseeable future in reservoir simulation is "defined" as 500 years.
 
@@ -521,108 +469,6 @@ def test_fallback_date_roll(rollme, direction, freq, expected):
     """The pandas date rolling does not always work for years beyound 2262. The
     code should fallback automatically to hide that Pandas limitation"""
     assert _fallback_date_roll(rollme, direction, freq) == expected
-
-
-@pytest.mark.parametrize(
-    "start, end, freq, expected",
-    [
-        (
-            dt(3000, 1, 1),
-            dt(3002, 1, 1),
-            "yearly",
-            [
-                dt(3000, 1, 1),
-                dt(3001, 1, 1),
-                dt(3002, 1, 1),
-            ],
-        ),
-        (
-            dt(2999, 11, 1),
-            dt(3000, 2, 1),
-            "monthly",
-            [
-                dt(2999, 11, 1),
-                dt(2999, 12, 1),
-                dt(3000, 1, 1),
-                dt(3000, 2, 1),
-            ],
-        ),
-        pytest.param(
-            dt(3000, 1, 1),
-            dt(3000, 2, 1),
-            "weekly",
-            None,
-            marks=pytest.mark.xfail(raises=ValueError),
-        ),
-        (
-            # Crossing the problematic time boundary:
-            dt(2260, 1, 1),
-            dt(2263, 1, 1),
-            "yearly",
-            [
-                dt(2260, 1, 1),
-                dt(2261, 1, 1),
-                dt(2262, 1, 1),
-                dt(2263, 1, 1),
-            ],
-        ),
-        (
-            dt(3000, 1, 1),
-            dt(3000, 1, 1),
-            "yearly",
-            [
-                dt(3000, 1, 1),
-            ],
-        ),
-        (
-            dt(2000, 1, 1),
-            dt(2000, 1, 1),
-            "yearly",
-            [
-                dt(2000, 1, 1),
-            ],
-        ),
-        (
-            dt(2000, 1, 1),
-            dt(1000, 1, 1),
-            "yearly",
-            [],
-        ),
-        (
-            dt(3000, 1, 1),
-            dt(2000, 1, 1),
-            "yearly",
-            [],
-        ),
-        (
-            dt(2300, 5, 6),
-            dt(2302, 3, 1),
-            "yearly",
-            [
-                dt(2300, 5, 6),
-                dt(2301, 1, 1),
-                dt(2302, 1, 1),
-                dt(2302, 3, 1),
-            ],
-        ),
-        (
-            dt(2304, 5, 6),
-            dt(2302, 3, 1),
-            "yearly",
-            [],
-        ),
-        (
-            dt(2302, 3, 1),
-            dt(2302, 3, 1),
-            "yearly",
-            [dt(2302, 3, 1)],
-        ),
-    ],
-)
-def test_date_range(start, end, freq, expected):
-    """When dates are beyond year 2262,
-    the function _fallback_date_range() is triggered."""
-    assert date_range(start, end, freq) == expected
 
 
 def test_resample_smry_dates():

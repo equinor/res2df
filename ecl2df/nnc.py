@@ -1,6 +1,7 @@
 """
 Extract non-neighbour connection (NNC) information from Eclipse output files.
 """
+
 import argparse
 import datetime
 import logging

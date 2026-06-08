@@ -3,6 +3,7 @@
 End-user command line tool for accessing functionality
 in ecl2df
 """
+
 import argparse
 import functools
 import importlib

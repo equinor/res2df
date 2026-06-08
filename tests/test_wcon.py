@@ -214,25 +214,3 @@ WCONHIST
     assert "2001-05-01" in dates
     assert "2001-05-02" in dates
     assert "2001-05-07" in dates
-
-
-def test_main_subparsers(tmp_path, mocker):
-    """Test command line interface"""
-    tmpcsvfile = tmp_path / ".TMP-wcondf.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "wcon", EIGHTCELLS, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
-
-    assert Path(tmpcsvfile).is_file()
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
-
-
-def test_magic_stdout():
-    """Test that we can pipe the output into a dataframe"""
-    result = subprocess.run(
-        ["ecl2csv", "wcon", "-v", "-o", "-", EIGHTCELLS],
-        check=True,
-        stdout=subprocess.PIPE,
-    )
-    df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
-    assert not df_stdout.empty

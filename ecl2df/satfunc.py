@@ -12,6 +12,7 @@ SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
+
 import argparse
 import logging
 from pathlib import Path
@@ -135,9 +136,9 @@ def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     can consist of multiple SATNUMs.
     """
     sat_cols: set = {"SW", "SO", "SG", "SL"}.intersection(dframe.columns)
-    assert (
-        len(sat_cols) == 1
-    ), f"Could not determine a single saturation column in {dframe.columns}"
+    assert len(sat_cols) == 1, (
+        f"Could not determine a single saturation column in {dframe.columns}"
+    )
     sat_col = list(sat_cols)[0]
 
     if dframe[sat_col].isna().any():

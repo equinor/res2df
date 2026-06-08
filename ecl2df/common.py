@@ -171,7 +171,7 @@ def parse_ecl_month(eclmonth: str) -> int:
 
 
 def datetime_to_eclipsedate(
-    timestamp: Union[str, datetime.datetime, datetime.date]
+    timestamp: Union[str, datetime.datetime, datetime.date],
 ) -> str:
     """Convert a Python timestamp or date to the Eclipse DATE format"""
     if isinstance(timestamp, str):

@@ -9,6 +9,7 @@ geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.
 """
+
 import argparse
 import datetime
 import fnmatch
@@ -677,10 +678,7 @@ def df2ecl(
 
     if "GLOBAL_INDEX" not in grid_df:
         logger.warning(
-            (
-                "Global index not found in grid dataframe. "
-                "Assumes all cells are active"
-            )
+            ("Global index not found in grid dataframe. Assumes all cells are active")
         )
         # Drop NaN rows for columns to be used (triggered by stacked
         # dates and no global index, unlikely)

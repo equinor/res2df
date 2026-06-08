@@ -1,4 +1,5 @@
 """Test module for rft"""
+
 import datetime
 import os
 import random
@@ -393,7 +394,14 @@ def test_seg2dicttree():
             pd.DataFrame([{"CONPRES": 30.0, "SEGPRES": 20}]),
             True,
             pd.DataFrame(
-                [{"CONPRES": 30.0, "SEGPRES": 20, "COMPLETION_DP": 10.0, "DRAWDOWN": 0.0}]
+                [
+                    {
+                        "CONPRES": 30.0,
+                        "SEGPRES": 20,
+                        "COMPLETION_DP": 10.0,
+                        "DRAWDOWN": 0.0,
+                    }
+                ]
             ),
         ),
         (

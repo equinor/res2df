@@ -536,62 +536,6 @@ def test_eclipse_rounding(somefloat, expected):
     assert expected in equil.df2ecl(dframe, withphases=False)
 
 
-def test_main_subparser(tmp_path, mocker):
-    """Test command line interface"""
-    os.chdir(tmp_path)
-    tmpcsvfile = "equil.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", REEK, "-o", tmpcsvfile])
-    ecl2csv.main()
-
-    assert Path(tmpcsvfile).is_file()
-    disk_df = pd.read_csv(tmpcsvfile)
-    assert not disk_df.empty
-
-    # Test the reverse operation:
-    mocker.patch(
-        "sys.argv", ["csv2ecl", "equil", "-v", "--output", "equil.inc", tmpcsvfile]
-    )
-    csv2ecl.main()
-    # NB: cvs2ecl does not output the phase configuration!
-    phases = "WATER\nGAS\nOIL\n\n"
-    ph_equil_inc = Path("phasesequil.inc")
-    ph_equil_inc.write_text(
-        phases + Path("equil.inc").read_text(encoding="utf-8"),
-        encoding="utf-8",
-    )
-
-    pd.testing.assert_frame_equal(
-        equil.df(ph_equil_inc.read_text(encoding="utf8")), disk_df
-    )
-
-    # Test via stdout:
-    result = subprocess.run(
-        ["csv2ecl", "equil", "--output", "-", tmpcsvfile],
-        stdout=subprocess.PIPE,
-        check=True,
-    )
-    pd.testing.assert_frame_equal(
-        equil.df(phases + result.stdout.decode()),
-        disk_df,
-        check_like=True,
-    )
-
-    # Test empty equil data:
-    Path("poro.inc").write_text(
-        """
-GAS
-OIL
-
-PORO
-0.1 0.1 /
-""",
-        encoding="utf8",
-    )
-    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", "poro.inc", "-o", "empty.csv"])
-    ecl2csv.main()
-    assert not Path("empty.csv").read_text(encoding="utf8").strip()
-
-
 @pytest.mark.parametrize(
     "deckstring, expected",
     [

@@ -301,7 +301,7 @@ FIELDA
 FIELDB
 └── OPX
 """,
-        )
+        ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     ],
 )
@@ -378,7 +378,7 @@ def test_multiple_roots():
         pytest.param(
             pd.DataFrame([{"PARENT": "A"}]),
             [{}],
-            marks=pytest.mark.xfail(raises=KeyError)
+            marks=pytest.mark.xfail(raises=KeyError),
             # "CHILD" is also required
         ),
         (pd.DataFrame([{"PARENT": "A", "CHILD": "B"}]), [{"A": {"B": {}}}]),

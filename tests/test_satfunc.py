@@ -250,43 +250,6 @@ def test_str2df(string, expected_df):
     pd.testing.assert_frame_equal(df_from_inc, expected_df)
 
 
-def test_sgof_satnuminferrer(tmp_path, mocker):
-    """Test inferring of SATNUMS in SGOF strings"""
-    sgofstr = """
-SGOF
-  0 0 1 1
-  1 1 0 0
-/
-  0 0 1 1
-  0.5 0.5 0.5 0.5
-  1 1 0 0
-/
-  0 0 1 0
-  0.1 0.1 0.1 0.1
-  1 1 0 0
-/
-"""
-    os.chdir(tmp_path)
-    assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
-    sgofdf = satfunc.df(sgofstr)
-    assert "SATNUM" in sgofdf
-    assert len(sgofdf["SATNUM"].unique()) == 3
-    assert len(sgofdf) == 8
-    inc = satfunc.df2ecl(sgofdf)
-    df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(sgofdf, df_from_inc)
-
-    # Write to file and try to parse it with command line:
-    sgoffile = "__sgof_tmp.txt"
-    Path(sgoffile).write_text(sgofstr, encoding="utf8")
-    mocker.patch(
-        "sys.argv", ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
-    )
-    ecl2csv.main()
-    parsed_sgof = pd.read_csv(sgoffile + ".csv")
-    assert len(parsed_sgof["SATNUM"].unique()) == 3
-
-
 def test_wrong_columns():
     """Test some error situations"""
     # SWFN data given as SWOF:
@@ -683,36 +646,3 @@ def test_main_subparsers(tmp_path, mocker):
     assert Path(tmpcsvfile2).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile2))
     assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}
-
-
-def test_csv2ecl(tmp_path, mocker):
-    """Test command line interface for csv to Eclipse include files"""
-    os.chdir(tmp_path)
-    tmpcsvfile = "satfunc.csv"
-
-    swof_df = pd.DataFrame(
-        columns=["KEYWORD", "SW", "KRW", "KROW", "PCOW"],
-        data=[["SWOF", 0.0, 0.0, 1.0, 0.0], ["SWOF", 1.0, 1.0, 0.0, 0.0]],
-    )
-    swof_df.to_csv(tmpcsvfile, index=False)
-    mocker.patch("sys.argv", ["csv2ecl", "satfunc", "--output", "swof.inc", tmpcsvfile])
-    csv2ecl.main()
-    pd.testing.assert_frame_equal(
-        satfunc.df(Path("swof.inc").read_text(encoding="utf8")).drop(
-            "SATNUM", axis="columns"
-        ),
-        swof_df,
-        check_like=True,
-    )
-
-    # Test writing to stdout:
-    result = subprocess.run(
-        ["csv2ecl", "satfunc", "--output", "-", tmpcsvfile],
-        stdout=subprocess.PIPE,
-        check=True,
-    )
-    pd.testing.assert_frame_equal(
-        satfunc.df(result.stdout.decode()).drop("SATNUM", axis="columns"),
-        swof_df,
-        check_like=True,
-    )

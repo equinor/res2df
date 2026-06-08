@@ -1,4 +1,5 @@
 """Test module for ecl2df.grid"""
+
 import datetime
 import os
 from pathlib import Path

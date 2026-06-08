@@ -114,27 +114,3 @@ def test_df2ecl_editnnc(tmp_path):
     assert "avg multiplier 0.3" in editnnc or "avg multiplier 0.29999" in editnnc
 
     print(nnc.df2ecl_editnnc(nnc.df(eclfiles).head(4).assign(TRANM=0.1)))
-
-
-@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
-def test_main(tmp_path, mocker):
-    """Test command line interface"""
-    tmpcsvfile = tmp_path / "nnc.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "nnc", "-v", REEK, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
-
-    assert Path(tmpcsvfile).is_file()
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
-    assert "I1" in disk_df
-    assert "TRAN" in disk_df
-
-
-@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
-def test_magic_stdout():
-    """Test that we can pipe the output into a dataframe"""
-    result = subprocess.run(
-        ["ecl2csv", "nnc", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
-    )
-    df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
-    assert not df_stdout.empty

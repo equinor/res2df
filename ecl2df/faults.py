@@ -4,6 +4,7 @@ Extract the contents of the FAULTS keyword into
 a DataFrame
 
 """
+
 import argparse
 import logging
 from typing import Union

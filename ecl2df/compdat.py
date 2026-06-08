@@ -1,13 +1,13 @@
 """Parser and dataframe generator for the Eclipse keywords:
-  * COMPDAT
-  * COMPLUMP
-  * COMPSEGS
-  * WELOPEN
-  * WELSEGS
-  * WLIST
-  * WSEGAICD
-  * WSEGSICD
-  * WSEGVALV
+* COMPDAT
+* COMPLUMP
+* COMPSEGS
+* WELOPEN
+* WELSEGS
+* WLIST
+* WSEGAICD
+* WSEGSICD
+* WSEGVALV
 """
 
 import argparse
@@ -650,9 +650,7 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                     )
                 )
             )
-            for (
-                wlist
-            ) in currentstate.keys():  # pylint: disable=consider-iterating-dictionary
+            for wlist in currentstate.keys():  # pylint: disable=consider-iterating-dictionary
                 if wlist == wlist_record["NAME"]:
                     continue
                 currentstate[wlist] = " ".join(
@@ -901,14 +899,12 @@ def applywelopen(
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
             raise ValueError(
-                "A WELOPEN keyword contains data that could not be parsed. "
-                f"\n {row} "
+                f"A WELOPEN keyword contains data that could not be parsed. \n {row} "
             )
 
         if previous_state.empty:
             raise ValueError(
-                "A WELOPEN keyword is not acting on any existing connection. "
-                f"\n {row} "
+                f"A WELOPEN keyword is not acting on any existing connection. \n {row} "
             )
 
         new_state = previous_state

@@ -238,7 +238,7 @@ def rst2df(
                 [
                     resdatafiles.get_rstfile()
                     .iget_named_kw(vec, rstindex)
-                    .numpyView()
+                    .numpy_view()
                     .reshape(-1, 1)
                     for vec in present_rstvectors
                 ]
@@ -445,7 +445,7 @@ def init2df(
             columns=usevectors,
             data=np.hstack(
                 [
-                    init.iget_named_kw(vec, 0).numpyView().reshape(-1, 1)
+                    init.iget_named_kw(vec, 0).numpy_view().reshape(-1, 1)
                     for vec in usevectors
                 ]
             ),
@@ -462,7 +462,7 @@ def init2df(
 
     # PORV is indexed by active_index, not global, needs special treatment:
     if include_porv:
-        porv_numpy = init.iget_named_kw("PORV", 0).numpyView()
+        porv_numpy = init.iget_named_kw("PORV", 0).numpy_view()
         glob_idxs = [
             egrid.get_global_index(active_index=ix)
             for ix in range(egrid.get_num_active())

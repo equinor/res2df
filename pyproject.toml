@@ -38,7 +38,7 @@ dependencies= [
 "resdata>=5",
 "resfo",
 "networkx",
-"numpy<2.5",
+"numpy",
 "opm>=2020.10.2",
 "pandas >= 2",
 "pyarrow",

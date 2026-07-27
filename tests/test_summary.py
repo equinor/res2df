@@ -1205,13 +1205,10 @@ def test_df2pyarrow_500years():
     dframe.index.name = "BOGUS"
     pyat = _df2pyarrow(dframe)
 
-    assert (
-        np.array(pyat.column(0))
-        == [
-            np.datetime64("1000-01-01T00:00:00.000000000"),
-            np.datetime64("3000-01-01T00:00:00.000000000"),
-        ]
-    ).all()
+    assert pyat.column(0).to_pylist() == [
+        dt(1000, 1, 1, 0, 0, 0),
+        dt(3000, 1, 1, 0, 0, 0),
+    ]
 
 
 def test_df2pyarrow_meta():

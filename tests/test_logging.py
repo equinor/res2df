@@ -58,7 +58,7 @@ def test_default_logger_levels_and_split(capsys):
 
 @pytest.mark.parametrize(
     "res2df_module, verbose, fileexport",
-    itertools.product(res2df.SUBMODULES, [False, True], [True, False]),
+    list(itertools.product(res2df.SUBMODULES, [False, True], [True, False])),
 )
 def test_res2csv_logging(
     tmp_path, res2df_module, verbose, fileexport, mocker, capsys, monkeypatch

@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pyarrow as pa
+import pyarrow.ipc
 import pytest
 import yaml
 from resdata.summary import Summary
@@ -364,7 +365,7 @@ def test_main_subparser(tmp_path, mocker):
     )
     res2csv.main()
     assert Path(tmpcsvfile).is_file()
-    disk_arraydf = pa.feather.read_table(tmparrowfile).to_pandas()
+    disk_arraydf = pa.ipc.open_file(tmparrowfile).read_all().to_pandas()
     assert "FOPT" in disk_arraydf
 
     # Alternative and equivalent command line syntax for arrow output:
@@ -374,7 +375,7 @@ def test_main_subparser(tmp_path, mocker):
     )
     res2csv.main()
     pd.testing.assert_frame_equal(
-        disk_arraydf, pa.feather.read_table(str(tmparrowfile_alt)).to_pandas()
+        disk_arraydf, pa.ipc.open_file(str(tmparrowfile_alt)).read_all().to_pandas()
     )
 
     # Not possible (yet?) to write arrow to stdout:

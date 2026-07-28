@@ -22,13 +22,11 @@ import numpy as np
 import opm.io.deck
 import pandas as pd
 import pyarrow as pa
+import pyarrow.ipc  # type: ignore[import-untyped]
 
 # This import is seemingly not used, but necessary for some attributes
 # to be included in DeckItem objects.
 from opm.io.deck import DeckKeyword  # noqa: F401
-from pyarrow import (
-    feather,  # necessary as this module is not loaded unless explicitly imported
-)
 
 from .__version__ import __version__
 from .constants import MAGIC_STDOUT
@@ -150,7 +148,11 @@ def write_dframe_stdout_file(
         if isinstance(dframe, pd.DataFrame):
             dframe.to_csv(output, index=index)
         else:
-            feather.write_feather(dframe, dest=output)
+            with (
+                pa.OSFile(output, "wb") as f,
+                pa.ipc.new_file(f, dframe.schema) as writer,
+            ):
+                writer.write_table(dframe)
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:

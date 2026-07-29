@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pyarrow as pa
+import pyarrow.ipc
 import pytest
 
 from res2df import ResdataFiles, common, grid, res2csv
@@ -517,7 +518,7 @@ def test_main_arrow(tmp_path, mocker):
     res2csv.main()
 
     # Read from disk and verify similarity
-    disk_frame_arrow = pa.feather.read_table(tmp_path / "grid.arrow").to_pandas()
+    disk_frame_arrow = pa.ipc.open_file(tmp_path / "grid.arrow").read_all().to_pandas()
     disk_frame_csv = pd.read_csv(tmp_path / "grid.csv")
 
     pd.testing.assert_frame_equal(disk_frame_arrow, disk_frame_csv, check_dtype=False)

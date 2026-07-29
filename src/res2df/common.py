@@ -148,9 +148,10 @@ def write_dframe_stdout_file(
         if isinstance(dframe, pd.DataFrame):
             dframe.to_csv(output, index=index)
         else:
+            options = pa.ipc.IpcWriteOptions(compression="lz4")
             with (
                 pa.OSFile(output, "wb") as f,
-                pa.ipc.new_file(f, dframe.schema) as writer,
+                pa.ipc.new_file(f, dframe.schema, options=options) as writer,
             ):
                 writer.write_table(dframe)
 

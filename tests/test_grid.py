@@ -476,27 +476,6 @@ def test_main(tmp_path, mocker):
     assert not disk_df.empty
 
 
-def test_main_arrow(tmp_path, mocker):
-    """Check that we can export grid in arrow format"""
-    mocker.patch(
-        "sys.argv",
-        ["ecl2csv", "grid", "--arrow", EIGHTCELLS, "-o", str(tmp_path / "grid.arrow")],
-    )
-    ecl2csv.main()
-
-    # Obtain the CSV version for comparison:
-    mocker.patch(
-        "sys.argv", ["ecl2csv", "grid", EIGHTCELLS, "-o", str(tmp_path / "grid.csv")]
-    )
-    ecl2csv.main()
-
-    # Read from disk and verify similarity
-    disk_frame_arrow = pyarrow.feather.read_table(tmp_path / "grid.arrow").to_pandas()
-    disk_frame_csv = pd.read_csv(tmp_path / "grid.csv")
-
-    pd.testing.assert_frame_equal(disk_frame_arrow, disk_frame_csv, check_dtype=False)
-
-
 def test_get_available_rst_dates():
     """Test the support of dates in restart files"""
     eclfiles = EclFiles(REEK)

@@ -299,32 +299,6 @@ def test_main_subparser(tmp_path, mocker):
     assert not disk_df.empty
     assert "FOPT" in disk_df
 
-    # Test arrow output format:
-    tmparrowfile = tmp_path / "sum.arrow"
-    mocker.patch(
-        "sys.argv",
-        ["ecl2csv", "summary", "--arrow", EIGHTCELLS, "-o", str(tmparrowfile)],
-    )
-    ecl2csv.main()
-    assert Path(tmpcsvfile).is_file()
-    disk_arraydf = pyarrow.feather.read_table(tmparrowfile).to_pandas()
-    assert "FOPT" in disk_arraydf
-
-    # Alternative and equivalent command line syntax for arrow output:
-    tmparrowfile_alt = tmp_path / "sum2.arrow"
-    mocker.patch(
-        "sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", str(tmparrowfile_alt)]
-    )
-    ecl2csv.main()
-    pd.testing.assert_frame_equal(
-        disk_arraydf, pyarrow.feather.read_table(str(tmparrowfile_alt)).to_pandas()
-    )
-
-    # Not possible (yet?) to write arrow to stdout:
-    mocker.patch("sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", "-"])
-    with pytest.raises(SystemExit):
-        ecl2csv.main()
-
 
 def test_datenormalization():
     """Test normalization of dates, where

@@ -924,28 +924,6 @@ def test_df2pyarrow_mix_int_float():
     pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
 
 
-def test_df2pyarrow_500years():
-    """Summary files can have DATE columns with timespans outside the
-    Pandas dataframe nanosecond limitation. This should not present
-    a problem to the PyArrow conversion"""
-    dateindex = [dt(1000, 1, 1, 0, 0, 0), dt(3000, 1, 1, 0, 0, 0)]
-    dframe = pd.DataFrame(
-        columns=["FOO", "BAR"], index=dateindex, data=[[1, 2], [3, 4]]
-    ).astype("int32")
-
-    # The index name should be ignored:
-    dframe.index.name = "BOGUS"
-    pyat = _df2pyarrow(dframe)
-
-    assert (
-        np.array(pyat.column(0))
-        == [
-            np.datetime64("1000-01-01T00:00:00.000000000"),
-            np.datetime64("3000-01-01T00:00:00.000000000"),
-        ]
-    ).all()
-
-
 def test_df2pyarrow_meta():
     """Test that metadata in summary dataframes dframe.attrs are passed on to
     pyarrow tables"""

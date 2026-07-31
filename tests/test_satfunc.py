@@ -1,14 +1,12 @@
 """Test module for satfunc2df"""
 
-import os
-import subprocess
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import csv2ecl, ecl2csv, inferdims, satfunc
+from ecl2df import ecl2csv, satfunc
 from ecl2df.eclfiles import EclFiles
 
 try:

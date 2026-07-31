@@ -1,13 +1,11 @@
 """Test module for wcon"""
 
-import io
-import subprocess
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from ecl2df import ecl2csv, wcon
+from ecl2df import wcon
 from ecl2df.eclfiles import EclFiles
 
 try:

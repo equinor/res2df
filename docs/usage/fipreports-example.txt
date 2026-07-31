@@ -1,4 +1,4 @@
-  REPORT   0     1 JAN 2000 
+  REPORT   0     1 JAN 2000
                                                 =================================
                                                 : FIPZON  REPORT REGION    2    :
                                                 :     PAV =        139.76  BARSA:

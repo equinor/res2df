@@ -1,7 +1,5 @@
 EQUALS
  SWL   0.1  /  Connate water saturation
  SWU   1.0  /  Maximum water saturation
- SGCR  0.1  /  Critical gas saturation 
+ SGCR  0.1  /  Critical gas saturation
 /
-
-

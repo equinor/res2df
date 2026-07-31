@@ -84,4 +84,3 @@ and need to be catered for outside ecl2df.
 
 The last step can also be done using the ``csv2ecl`` command line utility
 if you dump to CSV from your Python code instead.
-

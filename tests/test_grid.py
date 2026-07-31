@@ -6,7 +6,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import pyarrow
 import pytest
 from ecl2df import common, ecl2csv, grid
 from ecl2df.eclfiles import EclFiles

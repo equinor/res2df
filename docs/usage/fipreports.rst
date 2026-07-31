@@ -20,8 +20,3 @@ In this particular example, ``FIPZON`` was selected explicitly, either using the
 through an option to the :func:`ecl2df.fipreports.df` function.
 
 Using this module is easiest through ``ecl2csv fipreports``.
-
-
-
-
-

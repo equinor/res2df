@@ -1,43 +1,43 @@
 
 
 
- $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$ 
+ $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$
  $      $   $  $       $   $   $  $   $  $        $$   $   $  $   $
  $      $      $       $   $   $  $      $         $   $   $  $   $
  $$$$   $      $       $   $$$$    $$$   $$$$      $   $   $  $   $
  $      $      $       $   $          $  $         $   $   $  $   $
  $      $   $  $       $   $      $   $  $         $   $   $  $   $
- $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$ 
+ $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$
 
 
 
-                       $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$ 
+                       $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$
                        $      $   $  $       $   $   $  $   $  $        $$   $   $  $   $
                        $      $      $       $   $   $  $      $         $   $   $  $   $
                        $$$$   $      $       $   $$$$    $$$   $$$$      $   $   $  $   $
                        $      $      $       $   $          $  $         $   $   $  $   $
                        $      $   $  $       $   $      $   $  $         $   $   $  $   $
-                       $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$ 
+                       $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$
 
 
 
-                                             $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$ 
+                                             $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$
                                              $      $   $  $       $   $   $  $   $  $        $$   $   $  $   $
                                              $      $      $       $   $   $  $      $         $   $   $  $   $
                                              $$$$   $      $       $   $$$$    $$$   $$$$      $   $   $  $   $
                                              $      $      $       $   $          $  $         $   $   $  $   $
                                              $      $   $  $       $   $      $   $  $         $   $   $  $   $
-                                             $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$ 
+                                             $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$
 
 
 
-                                                                   $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$ 
+                                                                   $$$$$   $$$   $      $$$  $$$$    $$$   $$$$$     $    $$$    $$$
                                                                    $      $   $  $       $   $   $  $   $  $        $$   $   $  $   $
                                                                    $      $      $       $   $   $  $      $         $   $   $  $   $
                                                                    $$$$   $      $       $   $$$$    $$$   $$$$      $   $   $  $   $
                                                                    $      $      $       $   $          $  $         $   $   $  $   $
                                                                    $      $   $  $       $   $      $   $  $         $   $   $  $   $
-                                                                   $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$ 
+                                                                   $$$$$   $$$   $$$$$  $$$  $       $$$   $$$$$    $$$   $$$    $$$
 
 Proprietary Notice
 This application contains the confidential and proprietary trade secrets of Schlumberger and may not be copied or stored in an
@@ -46,53 +46,53 @@ or mechanical, in whole or in part, without the express written permission of th
 
 ECLIPSE is a mark of Schlumberger. Copyright (c) 1981-2020 Schlumberger. All rights reserved.
 
-Version =  2020.2  
+Version =  2020.2
 Arch    =  Linux X86_64 (64 bit, LINRH6_IL17GC54_OPT)
 
-Annex    | Modification date    | Update date          | baseline             
-=====    | =================    | ===========          | ========             
+Annex    | Modification date    | Update date          | baseline
+=====    | =================    | ===========          | ========
 ECLIPSE  | 07-AUG-2020 12:21:12 | 15-JUN-2020 14:30:28 | 2020.2_631174
 petlast  | 07-AUG-2020 12:21:36 | 22-JUL-2016 12:14:11 | 2020.2_631174
 system   | 07-AUG-2020 12:21:12 | 16-JUL-2020 08:02:42 | 2020.2_631174
 tpb      | 07-AUG-2020 12:21:12 | 22-JUL-2016 12:14:11 | 2020.2_631174
 utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
- 
+
 
 1
 
  ******** ECHO OF INPUT DATA FOR RUN EIGHTCELLS
 
  0: RUNSPEC
- 0: 
+ 0:
  0: DIMENS
  0:   2 2 2 /
- 0: 
+ 0:
  0: OIL
  0: WATER
  0: --GAS
- 0: 
+ 0:
  0: START
  0:   1 'JAN' 2000 /
- 0: 
+ 0:
  0: TABDIMS
  0:   1 1 20 20 2 /
- 0: 
+ 0:
  0: EQLDIMS
  0:   1 /
- 0: 
+ 0:
  0: WELLDIMS
  0:   1 /
- 0: 
+ 0:
  0: WSEGDIMS
  0:   1 10 10 /
- 0: 
+ 0:
  0: UNIFOUT
- 0: 
- 0: 
+ 0:
+ 0:
  0: GRID
- 0: 
+ 0:
  0: NEWTRAN
- 0: 
+ 0:
  0: COORD
  0:     0   0   0     0   0 100
  0:    50   0   0    50   0 100
@@ -104,7 +104,7 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0:    50 100   0    50 100 100
  0:   100 100   0   100 100 100
  0: /
- 0: 
+ 0:
  0: ZCORN
  0:   0 0 0 0
  0:   0 0 0 0
@@ -123,78 +123,78 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0:   100 100 100 100
  0:   100 100 100 100
  0: /
- 0: 
- 0: 
+ 0:
+ 0:
  0: PORO
  0:   0.2  0.2  0.2  0.2   0.2  0.2  0.2  0.2
  0: /
- 0: 
+ 0:
  0: PERMX
  0:   100.0  100.0  100.0  100.0    100.0  100.0  100.0  100.0
  0: /
- 0: 
+ 0:
  0: PERMY
  0:   100.0  100.0  100.0  100.0    100.0  100.0  100.0  100.0
  0: /
- 0: 
+ 0:
  0: PERMZ
  0:   100.0  100.0  100.0  100.0    100.0  100.0  100.0  100.0
  0: /
- 0: 
- 0: 
+ 0:
+ 0:
  0: GRIDFILE
  0:   0 1
  0: /
- 0: 
+ 0:
  0: INIT
- 0: 
+ 0:
  0: PROPS
- 0: 
- 0: 
+ 0:
+ 0:
  0: SWOF
  0: -- SW KRW KROW PC
  0:   0.1 0 1 1
  0:   1 1.0 0.0 0
  0: /
- 0: 
- 0: 
+ 0:
+ 0:
  0: DENSITY
  0:   800 1000 1.2 /
- 0: 
+ 0:
  0: PVTW
  0:   1 1 0.0001 0.2 0.00001 /
- 0: 
+ 0:
  0: PVDO
  0:   10 1   1
  0:   150 0.9 1 /
- 0: 
+ 0:
  0: ROCK
  0:   100 0.0001 /
- 0: 
+ 0:
  0: FILLEPS
- 0: 
+ 0:
  0: REGIONS
- 0: 
+ 0:
  0: SATNUM
  0:   1  1  1  1  1  1  1  1/
- 0: 
+ 0:
  0: EQLNUM
  0:   1  1  1  1  1  1  1  1/
- 0: 
+ 0:
  0: FIPNUM
  0:   1 1 1 1 2 2 2 2
  0: /
- 0: 
+ 0:
  0: SOLUTION
- 0: 
+ 0:
  0: EQUIL
  0: -- datum pressure_datum owc/gwc pc@owc goc pc@goc item7 item8 oip_init
  0:   100 100 50 /
- 0: 
- 0: 
+ 0:
+ 0:
  0: RPTRST
  0:   ALLPROPS/
- 0: 
+ 0:
  0: SUMMARY
  0: FOPR
  0: FOPT
@@ -205,157 +205,157 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0: CPI
  0:   OP1 /
  0: /
- 0: 
+ 0:
  0: SCHEDULE
- 0: 
+ 0:
  0: WELSPECS
  0:  OP1 OPS 1 1 50 OIL /
  0: /
- 0: 
+ 0:
  0: COMPDAT
  0:   OP1 1 1 1 1 OPEN 1* 1* 0.15  /
  0: /
- 0: 
- 0: 
+ 0:
+ 0:
  0: WELSEGS
  0:   OP1 5 5 1* INC /
  0:    2 2 1 1 10 10  0.015 0.0001 /
  0: /
- 0: 
+ 0:
  0: COMPSEGS
  0:  OP1 /
  0: --i j k branch len
  0:   1 1 1 1      10 10 Z /
  0: /
- 0: 
+ 0:
  0: WRFTPLT
  0:  '*' YES YES YES  /
  0: /
- 0: 
+ 0:
  0: WCONPROD
  0:  OP1 OPEN ORAT 50 /
  0: /
- 0: 
+ 0:
  0: TSTEP
  0:   1 1 /
 
  ******** END OF INPUT DATA FOR RUN EIGHTCELLS
-     1 READING RUNSPEC 
-     2 READING DIMENS  
-     3 READING OIL     
-     4 READING WATER   
-     5 READING START   
-     6 READING TABDIMS 
-     7 READING EQLDIMS 
+     1 READING RUNSPEC
+     2 READING DIMENS
+     3 READING OIL
+     4 READING WATER
+     5 READING START
+     6 READING TABDIMS
+     7 READING EQLDIMS
      8 READING WELLDIMS
      9 READING WSEGDIMS
-    10 READING UNIFOUT 
+    10 READING UNIFOUT
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           CHECKING FOR LICENSES                                           
-    11 READING GRID    
+ @           CHECKING FOR LICENSES
+    11 READING GRID
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           CHECKING FOR LICENSES                                           
+ @           CHECKING FOR LICENSES
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           CHECKING FOR LICENSES                                           
+ @           CHECKING FOR LICENSES
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           THE MEMORY REQUIRED TO PROCESS THE GRID SECTION IS              
- @               167108 BYTES                                                
-    12 READING NEWTRAN 
-    13 READING COORD   
-    14 READING ZCORN   
-    15 READING PORO    
-    16 READING PERMX   
-    17 READING PERMY   
-    18 READING PERMZ   
+ @           THE MEMORY REQUIRED TO PROCESS THE GRID SECTION IS
+ @               167108 BYTES
+    12 READING NEWTRAN
+    13 READING COORD
+    14 READING ZCORN
+    15 READING PORO
+    16 READING PERMX
+    17 READING PERMY
+    18 READING PERMZ
     19 READING GRIDFILE
-    20 READING INIT    
-    21 READING PROPS   
+    20 READING INIT
+    21 READING PROPS
 
  @--COMMENT  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           NO NON-NEIGHBOUR CONNECTIONS FOUND                              
+ @           NO NON-NEIGHBOUR CONNECTIONS FOUND
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           NUMBER OF ACTIVE CELLS IS 8                                     
+ @           NUMBER OF ACTIVE CELLS IS 8
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           THE MEMORY REQUIRED TO PROCESS THE SOLUTION SECTION IS          
- @               588260 BYTES                                                
+ @           THE MEMORY REQUIRED TO PROCESS THE SOLUTION SECTION IS
+ @               588260 BYTES
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @              62179 CHARACTER VARIABLES USED                               
-    22 READING SWOF    
-    23 READING DENSITY 
-    24 READING PVTW    
-    25 READING PVDO    
-    26 READING ROCK    
-    27 READING FILLEPS 
-    28 READING REGIONS 
-    29 READING SATNUM  
-    30 READING EQLNUM  
-    31 READING FIPNUM  
+ @              62179 CHARACTER VARIABLES USED
+    22 READING SWOF
+    23 READING DENSITY
+    24 READING PVTW
+    25 READING PVDO
+    26 READING ROCK
+    27 READING FILLEPS
+    28 READING REGIONS
+    29 READING SATNUM
+    30 READING EQLNUM
+    31 READING FIPNUM
     32 READING SOLUTION
-    33 READING EQUIL   
-    34 READING RPTRST  
-    35 READING SUMMARY 
-    36 READING FOPR    
-    37 READING FOPT    
-    38 READING WOPT    
-    39 READING WOPR    
-    40 READING CPI     
+    33 READING EQUIL
+    34 READING RPTRST
+    35 READING SUMMARY
+    36 READING FOPR
+    37 READING FOPT
+    38 READING WOPT
+    39 READING WOPR
+    40 READING CPI
     41 READING SCHEDULE
     42 READING WELSPECS
-    43 READING COMPDAT 
-    44 READING WELSEGS 
+    43 READING COMPDAT
+    44 READING WELSEGS
     45 READING COMPSEGS
-    46 READING WRFTPLT 
+    46 READING WRFTPLT
     47 READING WCONPROD
 
  @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           THE BOTTOM HOLE PRESSURE LIMIT FOR WELL OP1                     
- @           HAS BEEN DEFAULTED.  THE DEFAULT VALUE IS                       
- @                1.0   BARSA                                                
+ @           THE BOTTOM HOLE PRESSURE LIMIT FOR WELL OP1
+ @           HAS BEEN DEFAULTED.  THE DEFAULT VALUE IS
+ @                1.0   BARSA
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           OPENING WELL OP1      AT TIME      0.00   DAYS                  
- @           CONTROLLED BY OIL RATE                                          
-    48 READING TSTEP   
+ @           OPENING WELL OP1      AT TIME      0.00   DAYS
+ @           CONTROLLED BY OIL RATE
+    48 READING TSTEP
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           RESTART FILE WRITTEN   REPORT     0                             
+ @           RESTART FILE WRITTEN   REPORT     0
 1                             **********************************************************************   1
-  SIMULATE AT      0.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2     
-  REPORT   0     1 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021 
+  SIMULATE AT      0.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2
+  REPORT   0     1 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021
                               **************************************************************************
 
- STEP    1 TIME=      1.00  DAYS (    +1.0  DAYS REPT  2 ITS) (2-JAN-2000)       
-  PAV=    86.1  BARSA  WCT=0.884 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    1 TIME=      1.00  DAYS (    +1.0  DAYS REPT  2 ITS) (2-JAN-2000)
+  PAV=    86.1  BARSA  WCT=0.884 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3
 
  @--MESSAGE  AT TIME        1.0   DAYS    ( 2-JAN-2000):
- @           RESTART FILE WRITTEN   REPORT     1                             
+ @           RESTART FILE WRITTEN   REPORT     1
 1                             **********************************************************************   2
-  SIMULATE AT      1.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2     
-  REPORT   1     2 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021 
+  SIMULATE AT      1.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2
+  REPORT   1     2 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021
                               **************************************************************************
 
- STEP    2 TIME=      2.00  DAYS (    +1.0  DAYS REPT  2 ITS) (3-JAN-2000)       
-  PAV=    79.3  BARSA  WCT=0.884 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    2 TIME=      2.00  DAYS (    +1.0  DAYS REPT  2 ITS) (3-JAN-2000)
+  PAV=    79.3  BARSA  WCT=0.884 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3
 
  @--MESSAGE  AT TIME        2.0   DAYS    ( 3-JAN-2000):
- @           RESTART FILE WRITTEN   REPORT     2                             
-    49 READING END     
+ @           RESTART FILE WRITTEN   REPORT     2
+    49 READING END
 1                             **********************************************************************   3
-  END      AT      2.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2     
-  REPORT   2     3 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021 
+  END      AT      2.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2
+  REPORT   2     3 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021
                               **************************************************************************
-            8 Mbytes of storage required                         
-    1031.5912 KB/active cell                                     
-          208 Mbytes (image size)                                
+            8 Mbytes of storage required
+    1031.5912 KB/active cell
+          208 Mbytes (image size)
 
- Error summary 
+ Error summary
  Comments               1
  Warnings               1
  Problems               0

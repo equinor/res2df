@@ -71,4 +71,3 @@ and the contents of the exported file can be:
         30   4   3  31   4   2    0.1 /
         30   4   4  31   4   1    0.1 /
     / -- 4 nnc connections, avg multiplier 0.1
-

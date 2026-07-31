@@ -1,14 +1,12 @@
 """Test module for nnc2df"""
 
-import io
 import os
-import subprocess
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from ecl2df import ecl2csv, faults, nnc, trans
+from ecl2df import faults, nnc, trans
 from ecl2df.eclfiles import EclFiles
 
 try:

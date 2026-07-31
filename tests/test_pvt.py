@@ -1,14 +1,12 @@
 """Test module for pvt"""
 
-import io
 import os
-import subprocess
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from ecl2df import csv2ecl, ecl2csv, pvt
+from ecl2df import pvt
 from ecl2df.eclfiles import EclFiles
 
 try:

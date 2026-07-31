@@ -6,7 +6,6 @@ from pathlib import Path
 import ecl
 import numpy as np
 import pandas as pd
-import pyarrow
 import pytest
 import yaml
 from ecl2df import csv2ecl, ecl2csv, summary
@@ -15,7 +14,6 @@ from ecl2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
     _fix_dframe_for_libecl,
-    date_range,
     df,
     df2eclsum,
     resample_smry_dates,

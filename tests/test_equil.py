@@ -1,13 +1,12 @@
 """Test module for equil2df"""
 
 import os
-import subprocess
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
-from ecl2df import csv2ecl, ecl2csv, equil
+from ecl2df import ecl2csv, equil
 from ecl2df.eclfiles import EclFiles
 
 try:

@@ -112,13 +112,13 @@ all keywords will be merged into one common dataframe.</p>
 <p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">pvt</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">"MYDATADECK.DATA"</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Alternatively, we may also read directly from an <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a>
 if we read the contents of the file and supply it as a string:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pvt.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"pvt.inc"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
@@ -324,8 +324,8 @@ if we read the contents of the file and supply it as a string:</p>
 the entire <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, you have to merge the dataframes in Python like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="n">pvto</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pvto.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-<span class="n">density</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;density.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">pvto</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"pvto.inc"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">density</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"density.inc"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 <span class="n">pvt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pvto</span><span class="p">,</span> <span class="n">density</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -336,14 +336,14 @@ of the data values depend on each other for physical consistency.</p>
 <p>A simple example could be to scale the viscosity values up or down with
 some scalar amount:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale up all viscosity values by 10%</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VISCOSITY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VISCOSITY&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.1</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">"VISCOSITY"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"VISCOSITY"</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.1</span>
 </pre></div>
 </div>
 <p>Possibly, different viscosity scaling pr. PVTNUM is needed</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale up all viscosity values by 10% in PVTNUM 1 and by 5% in 2</span>
-<span class="n">pvtnum1_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="n">pvtnum2_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span>
-<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pvtnum1_rows</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pvtnum1_rows</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.05</span>
+<span class="n">pvtnum1_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"PVTNUM"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="n">pvtnum2_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"PVTNUM"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pvtnum1_rows</span><span class="p">,</span> <span class="s2">"VISCOSITY"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pvtnum1_rows</span><span class="p">,</span> <span class="s2">"VISCOSITY"</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.05</span>
 </pre></div>
 </div>
 <p>(there are many ways of doing operation on specific PVTNUMs in Pandas, pick your favourite).</p>
@@ -353,7 +353,7 @@ some scalar amount:</p>
 <h2>Re-exporting tables to include files<a class="headerlink" href="#re-exporting-tables-to-include-files" title="Link to this heading"></a></h2>
 <p>When you are done with the table, you can generate new
 <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a> from your modified data by issuing</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pvt</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;pvt.inc&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pvt</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"pvt.inc"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>When injecting this produced <code class="docutils literal notranslate"><span class="pre">pvt.inc</span></code> into any new <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>, ensure you

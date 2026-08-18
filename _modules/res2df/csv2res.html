@@ -81,10 +81,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.csv2res</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Convert dataframes (in res2df format) to include files,</span>
 <span class="sd">for selected keywords</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
@@ -104,68 +104,68 @@
 <div class="viewcode-block" id="get_parser">
 <a class="viewcode-back" href="../../res2df/res2df/csv2res/index.html#res2df.csv2res.get_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make parser&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Make parser"""</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;csv2res (&quot;</span> <span class="o">+</span> <span class="n">__version__</span> <span class="o">+</span> <span class="s2">&quot;) is a command line frontend to res2df. &quot;</span>
-            <span class="s2">&quot;Documentation at https://equinor.github.io/res2df/ &quot;</span>
+            <span class="s2">"csv2res ("</span> <span class="o">+</span> <span class="n">__version__</span> <span class="o">+</span> <span class="s2">") is a command line frontend to res2df. "</span>
+            <span class="s2">"Documentation at https://equinor.github.io/res2df/ "</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--version&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span>
-        <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%(prog)s </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">"--version"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"version"</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">"%(prog)s </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;subcommand&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"subcommand"</span><span class="p">,</span>
         <span class="n">parser_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">summary_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;summary&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write UNSMRY files&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Write UNSMRY files from CSV files.&quot;</span><span class="p">),</span>
+        <span class="s2">"summary"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Write UNSMRY files"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">"Write UNSMRY files from CSV files."</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">summary_fill_reverse_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
     <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary_reverse_main</span><span class="p">)</span>
 
     <span class="n">equil_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;equil&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write SOLUTION include files&quot;</span><span class="p">,</span>
+        <span class="s2">"equil"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Write SOLUTION include files"</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Write SOLUTION keywords (EQUIL, RSVD, RVVD) &quot;</span>
-            <span class="s2">&quot;to include files from CSV in res2df format.&quot;</span>
+            <span class="s2">"Write SOLUTION keywords (EQUIL, RSVD, RVVD) "</span>
+            <span class="s2">"to include files from CSV in res2df format."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">equil_fill_reverse_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
     <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil_reverse_main</span><span class="p">)</span>
 
     <span class="n">pvt_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;pvt&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write PVT include files&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Write include files from CSV files with res2df format.&quot;</span><span class="p">),</span>
+        <span class="s2">"pvt"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Write PVT include files"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">"Write include files from CSV files with res2df format."</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">pvt_fill_reverse_parser</span><span class="p">(</span><span class="n">pvt_parser</span><span class="p">)</span>
     <span class="n">pvt_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pvt_reverse_main</span><span class="p">)</span>
 
     <span class="n">satfunc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;satfunc&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write saturation function include files&quot;</span><span class="p">,</span>
+        <span class="s2">"satfunc"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Write saturation function include files"</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Write saturation function include files from CSV files with res2df format.&quot;</span>
+            <span class="s2">"Write saturation function include files from CSV files with res2df format."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">satfunc_fill_reverse_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
     <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc_reverse_main</span><span class="p">)</span>
 
     <span class="n">vfp_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;vfp&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write VFPPROD/VFPINJ include files&quot;</span><span class="p">,</span>
+        <span class="s2">"vfp"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Write VFPPROD/VFPINJ include files"</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Write VFPPROD/VFPINJ include files from CSV files with res2df format.&quot;</span>
+            <span class="s2">"Write VFPPROD/VFPINJ include files from CSV files with res2df format."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">vfp_fill_reverse_parser</span><span class="p">(</span><span class="n">vfp_parser</span><span class="p">)</span>
@@ -178,14 +178,14 @@
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../res2df/res2df/csv2res/index.html#res2df.csv2res.main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Entry point"""</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">get_parser</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="n">args</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

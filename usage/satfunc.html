@@ -115,7 +115,7 @@ dataframe, where data from different keywords are separated by the <code class="
 column.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">satfunc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">'MYDATADECK.DATA'</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -320,9 +320,9 @@ Pandas operations on saturation functions.</p>
 in the SWOF table, and if <cite>dframe</cite> holds all the data, this can be performed by
 the command</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build boolean array of which rows in the big dataframe we want to touch:</span>
-<span class="n">rows_to_touch</span> <span class="o">=</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SWOF&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">rows_to_touch</span> <span class="o">=</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"SWOF"</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"SATNUM"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
 <span class="c1"># Multiplicate these rows by 0.5</span>
-<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows_to_touch</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">0.5</span>
+<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows_to_touch</span><span class="p">,</span> <span class="s2">"KRW"</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">0.5</span>
 </pre></div>
 </div>
 <p>For a dataframe or a CSV file in the format provided by this module, an
@@ -345,17 +345,17 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">satfunc</span>
 
 <span class="c1"># Read an include file directly into a DataFrame</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_handle</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"relperm.inc"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_handle</span><span class="p">:</span>
     <span class="n">sat_df</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">f_handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
 <span class="c1"># Write a function that is to operate on each SATNUM:</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">sowcr</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine the largest oil saturation where</span>
-<span class="sd">    oil relperm is below 1e-7&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;KROW&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1e-7</span><span class="p">][</span><span class="s2">&quot;SW&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Determine the largest oil saturation where</span>
+<span class="sd">    oil relperm is below 1e-7"""</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"KROW"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1e-7</span><span class="p">][</span><span class="s2">"SW"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
 <span class="c1"># Apply that function individually on each SATNUM:</span>
-<span class="n">sat_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sowcr</span><span class="p">)</span>
+<span class="n">sat_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"SATNUM"</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sowcr</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>for an example <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a>, this could result in</p>

@@ -81,13 +81,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.vfp._vfpcommon</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Common functionality for vfp module to extract VFPPROD/VFPINJ data from input</span>
+<span></span><span class="sd">"""Common functionality for vfp module to extract VFPPROD/VFPINJ data from input</span>
 <span class="sd">deck to extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas</span>
 <span class="sd">Dataframes</span>
 
 <span class="sd">Data can be extracted from a complete deck or from individual files. Supports</span>
 <span class="sd">output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
@@ -109,19 +109,19 @@
 <div class="viewcode-block" id="_string2intlist">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpprod/index.html#res2df.vfp._vfpcommon._string2intlist">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_string2intlist</span><span class="p">(</span><span class="n">list_def_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a list of int from input string</span>
+<span class="w">    </span><span class="sd">"""Produce a list of int from input string</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        list_def_str: String defining list of int</span>
-<span class="sd">                      Format &quot;[1,2,6:9]&quot; to define list [1,2,6,7,8,9]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">                      Format "[1,2,6:9]" to define list [1,2,6,7,8,9]</span>
+<span class="sd">    """</span>
     <span class="n">int_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">list_def</span> <span class="o">=</span> <span class="n">list_def_str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span>
+    <span class="n">list_def</span> <span class="o">=</span> <span class="n">list_def_str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"["</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"]"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">list_def</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="n">list_items</span> <span class="o">=</span> <span class="n">list_def</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">list_def</span> <span class="k">else</span> <span class="p">[</span><span class="n">list_def</span><span class="p">]</span>
+        <span class="n">list_items</span> <span class="o">=</span> <span class="n">list_def</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span> <span class="k">if</span> <span class="s2">","</span> <span class="ow">in</span> <span class="n">list_def</span> <span class="k">else</span> <span class="p">[</span><span class="n">list_def</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_items</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
-                <span class="n">item_split</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">":"</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                <span class="n">item_split</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
                 <span class="n">int_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">item_split</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">int_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
@@ -133,42 +133,42 @@
 <div class="viewcode-block" id="_deckrecord2list">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpprod/index.html#res2df.vfp._vfpcommon._deckrecord2list">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_deckrecord2list</span><span class="p">(</span>
-    <span class="n">record</span><span class="p">:</span> <span class="s2">&quot;opm.opmcommon_python.DeckRecord&quot;</span><span class="p">,</span>
+    <span class="n">record</span><span class="p">:</span> <span class="s2">"opm.opmcommon_python.DeckRecord"</span><span class="p">,</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">recordindex</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">recordname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parse an opm.opmcommon_python.DeckRecord belonging to a certain keyword</span>
 <span class="sd">    and return as list of numbers</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        record:      Record be parsed</span>
 <span class="sd">        keyword:     Which keyword this belongs to</span>
-<span class="sd">        recordindex: For keywords where itemlistname is &#39;records&#39;, this is a</span>
-<span class="sd">                     list index to the &quot;record&quot;.</span>
+<span class="sd">        recordindex: For keywords where itemlistname is 'records', this is a</span>
+<span class="sd">                     list index to the "record".</span>
 <span class="sd">        recordname:  Name of the record</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">rec_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">recordindex</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">rec_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="s2">"records"</span><span class="p">,</span> <span class="n">recordindex</span><span class="p">)</span>
 
     <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="c1"># Extract interpolation ranges into lists</span>
     <span class="n">tmp_val</span> <span class="o">=</span> <span class="n">rec_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">recordname</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">tmp_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing record &#39;</span><span class="si">{</span><span class="n">recordname</span><span class="si">}</span><span class="s2">&#39; in keyword &#39;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing record '</span><span class="si">{</span><span class="n">recordname</span><span class="si">}</span><span class="s2">' in keyword '</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tmp_val</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">tmp_val</span><span class="p">]</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Non-numeric value in record &#39;</span><span class="si">{</span><span class="n">recordname</span><span class="si">}</span><span class="s2">&#39; for keyword &#39;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="sa">f</span><span class="s2">"Non-numeric value in record '</span><span class="si">{</span><span class="n">recordname</span><span class="si">}</span><span class="s2">' for keyword '</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">'"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tmp_val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">tmp_val</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Keyword </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> and recordname </span><span class="si">{</span><span class="n">recordname</span><span class="si">}</span><span class="s2"> &quot;</span>
-            <span class="s2">&quot;not match number of tabulated records&quot;</span>
+            <span class="sa">f</span><span class="s2">"Keyword </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> and recordname </span><span class="si">{</span><span class="n">recordname</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="s2">"not match number of tabulated records"</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">values</span></div>
@@ -183,7 +183,7 @@
     <span class="n">flow_values_list</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">table_values_list</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dataframe from a list of interpolation ranges and tabulated values</span>
+<span class="w">    </span><span class="sd">"""Return a dataframe from a list of interpolation ranges and tabulated values</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        index_names_list:  List with name of each interpolated</span>
@@ -196,18 +196,18 @@
 <span class="sd">        flow_values_list:  List of flow values (dim = no flow_values)</span>
 <span class="sd">        table_values_list: List of list with tabulated values</span>
 <span class="sd">                           (dim = (no records) x  (no flow_values))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_names_list</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_values_list</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Number of index names not equal to number of index lists&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Number of index names not equal to number of index lists"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">index_values</span> <span class="ow">in</span> <span class="n">index_values_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_values_list</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Number of index values not equal to number of records in table&quot;</span>
+                <span class="s2">"Number of index values not equal to number of records in table"</span>
             <span class="p">)</span>
     <span class="k">for</span> <span class="n">table_values</span> <span class="ow">in</span> <span class="n">table_values_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flow_values_list</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Number of flow values not equal to number of tabulated values&quot;</span>
+                <span class="s2">"Number of flow values not equal to number of tabulated values"</span>
             <span class="p">)</span>
 
     <span class="n">df_vfptable</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">table_values_list</span><span class="p">)</span>
@@ -218,8 +218,8 @@
         <span class="n">df_vfptable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">index_names_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">index_values_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
     <span class="c1">#  create multi-index for columns</span>
-    <span class="n">indextuples</span> <span class="o">=</span> <span class="p">[(</span><span class="n">index_name</span><span class="p">,</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">index_name</span> <span class="ow">in</span> <span class="n">index_names_list</span><span class="p">]</span>
-    <span class="n">indextuples</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="s2">&quot;TAB&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">flowvalue</span><span class="p">))</span> <span class="k">for</span> <span class="n">flowvalue</span> <span class="ow">in</span> <span class="n">flow_values_list</span><span class="p">)</span>
+    <span class="n">indextuples</span> <span class="o">=</span> <span class="p">[(</span><span class="n">index_name</span><span class="p">,</span> <span class="s2">"DELETE"</span><span class="p">)</span> <span class="k">for</span> <span class="n">index_name</span> <span class="ow">in</span> <span class="n">index_names_list</span><span class="p">]</span>
+    <span class="n">indextuples</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="s2">"TAB"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">flowvalue</span><span class="p">))</span> <span class="k">for</span> <span class="n">flowvalue</span> <span class="ow">in</span> <span class="n">flow_values_list</span><span class="p">)</span>
 
     <span class="c1"># Set the columns to a MultiIndex, to facilitate stacking</span>
     <span class="n">df_vfptable</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">indextuples</span><span class="p">)</span>
@@ -233,7 +233,7 @@
     <span class="c1"># backwards fill, hopefully that is robust enough</span>
     <span class="c1"># Also reset the index:</span>
     <span class="n">df_vfptable_stacked</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">df_vfptable_stacked</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;level_0&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+        <span class="n">df_vfptable_stacked</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"level_0"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"columns"</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="c1"># This column is not meaningful (it is the old index)</span>
 
@@ -241,18 +241,18 @@
     <span class="c1"># possibly a by-product of not doing the stacking in an</span>
     <span class="c1"># optimal way)</span>
     <span class="n">df_vfptable_stacked</span> <span class="o">=</span> <span class="n">df_vfptable_stacked</span><span class="p">[</span>
-        <span class="n">df_vfptable_stacked</span><span class="p">[</span><span class="s2">&quot;level_1&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;DELETE&quot;</span>
+        <span class="n">df_vfptable_stacked</span><span class="p">[</span><span class="s2">"level_1"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"DELETE"</span>
     <span class="p">]</span>
 
     <span class="c1"># Add correct column name for the flow values that we have stacked</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_vfptable_stacked</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-    <span class="n">cols</span><span class="p">[</span><span class="n">cols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;level_1&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;RATE&quot;</span>
+    <span class="n">cols</span><span class="p">[</span><span class="n">cols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">"level_1"</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">"RATE"</span>
     <span class="n">df_vfptable_stacked</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">cols</span>
-    <span class="n">df_vfptable_stacked</span><span class="p">[</span><span class="s2">&quot;RATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_vfptable_stacked</span><span class="p">[</span><span class="s2">&quot;RATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">df_vfptable_stacked</span><span class="p">[</span><span class="s2">"RATE"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_vfptable_stacked</span><span class="p">[</span><span class="s2">"RATE"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="c1"># Sort values in correct order</span>
     <span class="n">df_vfptable_stacked</span> <span class="o">=</span> <span class="n">df_vfptable_stacked</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-        <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">index_names_list</span><span class="p">,</span> <span class="s2">&quot;RATE&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">index_names_list</span><span class="p">,</span> <span class="s2">"RATE"</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df_vfptable_stacked</span></div>
@@ -265,10 +265,10 @@
     <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">var_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">unit_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%10.6g</span><span class="s2">"</span><span class="p">,</span>
     <span class="n">values_per_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a :term:`include file` content string of a resdata</span>
+<span class="w">    </span><span class="sd">"""Creates a :term:`include file` content string of a resdata</span>
 <span class="sd">    record for a given table range</span>
 
 <span class="sd">    Args:</span>
@@ -277,21 +277,21 @@
 <span class="sd">        unit_type:       The unit type for the variable</span>
 <span class="sd">        format:          Format string for values</span>
 <span class="sd">        values_per_line: Number of values per line in output</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">var_type_str</span> <span class="o">=</span> <span class="s2">&quot;&#39;&#39;&quot;</span>
-    <span class="k">if</span> <span class="n">var_type</span> <span class="o">!=</span> <span class="s2">&quot;UNDEFINED&quot;</span><span class="p">:</span>
+    <span class="n">var_type_str</span> <span class="o">=</span> <span class="s2">"''"</span>
+    <span class="k">if</span> <span class="n">var_type</span> <span class="o">!=</span> <span class="s2">"UNDEFINED"</span><span class="p">:</span>
         <span class="n">var_type_str</span> <span class="o">=</span> <span class="n">var_type</span>
 
-    <span class="n">deck_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;-- </span><span class="si">{</span><span class="n">var_type_str</span><span class="si">}</span><span class="s2"> units - </span><span class="si">{</span><span class="n">unit_type</span><span class="si">}</span><span class="s2"> ( </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> values )</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"-- </span><span class="si">{</span><span class="n">var_type_str</span><span class="si">}</span><span class="s2"> units - </span><span class="si">{</span><span class="n">unit_type</span><span class="si">}</span><span class="s2"> ( </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> values )</span><span class="se">\n</span><span class="s2">"</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
         <span class="n">deck_str</span> <span class="o">+=</span> <span class="nb">format</span> <span class="o">%</span> <span class="n">value</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">values_per_line</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span>
-    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot; /</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">" "</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">" /</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
 
     <span class="k">return</span> <span class="n">deck_str</span></div>
 

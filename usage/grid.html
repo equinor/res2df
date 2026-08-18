@@ -115,8 +115,8 @@ Each row in a returned dataframe represents one cell.</p>
 <p>Typical usage</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">'MYDATADECK.DATA'</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s1">'last'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>where the API is documented at <a class="reference internal" href="../res2df/res2df/grid/index.html#res2df.grid.df" title="res2df.grid.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.grid.df()</span></code></a>.</p>
@@ -620,22 +620,22 @@ number in a sequence can lead to accumulation of roundoff errors. This is
 proven to have an impact on volumetrics computations on a grid. For this, the
 Python function <code class="docutils literal notranslate"><span class="pre">math.fsum()</span></code> should always be used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Average non-weighted porosity:</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">"PORO"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
 <span class="c1"># Bulk volume in Gm3:</span>
-<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e9</span>
+<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"VOLUME"</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e9</span>
 
 <span class="c1"># Total pore volume:</span>
-<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">])</span>
+<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"PORV"</span><span class="p">])</span>
 
 <span class="c1"># Average (weighted) porosity:</span>
-<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">])</span>
+<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"PORV"</span><span class="p">])</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"VOLUME"</span><span class="p">])</span>
 
 <span class="c1"># Apex reservoir (cell centre):</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">"Z"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
 
 <span class="c1"># Apex reservoir (topmost cell corner):</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;Z_MIN&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">"Z_MIN"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Pandas has powerful aggregation operators, and any thinkable statistical measure
@@ -643,7 +643,7 @@ can be applied to the data. The Pandas <cite>groupby()</cite> operation can be u
 statistical measures pr. regions. All of the above examples can be rephrased to
 compute values for every SATNUM, EQLNUM or similar. Example:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apex reservoir pr equilibriation zone</span>
-<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">])[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"EQLNUM"</span><span class="p">])[</span><span class="s2">"Z"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
 <span class="n">EQLNUM</span>
 <span class="mf">1.0</span>    <span class="mf">1568.876251</span>
@@ -658,7 +658,7 @@ compute values for every SATNUM, EQLNUM or similar. Example:</p>
 alongside, zone information will automatically be merged into each row based on the <cite>K</cite>
 column. This can be used for statistics pr. zone,</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="c1"># Permeability (arithmetic average) pr. zone</span>
-<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ZONE&quot;</span><span class="p">)[</span><span class="s2">&quot;PERMX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"ZONE"</span><span class="p">)[</span><span class="s2">"PERMX"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
 <span class="n">ZONE</span>
 <span class="n">LowerReek</span>    <span class="mf">979.605462</span>
@@ -670,13 +670,13 @@ column. This can be used for statistics pr. zone,</p>
 the whereabouts of the file:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;&#39;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">"'MYDATADECK.DATA"</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 <span class="c1"># The filename with layers is relative to .DATA file location</span>
 <span class="c1"># or an absolute path.</span>
-<span class="n">subzonemap</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">parse_zonemapfile</span><span class="p">(</span><span class="s2">&quot;subzones.lyr&quot;</span><span class="p">)</span>
+<span class="n">subzonemap</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">parse_zonemapfile</span><span class="p">(</span><span class="s2">"subzones.lyr"</span><span class="p">)</span>
 <span class="n">dframe_with_subzones</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">merge_zones</span><span class="p">(</span>
-    <span class="n">dframe</span><span class="p">,</span> <span class="n">subzonemap</span><span class="p">,</span> <span class="n">zoneheader</span><span class="o">=</span><span class="s2">&quot;SUBZONE&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K&quot;</span>
+    <span class="n">dframe</span><span class="p">,</span> <span class="n">subzonemap</span><span class="p">,</span> <span class="n">zoneheader</span><span class="o">=</span><span class="s2">"SUBZONE"</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">"K"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -707,15 +707,15 @@ scaling porosity, permeability etc. Or remapping some region parameters. Using t
 it to FIPNUM 5. This can be accomplished using</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;&#39;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">"'MYDATADECK.DATA"</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 
 <span class="c1"># Change FIPNUM 6 to FIPNUM 5:</span>
-<span class="n">rows_to_touch</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6</span>
-<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows_to_touch</span><span class="p">,</span> <span class="s2">&quot;FIPNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">rows_to_touch</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"FIPNUM"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6</span>
+<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows_to_touch</span><span class="p">,</span> <span class="s2">"FIPNUM"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
 
 <span class="c1"># Write back to new include file, ensure datatype is integer.</span>
-<span class="n">grid</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;fipnum.inc&quot;</span><span class="p">,</span> <span class="n">resdatafiles</span><span class="o">=</span><span class="n">resdatafiles</span><span class="p">)</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="s2">"FIPNUM"</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"fipnum.inc"</span><span class="p">,</span> <span class="n">resdatafiles</span><span class="o">=</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This will produce the file <cite>fipnum.inc</cite> with the contents:</p>

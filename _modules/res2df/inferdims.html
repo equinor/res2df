@@ -81,10 +81,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.inferdims</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Support module for inferring EQLDIMS and TABDIMS from incomplete</span>
 <span class="sd">reservoir simulator decks (typically single include-files)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
@@ -95,13 +95,13 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># Constants to use for pointing to positions in the xxxDIMS keyword</span>
-<span class="n">DIMS_POS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;NTPVT&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;NTSFUN&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">DIMS_POS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"NTPVT"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"NTSFUN"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="guess_dim">
 <a class="viewcode-back" href="../../res2df/res2df/inferdims/index.html#res2df.inferdims.guess_dim">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">guess_dim</span><span class="p">(</span><span class="n">deckstring</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guess the correct dimension count for an incoming :term:`deck` (string)</span>
+<span class="w">    </span><span class="sd">"""Guess the correct dimension count for an incoming :term:`deck` (string)</span>
 
 <span class="sd">    The incoming :term:`deck` must in string form, if not, extra data is most</span>
 <span class="sd">    likely already removed by the opm.io parser. TABDIMS or EQLDIMS</span>
@@ -117,26 +117,26 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        The lowest number for which stricter opm.io parsing succeeds</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only supports TABDIMS and EQLDIMS&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only support item 0 and 1 in TABDIMS&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only item 0 in EQLDIMS can be estimated&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"TABDIMS"</span><span class="p">,</span> <span class="s2">"EQLDIMS"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only supports TABDIMS and EQLDIMS"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">"TABDIMS"</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only support item 0 and 1 in TABDIMS"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">"EQLDIMS"</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only item 0 in EQLDIMS can be estimated"</span><span class="p">)</span>
 
     <span class="c1"># A less than res2df-standard permissive opm.io, when using</span>
     <span class="c1"># this one opm.io will fail if there are extra records</span>
     <span class="c1"># in tables (if NTSFUN in TABDIMS is wrong f.ex):</span>
     <span class="n">opmioparser_recovery_fail_extra_records</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_INVALID_KEYWORD_COMBINATION&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_UNKNOWN_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;SUMMARY_UNKNOWN_GROUP&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;UNSUPPORTED_*&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"PARSE_INVALID_KEYWORD_COMBINATION"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"PARSE_MISSING_INCLUDE"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"PARSE_MISSING_SECTIONS"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"PARSE_RANDOM_TEXT"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"PARSE_UNKNOWN_KEYWORD"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"SUMMARY_UNKNOWN_GROUP"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"UNSUPPORTED_*"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
     <span class="p">]</span>
 
     <span class="n">max_guess</span> <span class="o">=</span> <span class="mi">640</span>  <span class="c1"># This ought to be enough for everybody</span>
@@ -163,9 +163,9 @@
             <span class="c1"># If we get here, try another dimnumcount</span>
     <span class="k">if</span> <span class="n">dimcountguess</span> <span class="o">==</span> <span class="n">max_guess</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Unable to guess dim count for </span><span class="si">%s</span><span class="s2">, or larger than </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">max_guess</span>
+            <span class="s2">"Unable to guess dim count for </span><span class="si">%s</span><span class="s2">, or larger than </span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">max_guess</span>
         <span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Guessed dimension count count for </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimcountguess</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Guessed dimension count count for </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimcountguess</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dimcountguess</span></div>
 
 
@@ -175,7 +175,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">inject_dimcount</span><span class="p">(</span>
     <span class="n">deckstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dimvalue</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nowarn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a :term:`deck` string</span>
+<span class="w">    </span><span class="sd">"""Insert a TABDIMS with NTSFUN into a :term:`deck` string</span>
 
 <span class="sd">    This is simple string manipulation, not opm.io</span>
 <span class="sd">    :term:`deck` manipulation (which might be possible to do).</span>
@@ -194,27 +194,27 @@
 <span class="sd">            is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        New :term:`deck` string with TABDIMS/EQLDIMS prepended.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">dimvalue</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;dimvalue must be larger than zero&quot;</span>
-    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only supports TABDIMS and EQLDIMS&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only support item 0 and 1 in TABDIMS&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only item 0 in EQLDIMS can be injected&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">assert</span> <span class="n">dimvalue</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"dimvalue must be larger than zero"</span>
+    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"TABDIMS"</span><span class="p">,</span> <span class="s2">"EQLDIMS"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only supports TABDIMS and EQLDIMS"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">"TABDIMS"</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only support item 0 and 1 in TABDIMS"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">"EQLDIMS"</span> <span class="ow">and</span> <span class="n">dimitem</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only item 0 in EQLDIMS can be injected"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">in</span> <span class="n">deckstr</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">nowarn</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Not inserting </span><span class="si">%s</span><span class="s2"> in a deck where already exists&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span>
+                <span class="s2">"Not inserting </span><span class="si">%s</span><span class="s2"> in a deck where already exists"</span><span class="p">,</span> <span class="n">dimkeyword</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">deckstr</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">dimkeyword</span>
-        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span>
-        <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">dimitem</span><span class="p">)</span> <span class="o">*</span> <span class="s2">&quot;1* &quot;</span>
+        <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2"> "</span>
+        <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">dimitem</span><span class="p">)</span> <span class="o">*</span> <span class="s2">"1* "</span>
         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dimvalue</span><span class="p">)</span>
-        <span class="o">+</span> <span class="s2">&quot; /</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">" /</span><span class="se">\n\n</span><span class="s2">"</span>
         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">deckstr</span><span class="p">)</span>
     <span class="p">)</span></div>
 
@@ -225,10 +225,10 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">inject_xxxdims_ntxxx</span><span class="p">(</span>
     <span class="n">xxxdims</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">ntxxx_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="s2">"str | opm.opmcommon_python.Deck"</span><span class="p">,</span>
     <span class="n">ntxxx_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.opmcommon_python.Deck&quot;</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures TABDIMS/EQLDIMS is present in a :term:`deck`.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"opm.opmcommon_python.Deck"</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Ensures TABDIMS/EQLDIMS is present in a :term:`deck`.</span>
 
 <span class="sd">    If ntxxx_value=None and ntxxx_name not in the :term:`deck`, ntxxx_name will</span>
 <span class="sd">    be inferred through trial-and-error parsing of the :term:`deck`, and then injected</span>
@@ -245,9 +245,9 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        opm.io Deck object</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">xxxdims</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="n">ntxxx_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="s2">&quot;NTSFUN&quot;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="k">assert</span> <span class="n">xxxdims</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"TABDIMS"</span><span class="p">,</span> <span class="s2">"EQLDIMS"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ntxxx_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NTPVT"</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">,</span> <span class="s2">"NTSFUN"</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">xxxdims</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="n">ntxxx_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Then we have nothing to do, but ensure we parse a potential string to a deck</span>
@@ -256,7 +256,7 @@
         <span class="k">return</span> <span class="n">deck</span>
 
     <span class="k">if</span> <span class="n">xxxdims</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="n">ntxxx_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Ignoring </span><span class="si">%s</span><span class="s2"> argument, it is already in the deck&quot;</span><span class="p">,</span> <span class="n">ntxxx_name</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Ignoring </span><span class="si">%s</span><span class="s2"> argument, it is already in the deck"</span><span class="p">,</span> <span class="n">ntxxx_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">deck</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -267,7 +267,7 @@
     <span class="c1"># Estimate if ntxxx_value is not provided:</span>
     <span class="k">if</span> <span class="n">ntxxx_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ntxxx_estimate</span> <span class="o">=</span> <span class="n">guess_dim</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">xxxdims</span><span class="p">,</span> <span class="n">DIMS_POS</span><span class="p">[</span><span class="n">ntxxx_name</span><span class="p">])</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Estimated </span><span class="si">%s</span><span class="s2">=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ntxxx_name</span><span class="p">,</span> <span class="n">ntxxx_estimate</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Estimated </span><span class="si">%s</span><span class="s2">=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">ntxxx_name</span><span class="p">,</span> <span class="n">ntxxx_estimate</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ntxxx_estimate</span> <span class="o">=</span> <span class="n">ntxxx_value</span>
 

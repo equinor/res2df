@@ -81,7 +81,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.satfunc</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Extract saturation function data (SWOF, SGOF, SWFN, etc.)</span>
 <span class="sd">from a .DATA file as Pandas DataFrame.</span>
 
@@ -94,7 +94,7 @@
 <span class="sd">SATNUMs, but whenever this is known, it is recommended to either supply</span>
 <span class="sd">TABDIMS or to supply the satnumcount directly to avoid possible bugs.</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -121,28 +121,28 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">SUPPORTED_KEYWORDS</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;SWOF&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SGOF&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SWFN&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SOF2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SGFN&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SOF3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SLGOF&quot;</span><span class="p">,</span>
+    <span class="s2">"SWOF"</span><span class="p">,</span>
+    <span class="s2">"SGOF"</span><span class="p">,</span>
+    <span class="s2">"SWFN"</span><span class="p">,</span>
+    <span class="s2">"SGWFN"</span><span class="p">,</span>
+    <span class="s2">"SOF2"</span><span class="p">,</span>
+    <span class="s2">"SGFN"</span><span class="p">,</span>
+    <span class="s2">"SOF3"</span><span class="p">,</span>
+    <span class="s2">"SLGOF"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="c1"># RENAMERS are a dictionary of dictionaries, referring to</span>
 <span class="c1"># how we should rename deck record items, from the JSON</span>
 <span class="c1"># files in opm.common and into Dataframe column names.</span>
 <span class="n">RENAMERS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGFN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">]}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGOF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KROG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">]}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGWFN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;PCGW&quot;</span><span class="p">]}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SLGOF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SL&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRO&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">]}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SOF2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SO&quot;</span><span class="p">,</span> <span class="s2">&quot;KRO&quot;</span><span class="p">]}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SOF3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SO&quot;</span><span class="p">,</span> <span class="s2">&quot;KROW&quot;</span><span class="p">,</span> <span class="s2">&quot;KROG&quot;</span><span class="p">]}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SWFN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOW&quot;</span><span class="p">]}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SWOF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;KROW&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOW&quot;</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SGFN"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SG"</span><span class="p">,</span> <span class="s2">"KRG"</span><span class="p">,</span> <span class="s2">"PCOG"</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SGOF"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SG"</span><span class="p">,</span> <span class="s2">"KRG"</span><span class="p">,</span> <span class="s2">"KROG"</span><span class="p">,</span> <span class="s2">"PCOG"</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SGWFN"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SG"</span><span class="p">,</span> <span class="s2">"KRG"</span><span class="p">,</span> <span class="s2">"KRW"</span><span class="p">,</span> <span class="s2">"PCGW"</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SLGOF"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SL"</span><span class="p">,</span> <span class="s2">"KRG"</span><span class="p">,</span> <span class="s2">"KRO"</span><span class="p">,</span> <span class="s2">"PCOG"</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SOF2"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SO"</span><span class="p">,</span> <span class="s2">"KRO"</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SOF3"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SO"</span><span class="p">,</span> <span class="s2">"KROW"</span><span class="p">,</span> <span class="s2">"KROG"</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SWFN"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SW"</span><span class="p">,</span> <span class="s2">"KRW"</span><span class="p">,</span> <span class="s2">"PCOW"</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">"SWOF"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SW"</span><span class="p">,</span> <span class="s2">"KRW"</span><span class="p">,</span> <span class="s2">"KROW"</span><span class="p">,</span> <span class="s2">"PCOW"</span><span class="p">]}</span>
 
 
 <div class="viewcode-block" id="df">
@@ -152,11 +152,11 @@
     <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntsfun</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the data in the saturation function keywords as a Pandas</span>
+<span class="w">    </span><span class="sd">"""Extract the data in the saturation function keywords as a Pandas</span>
 <span class="sd">    DataFrames.</span>
 
 <span class="sd">    Data for all saturation functions are merged into one dataframe.</span>
-<span class="sd">    The two first columns in the dataframe are &#39;KEYWORD&#39; (which can be</span>
+<span class="sd">    The two first columns in the dataframe are 'KEYWORD' (which can be</span>
 <span class="sd">    SWOF, SGOF, etc.), and then SATNUM which is an index counter from 1 and</span>
 <span class="sd">    onwards. Then follows the data for each individual keyword that</span>
 <span class="sd">    is found in the :term:`deck`.</span>
@@ -170,7 +170,7 @@
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        deck: Incoming data :term:`deck`. Always</span>
-<span class="sd">            supply as a string if you don&#39;t know TABDIMS-NTSFUN.</span>
+<span class="sd">            supply as a string if you don't know TABDIMS-NTSFUN.</span>
 <span class="sd">        keywords: Requested keywords for which to</span>
 <span class="sd">            to extract data.</span>
 <span class="sd">        ntsfun: Number of SATNUMs defined in the :term:`deck`, only</span>
@@ -179,21 +179,21 @@
 <span class="sd">            it will be attempted inferred.</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        pd.DataFrame, columns &#39;KEYWORD&#39;, &#39;SW&#39;, &#39;KRW&#39;, &#39;KROW&#39;, &#39;PC&#39;, ..</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        pd.DataFrame, columns 'KEYWORD', 'SW', 'KRW', 'KROW', 'PC', ..</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">):</span>
         <span class="c1"># NB: If this is done on include files and not on .DATA files</span>
         <span class="c1"># we can loose data for SATNUM &gt; 1</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
-    <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTSFUN&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span>
+    <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">"TABDIMS"</span><span class="p">,</span> <span class="s2">"NTSFUN"</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s2">"TABDIMS"</span> <span class="ow">in</span> <span class="n">deck</span>
 
     <span class="n">wanted_keywords</span> <span class="o">=</span> <span class="n">handle_wanted_keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
 
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">interpolate_defaults</span><span class="p">(</span>
             <span class="n">keyworddata_to_df</span><span class="p">(</span>
-                <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;SATNUM&quot;</span>
+                <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">"SATNUM"</span>
             <span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">KEYWORD</span><span class="o">=</span><span class="n">keyword</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">wanted_keywords</span>
@@ -204,13 +204,13 @@
         <span class="c1"># We want to sort the keywords by the order they appear in</span>
         <span class="c1"># SUPPORTED_KEYWORDS (mainly to get WaterOil before GasOil)</span>
         <span class="c1"># We do that by converting to a Categorical series:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">],</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">])</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">],</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"SATNUM"</span><span class="p">,</span> <span class="s2">"KEYWORD"</span><span class="p">])</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Extracted keywords </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%i</span><span class="s2"> SATNUMs&quot;</span><span class="p">,</span>
-            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
+            <span class="s2">"Extracted keywords </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%i</span><span class="s2"> SATNUMs"</span><span class="p">,</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"SATNUM"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">dframe</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
@@ -220,28 +220,28 @@
 <div class="viewcode-block" id="interpolate_defaults">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.interpolate_defaults">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">interpolate_defaults</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate NaN&#39;s linearly in saturation.</span>
+<span class="w">    </span><span class="sd">"""Interpolate NaN's linearly in saturation.</span>
 <span class="sd">    Saturation function tables in :term:`.DATA files &lt;.DATA file&gt;`</span>
 <span class="sd">    can have certain values defaulted.</span>
 <span class="sd">    When parsed by res2df, these values are returned as np.nan.</span>
 <span class="sd">    The incoming dataframe must be associated to one keyword only, but</span>
 <span class="sd">    can consist of multiple SATNUMs.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sat_cols</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;SO&quot;</span><span class="p">,</span> <span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;SL&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">sat_cols</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"SW"</span><span class="p">,</span> <span class="s2">"SO"</span><span class="p">,</span> <span class="s2">"SG"</span><span class="p">,</span> <span class="s2">"SL"</span><span class="p">}</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sat_cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Could not determine a single saturation column in </span><span class="si">{</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"Could not determine a single saturation column in </span><span class="si">{</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
     <span class="n">sat_col</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">sat_cols</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">dframe</span><span class="p">[</span><span class="n">sat_col</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;nan in saturation column is not allowed&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"nan in saturation column is not allowed"</span><span class="p">)</span>
 
     <span class="n">filled_frames</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">subframe</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">subframe</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"SATNUM"</span><span class="p">):</span>
         <span class="n">subframe</span> <span class="o">=</span> <span class="n">subframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">sat_col</span><span class="p">)</span>
-        <span class="n">numeric_columns</span> <span class="o">=</span> <span class="n">subframe</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">numeric_columns</span> <span class="o">=</span> <span class="n">subframe</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">"float"</span><span class="p">,</span> <span class="s2">"int"</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
         <span class="n">subframe</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">subframe</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span>
-            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">limit_area</span><span class="o">=</span><span class="s2">&quot;inside&quot;</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">"index"</span><span class="p">,</span> <span class="n">limit_area</span><span class="o">=</span><span class="s2">"inside"</span>
         <span class="p">)</span>
         <span class="n">filled_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">filled_frames</span><span class="p">)</span></div>
@@ -251,33 +251,33 @@
 <div class="viewcode-block" id="fill_parser">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.fill_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">"""Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser (ArgumentParser or subparser): parser to fill with arguments</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of .DATA input file for the reservoir simulator,&quot;</span>
-        <span class="s2">&quot; or file with saturation functions.&quot;</span><span class="p">,</span>
+        <span class="s2">"DATAFILE"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Name of .DATA input file for the reservoir simulator,"</span>
+        <span class="s2">" or file with saturation functions."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s2">"--output"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;satfuncs.csv&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Name of output csv file."</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"satfuncs.csv"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-k&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--keywords&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="s2">"-k"</span><span class="p">,</span>
+        <span class="s2">"--keywords"</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;List of saturation function keywords to fetch data from. &quot;</span>
-            <span class="s2">&quot;If not supplied, all supported keywords will be included.&quot;</span>
+            <span class="s2">"List of saturation function keywords to fetch data from. "</span>
+            <span class="s2">"If not supplied, all supported keywords will be included."</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"--verbose"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Be verbose"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -285,19 +285,19 @@
 <div class="viewcode-block" id="fill_reverse_parser">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.fill_reverse_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; resdata :term:`include file`&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;SWOF, SGOF++&quot;</span><span class="p">,</span> <span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Fill a parser for the operation dataframe -&gt; resdata :term:`include file`"""</span>
+    <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">"SWOF, SGOF++"</span><span class="p">,</span> <span class="s2">"relperm.inc"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="satfunc_main">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.satfunc_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">satfunc_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Entry-point for module, for command line utility"""</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">deck</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"TABDIMS"</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># Things are easier when a full deck with (correct) TABDIMS</span>
         <span class="c1"># is supplied:</span>
         <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
@@ -305,20 +305,20 @@
         <span class="c1"># This might be an include file for which we have to infer/guess</span>
         <span class="c1"># TABDIMS. Then we send it to df() as a string</span>
         <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
-            <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">),</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;SATNUM&quot;</span> <span class="ow">in</span> <span class="n">satfunc_df</span> <span class="ow">and</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">in</span> <span class="n">satfunc_df</span><span class="p">:</span>
-        <span class="n">satnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="k">if</span> <span class="s2">"SATNUM"</span> <span class="ow">in</span> <span class="n">satfunc_df</span> <span class="ow">and</span> <span class="s2">"KEYWORD"</span> <span class="ow">in</span> <span class="n">satfunc_df</span><span class="p">:</span>
+        <span class="n">satnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">"SATNUM"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">satnums</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">satnums</span> <span class="o">=</span> <span class="s2">"-"</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="s2">"-"</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
         <span class="n">satfunc_df</span><span class="p">,</span>
         <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unique SATNUMs: </span><span class="si">{</span><span class="n">satnums</span><span class="si">}</span><span class="s2">, saturation keywords: </span><span class="si">{</span><span class="n">keywords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Unique SATNUMs: </span><span class="si">{</span><span class="n">satnums</span><span class="si">}</span><span class="s2">, saturation keywords: </span><span class="si">{</span><span class="n">keywords</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -326,10 +326,10 @@
 <div class="viewcode-block" id="satfunc_reverse_main">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.satfunc_reverse_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">satfunc_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;For command line utility for CSV to resdata&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""For command line utility for CSV to resdata"""</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Parsed </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2res</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
     <span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
@@ -343,7 +343,7 @@
     <span class="n">comments</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate resdata :term:`include file` content from dataframes with</span>
+<span class="w">    </span><span class="sd">"""Generate resdata :term:`include file` content from dataframes with</span>
 <span class="sd">    saturation functions (SWOF, SGOF, ...)</span>
 
 <span class="sd">    Args:</span>
@@ -352,7 +352,7 @@
 <span class="sd">            supported and present in the incoming dataframe. Keywords</span>
 <span class="sd">            are printed in the order defined by this list.</span>
 <span class="sd">        comments: Dictionary indexed by keyword with comments to be</span>
-<span class="sd">            included pr. keyword. If a key named &quot;master&quot; is present</span>
+<span class="sd">            included pr. keyword. If a key named "master" is present</span>
 <span class="sd">            it will be used as a master comment for the outputted file.</span>
 <span class="sd">        filename: If supplied, the generated text will also be dumped</span>
 <span class="sd">            to file.</span>
@@ -360,14 +360,14 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Generated resdata :term:`include file` content</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common_df2res</span><span class="p">(</span>
         <span class="n">satfunc_df</span><span class="p">,</span>
         <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
         <span class="n">comments</span><span class="o">=</span><span class="n">comments</span><span class="p">,</span>
         <span class="n">supported</span><span class="o">=</span><span class="n">SUPPORTED_KEYWORDS</span><span class="p">,</span>
-        <span class="n">consecutive</span><span class="o">=</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">,</span>
+        <span class="n">consecutive</span><span class="o">=</span><span class="s2">"SATNUM"</span><span class="p">,</span>
         <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">string</span></div>
@@ -377,104 +377,104 @@
 <div class="viewcode-block" id="df2res_swof">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_swof">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_swof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SWOF. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SWOF. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SWOF data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SWOF&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SWOF"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_sgof">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_sgof">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_sgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SGOF. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SGOF. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SGOF data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SGOF&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SGOF"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_sgfn">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_sgfn">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_sgfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SGFN. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SGFN. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SGFN data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SGFN&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SGFN"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_sgwfn">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_sgwfn">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_sgwfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SGWFN. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SGWFN. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SGWFN data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SGWFN"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_swfn">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_swfn">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_swfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SWFN. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SWFN. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SWFN data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SWFN&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SWFN"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_slgof">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_slgof">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_slgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SLGOF. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SLGOF. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SLGOF data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SLGOF&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SLGOF"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_sof2">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_sof2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_sof2</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SOF2. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SOF2. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SOF2 data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SOF2&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SOF2"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_sof3">
 <a class="viewcode-back" href="../../res2df/res2df/satfunc/index.html#res2df.satfunc.df2res_sof3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_sof3</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for SOF3. Used by df2res().</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for SOF3. Used by df2res().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SOF3 data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">&quot;SOF3&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_satfuncs</span><span class="p">(</span><span class="s2">"SOF3"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
@@ -482,38 +482,38 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;-- No data!</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="s2">"-- No data!</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
 
     <span class="c1"># Use everything if KEYWORD not in dframe ..</span>
     <span class="n">subset</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span>
-        <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">"KEYWORD"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span>
+        <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;SATNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
-        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">"SATNUM"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">"SATNUM"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"SATNUM"</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 
     <span class="c1"># Make a function that is to be called for each SATNUM</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_df2res_satfuncs_satnum</span><span class="p">(</span><span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
-<span class="sd">        for one saturation function for one specific SATNUM&quot;&quot;&quot;</span>
-        <span class="n">col_headers</span> <span class="o">=</span> <span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">&quot;DATA&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">"""Create string with :term:`include file` contents</span>
+<span class="sd">        for one saturation function for one specific SATNUM"""</span>
+        <span class="n">col_headers</span> <span class="o">=</span> <span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">"DATA"</span><span class="p">]</span>
         <span class="n">string</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;-- &quot;</span>
+            <span class="s2">"-- "</span>
             <span class="o">+</span> <span class="n">dframe</span><span class="p">[</span><span class="n">col_headers</span><span class="p">]</span>
-            <span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">float_format</span><span class="o">=</span><span class="s2">&quot; </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">float_format</span><span class="o">=</span><span class="s2">" </span><span class="si">%g</span><span class="s2">"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">/</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">/</span><span class="se">\n</span><span class="s2">"</span>
 
     <span class="c1"># Loop over every SATNUM</span>
     <span class="k">for</span> <span class="n">satnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;-- SATNUM: </span><span class="si">{</span><span class="n">satnum</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"-- SATNUM: </span><span class="si">{</span><span class="n">satnum</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="n">_df2res_satfuncs_satnum</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">satnum</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
 </pre></div>
 
            </div>

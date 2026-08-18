@@ -81,19 +81,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.vfp._vfpdefs</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Some definitions and parameters used to define VFPPROD and VFPINJ keywords in Eclipse.</span>
 <span class="sd">This includes definitions of rates, thp, wfr (water fractions), gfr (gas fractions),</span>
 <span class="sd">alq (artificial-lift-quantities), units and so on. Used for consistency check in IO</span>
 <span class="sd">routines for VFPPROD and VFPINJ keywords in res2df.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 
 <span class="c1"># Supported types of VFP keywords</span>
 <span class="n">SUPPORTED_KEYWORDS</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VFPINJ&quot;</span><span class="p">,</span>
+    <span class="s2">"VFPPROD"</span><span class="p">,</span>
+    <span class="s2">"VFPINJ"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="c1"># The renamers listed here map from opm-common json item names to</span>
@@ -107,8 +107,8 @@
 <div class="viewcode-block" id="VFPTYPE">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPTYPE">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VFPTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">VFPPROD</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span>
-    <span class="n">VFPINJ</span> <span class="o">=</span> <span class="s2">&quot;VFPINJ&quot;</span></div>
+    <span class="n">VFPPROD</span> <span class="o">=</span> <span class="s2">"VFPPROD"</span>
+    <span class="n">VFPINJ</span> <span class="o">=</span> <span class="s2">"VFPINJ"</span></div>
 
 
 
@@ -116,11 +116,11 @@
 <div class="viewcode-block" id="VFPPROD_FLO">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPPROD_FLO">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VFPPROD_FLO</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">OIL</span> <span class="o">=</span> <span class="s2">&quot;OIL&quot;</span>
-    <span class="n">LIQ</span> <span class="o">=</span> <span class="s2">&quot;LIQ&quot;</span>
-    <span class="n">GAS</span> <span class="o">=</span> <span class="s2">&quot;GAS&quot;</span>
-    <span class="n">WG</span> <span class="o">=</span> <span class="s2">&quot;WG&quot;</span>
-    <span class="n">TM</span> <span class="o">=</span> <span class="s2">&quot;TM&quot;</span></div>
+    <span class="n">OIL</span> <span class="o">=</span> <span class="s2">"OIL"</span>
+    <span class="n">LIQ</span> <span class="o">=</span> <span class="s2">"LIQ"</span>
+    <span class="n">GAS</span> <span class="o">=</span> <span class="s2">"GAS"</span>
+    <span class="n">WG</span> <span class="o">=</span> <span class="s2">"WG"</span>
+    <span class="n">TM</span> <span class="o">=</span> <span class="s2">"TM"</span></div>
 
 
 
@@ -128,11 +128,11 @@
 <div class="viewcode-block" id="VFPINJ_FLO">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPINJ_FLO">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VFPINJ_FLO</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">OIL</span> <span class="o">=</span> <span class="s2">&quot;OIL&quot;</span>
-    <span class="n">WAT</span> <span class="o">=</span> <span class="s2">&quot;WAT&quot;</span>
-    <span class="n">GAS</span> <span class="o">=</span> <span class="s2">&quot;GAS&quot;</span>
-    <span class="n">WG</span> <span class="o">=</span> <span class="s2">&quot;WG&quot;</span>
-    <span class="n">TM</span> <span class="o">=</span> <span class="s2">&quot;TM&quot;</span></div>
+    <span class="n">OIL</span> <span class="o">=</span> <span class="s2">"OIL"</span>
+    <span class="n">WAT</span> <span class="o">=</span> <span class="s2">"WAT"</span>
+    <span class="n">GAS</span> <span class="o">=</span> <span class="s2">"GAS"</span>
+    <span class="n">WG</span> <span class="o">=</span> <span class="s2">"WG"</span>
+    <span class="n">TM</span> <span class="o">=</span> <span class="s2">"TM"</span></div>
 
 
 
@@ -140,11 +140,11 @@
 <div class="viewcode-block" id="WFR">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.WFR">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WFR</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">WOR</span> <span class="o">=</span> <span class="s2">&quot;WOR&quot;</span>
-    <span class="n">WCT</span> <span class="o">=</span> <span class="s2">&quot;WCT&quot;</span>
-    <span class="n">WGR</span> <span class="o">=</span> <span class="s2">&quot;WGR&quot;</span>
-    <span class="n">WWR</span> <span class="o">=</span> <span class="s2">&quot;WWR&quot;</span>
-    <span class="n">WTF</span> <span class="o">=</span> <span class="s2">&quot;WTF&quot;</span></div>
+    <span class="n">WOR</span> <span class="o">=</span> <span class="s2">"WOR"</span>
+    <span class="n">WCT</span> <span class="o">=</span> <span class="s2">"WCT"</span>
+    <span class="n">WGR</span> <span class="o">=</span> <span class="s2">"WGR"</span>
+    <span class="n">WWR</span> <span class="o">=</span> <span class="s2">"WWR"</span>
+    <span class="n">WTF</span> <span class="o">=</span> <span class="s2">"WTF"</span></div>
 
 
 
@@ -152,10 +152,10 @@
 <div class="viewcode-block" id="GFR">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.GFR">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GFR</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">GOR</span> <span class="o">=</span> <span class="s2">&quot;GOR&quot;</span>
-    <span class="n">GLR</span> <span class="o">=</span> <span class="s2">&quot;GLR&quot;</span>
-    <span class="n">OGR</span> <span class="o">=</span> <span class="s2">&quot;OGR&quot;</span>
-    <span class="n">MMW</span> <span class="o">=</span> <span class="s2">&quot;MMW&quot;</span></div>
+    <span class="n">GOR</span> <span class="o">=</span> <span class="s2">"GOR"</span>
+    <span class="n">GLR</span> <span class="o">=</span> <span class="s2">"GLR"</span>
+    <span class="n">OGR</span> <span class="o">=</span> <span class="s2">"OGR"</span>
+    <span class="n">MMW</span> <span class="o">=</span> <span class="s2">"MMW"</span></div>
 
 
 
@@ -163,15 +163,15 @@
 <div class="viewcode-block" id="ALQ">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.ALQ">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ALQ</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">GRAT</span> <span class="o">=</span> <span class="s2">&quot;GRAT&quot;</span>
-    <span class="n">IGLR</span> <span class="o">=</span> <span class="s2">&quot;IGLR&quot;</span>
-    <span class="n">TGLR</span> <span class="o">=</span> <span class="s2">&quot;TGLR&quot;</span>
-    <span class="n">PUMP</span> <span class="o">=</span> <span class="s2">&quot;PUMP&quot;</span>
-    <span class="n">COMP</span> <span class="o">=</span> <span class="s2">&quot;COMP&quot;</span>
-    <span class="n">DENO</span> <span class="o">=</span> <span class="s2">&quot;DENO&quot;</span>
-    <span class="n">DENG</span> <span class="o">=</span> <span class="s2">&quot;DENG&quot;</span>
-    <span class="n">BEAN</span> <span class="o">=</span> <span class="s2">&quot;BEAN&quot;</span>
-    <span class="n">UNDEFINED</span> <span class="o">=</span> <span class="s2">&quot;&#39;&#39;&quot;</span></div>
+    <span class="n">GRAT</span> <span class="o">=</span> <span class="s2">"GRAT"</span>
+    <span class="n">IGLR</span> <span class="o">=</span> <span class="s2">"IGLR"</span>
+    <span class="n">TGLR</span> <span class="o">=</span> <span class="s2">"TGLR"</span>
+    <span class="n">PUMP</span> <span class="o">=</span> <span class="s2">"PUMP"</span>
+    <span class="n">COMP</span> <span class="o">=</span> <span class="s2">"COMP"</span>
+    <span class="n">DENO</span> <span class="o">=</span> <span class="s2">"DENO"</span>
+    <span class="n">DENG</span> <span class="o">=</span> <span class="s2">"DENG"</span>
+    <span class="n">BEAN</span> <span class="o">=</span> <span class="s2">"BEAN"</span>
+    <span class="n">UNDEFINED</span> <span class="o">=</span> <span class="s2">"''"</span></div>
 
 
 
@@ -179,11 +179,11 @@
 <div class="viewcode-block" id="UNITTYPE">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.UNITTYPE">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UNITTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;METRIC&quot;</span>
-    <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;FIELD&quot;</span>
-    <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;LAB&quot;</span>
-    <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">&quot;PVT-M&quot;</span>
-    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;DEFAULT&quot;</span></div>
+    <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">"METRIC"</span>
+    <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">"FIELD"</span>
+    <span class="n">LAB</span> <span class="o">=</span> <span class="s2">"LAB"</span>
+    <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">"PVT-M"</span>
+    <span class="n">DEFAULT</span> <span class="o">=</span> <span class="s2">"DEFAULT"</span></div>
 
 
 
@@ -191,7 +191,7 @@
 <div class="viewcode-block" id="THPTYPE">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.THPTYPE">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">THPTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">THP</span> <span class="o">=</span> <span class="s2">&quot;THP&quot;</span></div>
+    <span class="n">THP</span> <span class="o">=</span> <span class="s2">"THP"</span></div>
 
 
 
@@ -199,8 +199,8 @@
 <div class="viewcode-block" id="VFPPROD_TABTYPE">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPPROD_TABTYPE">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VFPPROD_TABTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">BHP</span> <span class="o">=</span> <span class="s2">&quot;BHP&quot;</span>
-    <span class="n">THT</span> <span class="o">=</span> <span class="s2">&quot;TEMP&quot;</span></div>
+    <span class="n">BHP</span> <span class="o">=</span> <span class="s2">"BHP"</span>
+    <span class="n">THT</span> <span class="o">=</span> <span class="s2">"TEMP"</span></div>
 
 
 
@@ -208,225 +208,225 @@
 <div class="viewcode-block" id="VFPINJ_TABTYPE">
 <a class="viewcode-back" href="../../../res2df/res2df/vfp/_vfpdefs/index.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VFPINJ_TABTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">BHP</span> <span class="o">=</span> <span class="s2">&quot;BHP&quot;</span></div>
+    <span class="n">BHP</span> <span class="o">=</span> <span class="s2">"BHP"</span></div>
 
 
 
 <span class="c1"># Unit definitions for VFPPROD</span>
 <span class="n">VFPPROD_UNITS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;LIQ&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">"DEFAULT"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"LIQ"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;barsa&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;WFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;WOR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WCT&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WGR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WWR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WTF&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"barsa"</span><span class="p">},</span>
+        <span class="s2">"WFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"WOR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"WCT"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"WGR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"WWR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"WTF"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;GFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GOR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GLR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;OGR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;MMW&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">"GFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GOR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"GLR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"OGR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"MMW"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;ALQ&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GRAT&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENO&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENG&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;BEAN&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;METRIC&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;LIQ&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;kg-M/day&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;barsa&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;WFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;WOR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WCT&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WGR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WWR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WTF&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;GFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GOR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GLR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;OGR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;MMW&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/kg-M&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;ALQ&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GRAT&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENO&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/m3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENG&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/m3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;BEAN&quot;</span><span class="p">:</span> <span class="s2">&quot;mm&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">"ALQ"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GRAT"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"IGLR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"TGLR"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"DENO"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"DENG"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"BEAN"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"''"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">},</span>
-    <span class="s2">&quot;FIELD&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;LIQ&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;lb-M/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;lb-M/day&quot;</span><span class="p">,</span>
+    <span class="s2">"METRIC"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"LIQ"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"kg-M/day"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;psia&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;WFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;WOR&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/stb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WCT&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/stb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WGR&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/Mscf&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WWR&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/Mscf&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WTF&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"barsa"</span><span class="p">},</span>
+        <span class="s2">"WFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"WOR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WCT"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WGR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WWR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WTF"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;GFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GOR&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/stb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GLR&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/stb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;OGR&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/Mscf&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;MMW&quot;</span><span class="p">:</span> <span class="s2">&quot;lb/lb-M&quot;</span><span class="p">,</span>
+        <span class="s2">"GFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GOR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"GLR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"OGR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"MMW"</span><span class="p">:</span> <span class="s2">"kg/kg-M"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;ALQ&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GRAT&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/stb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/stb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENO&quot;</span><span class="p">:</span> <span class="s2">&quot;lb/ft3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENG&quot;</span><span class="p">:</span> <span class="s2">&quot;lb/ft3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;BEAN&quot;</span><span class="p">:</span> <span class="s2">&quot;1/64&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;LAB&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;LIQ&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;lb-M/day&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;atma&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;WFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;WOR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WCT&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WGR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WWR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WTF&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;GFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GOR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GLR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;OGR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;MMW&quot;</span><span class="p">:</span> <span class="s2">&quot;lb/lb-M&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;ALQ&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GRAT&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/scc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENO&quot;</span><span class="p">:</span> <span class="s2">&quot;gm/cc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENG&quot;</span><span class="p">:</span> <span class="s2">&quot;gm/cc&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;BEAN&quot;</span><span class="p">:</span> <span class="s2">&quot;mm&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">"ALQ"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GRAT"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"IGLR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"TGLR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"DENO"</span><span class="p">:</span> <span class="s2">"kg/m3"</span><span class="p">,</span>
+            <span class="s2">"DENG"</span><span class="p">:</span> <span class="s2">"kg/m3"</span><span class="p">,</span>
+            <span class="s2">"BEAN"</span><span class="p">:</span> <span class="s2">"mm"</span><span class="p">,</span>
+            <span class="s2">"''"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">},</span>
-    <span class="s2">&quot;PVT-M&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;LIQ&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;kg-M/day&quot;</span><span class="p">,</span>
+    <span class="s2">"FIELD"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"stb/day"</span><span class="p">,</span>
+            <span class="s2">"LIQ"</span><span class="p">:</span> <span class="s2">"stb/day"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"Mscf/day"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"lb-M/day"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"lb-M/day"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;atma&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;WFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;WOR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WCT&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WGR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WWR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WTF&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"psia"</span><span class="p">},</span>
+        <span class="s2">"WFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"WOR"</span><span class="p">:</span> <span class="s2">"stb/stb"</span><span class="p">,</span>
+            <span class="s2">"WCT"</span><span class="p">:</span> <span class="s2">"stb/stb"</span><span class="p">,</span>
+            <span class="s2">"WGR"</span><span class="p">:</span> <span class="s2">"stb/Mscf"</span><span class="p">,</span>
+            <span class="s2">"WWR"</span><span class="p">:</span> <span class="s2">"stb/Mscf"</span><span class="p">,</span>
+            <span class="s2">"WTF"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;GFR&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GOR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GLR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;OGR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;MMW&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/kg-M&quot;</span><span class="p">,</span>
+        <span class="s2">"GFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GOR"</span><span class="p">:</span> <span class="s2">"Mscf/stb"</span><span class="p">,</span>
+            <span class="s2">"GLR"</span><span class="p">:</span> <span class="s2">"Mscf/stb"</span><span class="p">,</span>
+            <span class="s2">"OGR"</span><span class="p">:</span> <span class="s2">"stb/Mscf"</span><span class="p">,</span>
+            <span class="s2">"MMW"</span><span class="p">:</span> <span class="s2">"lb/lb-M"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;ALQ&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;GRAT&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TGLR&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/sm3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENO&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/m3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;DENG&quot;</span><span class="p">:</span> <span class="s2">&quot;kg/m3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;BEAN&quot;</span><span class="p">:</span> <span class="s2">&quot;mm&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">"ALQ"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GRAT"</span><span class="p">:</span> <span class="s2">"Mscf/day"</span><span class="p">,</span>
+            <span class="s2">"IGLR"</span><span class="p">:</span> <span class="s2">"Mscf/stb"</span><span class="p">,</span>
+            <span class="s2">"TGLR"</span><span class="p">:</span> <span class="s2">"Mscf/stb"</span><span class="p">,</span>
+            <span class="s2">"DENO"</span><span class="p">:</span> <span class="s2">"lb/ft3"</span><span class="p">,</span>
+            <span class="s2">"DENG"</span><span class="p">:</span> <span class="s2">"lb/ft3"</span><span class="p">,</span>
+            <span class="s2">"BEAN"</span><span class="p">:</span> <span class="s2">"1/64"</span><span class="p">,</span>
+            <span class="s2">"''"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">"LAB"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"LIQ"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"lb-M/day"</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"atma"</span><span class="p">},</span>
+        <span class="s2">"WFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"WOR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"WCT"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"WGR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"WWR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"WTF"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"GFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GOR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"GLR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"OGR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"MMW"</span><span class="p">:</span> <span class="s2">"lb/lb-M"</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"ALQ"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GRAT"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"IGLR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"TGLR"</span><span class="p">:</span> <span class="s2">"scc/scc"</span><span class="p">,</span>
+            <span class="s2">"DENO"</span><span class="p">:</span> <span class="s2">"gm/cc"</span><span class="p">,</span>
+            <span class="s2">"DENG"</span><span class="p">:</span> <span class="s2">"gm/cc"</span><span class="p">,</span>
+            <span class="s2">"BEAN"</span><span class="p">:</span> <span class="s2">"mm"</span><span class="p">,</span>
+            <span class="s2">"''"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">"PVT-M"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"LIQ"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"kg-M/day"</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"atma"</span><span class="p">},</span>
+        <span class="s2">"WFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"WOR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WCT"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WGR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WWR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"WTF"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"GFR"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GOR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"GLR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"OGR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"MMW"</span><span class="p">:</span> <span class="s2">"kg/kg-M"</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"ALQ"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"GRAT"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"IGLR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"TGLR"</span><span class="p">:</span> <span class="s2">"sm3/sm3"</span><span class="p">,</span>
+            <span class="s2">"DENO"</span><span class="p">:</span> <span class="s2">"kg/m3"</span><span class="p">,</span>
+            <span class="s2">"DENG"</span><span class="p">:</span> <span class="s2">"kg/m3"</span><span class="p">,</span>
+            <span class="s2">"BEAN"</span><span class="p">:</span> <span class="s2">"mm"</span><span class="p">,</span>
+            <span class="s2">"''"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
 <span class="c1"># Unit definitions for VFPINJ</span>
 <span class="n">VFPINJ_UNITS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WAT&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">"DEFAULT"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"WAT"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">},</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">""</span><span class="p">},</span>
     <span class="p">},</span>
-    <span class="s2">&quot;METRIC&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WAT&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;kg-M/day&quot;</span><span class="p">,</span>
+    <span class="s2">"METRIC"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"WAT"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"kg-M/day"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;barsa&quot;</span><span class="p">},</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"barsa"</span><span class="p">},</span>
     <span class="p">},</span>
-    <span class="s2">&quot;FIELD&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WAT&quot;</span><span class="p">:</span> <span class="s2">&quot;stb/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;Mscf/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;lb-M/day&quot;</span><span class="p">,</span>
+    <span class="s2">"FIELD"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"stb/day"</span><span class="p">,</span>
+            <span class="s2">"WAT"</span><span class="p">:</span> <span class="s2">"stb/day"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"Mscf/day"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"Mscf/day"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"lb-M/day"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;psia&quot;</span><span class="p">},</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"psia"</span><span class="p">},</span>
     <span class="p">},</span>
-    <span class="s2">&quot;LAB&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WAT&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;scc/hr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;gm-M/hr&quot;</span><span class="p">,</span>
+    <span class="s2">"LAB"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"WAT"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"scc/hr"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"gm-M/hr"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;atma&quot;</span><span class="p">},</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"atma"</span><span class="p">},</span>
     <span class="p">},</span>
-    <span class="s2">&quot;PVT-M&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;FLO&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WAT&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;WG&quot;</span><span class="p">:</span> <span class="s2">&quot;sm3/day&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;kg-M/day&quot;</span><span class="p">,</span>
+    <span class="s2">"PVT-M"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"FLO"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"OIL"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"WAT"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"GAS"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"WG"</span><span class="p">:</span> <span class="s2">"sm3/day"</span><span class="p">,</span>
+            <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"kg-M/day"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;THP&quot;</span><span class="p">:</span> <span class="s2">&quot;atma&quot;</span><span class="p">},</span>
+        <span class="s2">"THP"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"THP"</span><span class="p">:</span> <span class="s2">"atma"</span><span class="p">},</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>

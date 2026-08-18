@@ -112,18 +112,18 @@ dataframe-representation.</p>
 from wells and up to the platform (and possibly also to a field having
 many platforms). In the <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> it be as simple as this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">START</span>
-  <span class="mi">01</span> <span class="s1">&#39;JAN&#39;</span> <span class="mi">2000</span> <span class="o">/</span>
+  <span class="mi">01</span> <span class="s1">'JAN'</span> <span class="mi">2000</span> <span class="o">/</span>
 
 <span class="n">SCHEDULE</span>
 
 <span class="n">GRUPTREE</span>
-  <span class="s1">&#39;OPEAST&#39;</span> <span class="s1">&#39;OP&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;OPWEST&#39;</span> <span class="s1">&#39;OP&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;INJEAST&#39;</span> <span class="s1">&#39;WI&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;OP&#39;</span> <span class="s1">&#39;FIELD&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;WI&#39;</span> <span class="s1">&#39;FIELD&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;FIELD&#39;</span> <span class="s1">&#39;AREA&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;AREA&#39;</span> <span class="s1">&#39;NORTHSEA&#39;</span> <span class="o">/</span>
+  <span class="s1">'OPEAST'</span> <span class="s1">'OP'</span> <span class="o">/</span>
+  <span class="s1">'OPWEST'</span> <span class="s1">'OP'</span> <span class="o">/</span>
+  <span class="s1">'INJEAST'</span> <span class="s1">'WI'</span> <span class="o">/</span>
+  <span class="s1">'OP'</span> <span class="s1">'FIELD'</span> <span class="o">/</span>
+  <span class="s1">'WI'</span> <span class="s1">'FIELD'</span> <span class="o">/</span>
+  <span class="s1">'FIELD'</span> <span class="s1">'AREA'</span> <span class="o">/</span>
+  <span class="s1">'AREA'</span> <span class="s1">'NORTHSEA'</span> <span class="o">/</span>
 <span class="o">/</span>
 </pre></div>
 </div>
@@ -202,14 +202,14 @@ specifications), so for a full <a class="reference internal" href="../glossary.h
 information than in the example above.</p>
 <p>If our <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> also contains:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GRUPNET</span>
-  <span class="s1">&#39;FIELD&#39;</span> <span class="mi">90</span> <span class="o">/</span>
-  <span class="s1">&#39;OPWEST&#39;</span> <span class="mi">100</span> <span class="o">/</span>
+  <span class="s1">'FIELD'</span> <span class="mi">90</span> <span class="o">/</span>
+  <span class="s1">'OPWEST'</span> <span class="mi">100</span> <span class="o">/</span>
 <span class="o">/</span>
 
 <span class="n">WELSPECS</span>
-  <span class="s1">&#39;OP1&#39;</span>  <span class="s1">&#39;OPWEST&#39;</span>  <span class="mi">41</span> <span class="mi">125</span> <span class="mf">1759.74</span> <span class="s1">&#39;OIL&#39;</span> <span class="mf">0.0</span> <span class="s1">&#39;STD&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="s1">&#39;YES&#39;</span>  <span class="mi">0</span>  <span class="s1">&#39;SEG&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;OP2&#39;</span>  <span class="s1">&#39;OPEAST&#39;</span>  <span class="mi">43</span> <span class="mi">122</span> <span class="mf">1776.01</span> <span class="s1">&#39;OIL&#39;</span> <span class="mf">0.0</span> <span class="s1">&#39;STD&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="s1">&#39;YES&#39;</span>  <span class="mi">0</span>  <span class="s1">&#39;SEG&#39;</span> <span class="o">/</span>
-  <span class="s1">&#39;INJ1&#39;</span> <span class="s1">&#39;INJEAST&#39;</span> <span class="mi">33</span> <span class="mi">115</span> <span class="mf">1960.21</span> <span class="s1">&#39;OIL&#39;</span> <span class="mf">0.0</span> <span class="s1">&#39;STD&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="s1">&#39;YES&#39;</span>  <span class="mi">0</span>  <span class="s1">&#39;SEG&#39;</span> <span class="o">/</span>
+  <span class="s1">'OP1'</span>  <span class="s1">'OPWEST'</span>  <span class="mi">41</span> <span class="mi">125</span> <span class="mf">1759.74</span> <span class="s1">'OIL'</span> <span class="mf">0.0</span> <span class="s1">'STD'</span> <span class="s1">'SHUT'</span> <span class="s1">'YES'</span>  <span class="mi">0</span>  <span class="s1">'SEG'</span> <span class="o">/</span>
+  <span class="s1">'OP2'</span>  <span class="s1">'OPEAST'</span>  <span class="mi">43</span> <span class="mi">122</span> <span class="mf">1776.01</span> <span class="s1">'OIL'</span> <span class="mf">0.0</span> <span class="s1">'STD'</span> <span class="s1">'SHUT'</span> <span class="s1">'YES'</span>  <span class="mi">0</span>  <span class="s1">'SEG'</span> <span class="o">/</span>
+  <span class="s1">'INJ1'</span> <span class="s1">'INJEAST'</span> <span class="mi">33</span> <span class="mi">115</span> <span class="mf">1960.21</span> <span class="s1">'OIL'</span> <span class="mf">0.0</span> <span class="s1">'STD'</span> <span class="s1">'SHUT'</span> <span class="s1">'YES'</span>  <span class="mi">0</span>  <span class="s1">'SEG'</span> <span class="o">/</span>
 <span class="o">/</span>
 </pre></div>
 </div>

@@ -81,12 +81,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.summary</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
 
-<span class="c1"># The name &#39;datetime&#39; is in use by a function argument:</span>
+<span class="c1"># The name 'datetime' is in use by a function argument:</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
@@ -107,22 +107,22 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># Frequency mnemonics for the API consumer to use:</span>
-<span class="n">FREQ_RAW</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;raw&quot;</span>
-<span class="n">FREQ_FIRST</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span>
-<span class="n">FREQ_LAST</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;last&quot;</span>
+<span class="n">FREQ_RAW</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"raw"</span>
+<span class="n">FREQ_FIRST</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"first"</span>
+<span class="n">FREQ_LAST</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"last"</span>
 <span class="n">PD_FREQ_MNEMONICS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;daily&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;W-MON&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;MS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;YS&quot;</span><span class="p">,</span>
+    <span class="s2">"daily"</span><span class="p">:</span> <span class="s2">"D"</span><span class="p">,</span>
+    <span class="s2">"weekly"</span><span class="p">:</span> <span class="s2">"W-MON"</span><span class="p">,</span>
+    <span class="s2">"monthly"</span><span class="p">:</span> <span class="s2">"MS"</span><span class="p">,</span>
+    <span class="s2">"yearly"</span><span class="p">:</span> <span class="s2">"YS"</span><span class="p">,</span>
     <span class="c1"># Any frequency mnemonics not mentioned here will be</span>
     <span class="c1"># passed on to Pandas.</span>
 <span class="p">}</span>
-<span class="sd">&quot;&quot;&quot;Mapping from res2df custom offset strings to Pandas DateOffset strings.</span>
+<span class="sd">"""Mapping from res2df custom offset strings to Pandas DateOffset strings.</span>
 <span class="sd">See</span>
 <span class="sd">https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="n">PANDAS_MAJOR_VERSION</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="sd">"""</span>
+<span class="n">PANDAS_MAJOR_VERSION</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="date_range">
@@ -130,8 +130,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">date_range</span><span class="p">(</span>
     <span class="n">start_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for pandas.date_range to allow for extra res2df specific mnemonics</span>
-<span class="sd">    &#39;yearly&#39;, &#39;daily&#39;, &#39;weekly&#39;, mapped over to pandas DateOffsets.</span>
+<span class="w">    </span><span class="sd">"""Wrapper for pandas.date_range to allow for extra res2df specific mnemonics</span>
+<span class="sd">    'yearly', 'daily', 'weekly', mapped over to pandas DateOffsets.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        start_date (datetime.date):</span>
@@ -141,7 +141,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        list of datetimes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
             <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">PD_FREQ_MNEMONICS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
@@ -152,14 +152,14 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_date_or_none</span><span class="p">(</span><span class="n">some_date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures an object is either a date or None</span>
+<span class="w">    </span><span class="sd">"""Ensures an object is either a date or None</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        some_date: string or a datetime.date</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None if input is None.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">some_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">some_date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
@@ -168,7 +168,7 @@
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">some_date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">some_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;some_date must be a string or a date, got </span><span class="si">{</span><span class="n">some_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"some_date must be a string or a date, got </span><span class="si">{</span><span class="n">some_date</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_crop_datelist</span><span class="p">(</span>
@@ -177,20 +177,20 @@
     <span class="n">start_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">end_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function for resample_smry_dates, taking care of</span>
+<span class="w">    </span><span class="sd">"""Helper function for resample_smry_dates, taking care of</span>
 <span class="sd">    the special cases where the list of dates should not be resampled, but</span>
 <span class="sd">    only cropped or returned as is.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        summarydates: list of datetimes, typically coming from Summary.dates</span>
 <span class="sd">        freq: Either a date or datetime, or a frequency string</span>
-<span class="sd">            &quot;raw&quot;, &quot;first&quot; or &quot;last&quot;.</span>
+<span class="sd">            "raw", "first" or "last".</span>
 <span class="sd">        start_date: Dates prior to this date will be cropped.</span>
 <span class="sd">        end_date: Dates after this date will be cropped.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        list of datetimes.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">datetimes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="n">FREQ_RAW</span><span class="p">:</span>
         <span class="n">datetimes</span> <span class="o">=</span> <span class="n">summarydates</span>
@@ -214,28 +214,28 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fallback_date_roll</span><span class="p">(</span><span class="n">rollme</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fallback function for rolling dates forward or backward onto a</span>
+<span class="w">    </span><span class="sd">"""Fallback function for rolling dates forward or backward onto a</span>
 <span class="sd">    date frequency boundary.</span>
 
-<span class="sd">    This function reimplements pandas&#39; DateOffset.roll_forward() and backward()</span>
+<span class="sd">    This function reimplements pandas' DateOffset.roll_forward() and backward()</span>
 <span class="sd">    only for monthly and yearly frequency. This is necessary as Pandas does not</span>
 <span class="sd">    support datetimes beyond year 2262 due to all datetimes in Pandas being</span>
 <span class="sd">    represented by nanosecond accuracy.</span>
 
 <span class="sd">    This function is a fallback only, to keep support for using all Pandas timeoffsets</span>
-<span class="sd">    in situations where years beyond 2262 is not a issue.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;back&quot;</span><span class="p">,</span> <span class="s2">&quot;forward&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown direction </span><span class="si">{</span><span class="n">direction</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">    in situations where years beyond 2262 is not a issue."""</span>
+    <span class="k">if</span> <span class="n">direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"back"</span><span class="p">,</span> <span class="s2">"forward"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown direction </span><span class="si">{</span><span class="n">direction</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;yearly&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;forward&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">"yearly"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s2">"forward"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rollme</span> <span class="o">&lt;=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;monthly&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;forward&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">"monthly"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s2">"forward"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rollme</span> <span class="o">&lt;=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
@@ -244,22 +244,22 @@
         <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">rollme</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-        <span class="s2">&quot;Only yearly or monthly frequencies are &quot;</span>
-        <span class="s2">&quot;supported for simulations beyond year 2262&quot;</span>
+        <span class="s2">"Only yearly or monthly frequencies are "</span>
+        <span class="s2">"supported for simulations beyond year 2262"</span>
     <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fallback_date_range</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fallback routine for generating date ranges beyond Pandas datetime64[ns]</span>
+<span class="w">    </span><span class="sd">"""Fallback routine for generating date ranges beyond Pandas datetime64[ns]</span>
 <span class="sd">    year-2262 limit.</span>
 
 <span class="sd">    Assumes that the start and end times already fall on a frequency boundary.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">start</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())]</span>
     <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;yearly&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">"yearly"</span><span class="p">:</span>
         <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())]</span> <span class="o">+</span> <span class="p">[</span>
             <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -267,7 +267,7 @@
         <span class="k">if</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">!=</span> <span class="n">dates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">dates</span> <span class="o">+=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())]</span>
         <span class="k">return</span> <span class="n">dates</span>
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;monthly&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">"monthly"</span><span class="p">:</span>
         <span class="n">dates</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
         <span class="n">enddatetime</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
@@ -275,7 +275,7 @@
             <span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
             <span class="n">date</span> <span class="o">+=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">relativedelta</span><span class="o">.</span><span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dates</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported frequency for datetimes beyond year 2262&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unsupported frequency for datetimes beyond year 2262"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="resample_smry_dates">
@@ -287,7 +287,7 @@
     <span class="n">start_date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">end_date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Resample (optionally) a list of date(time)s to a new datelist according to options.</span>
 
 <span class="sd">    Based on the dates as input, a new list at a finer or coarser time density</span>
@@ -296,11 +296,11 @@
 <span class="sd">    Args:</span>
 <span class="sd">        summarydates: list of datetimes, typically coming from Summary.dates</span>
 <span class="sd">        freq: string denoting requested frequency for</span>
-<span class="sd">            the returned list of datetime. &#39;raw&#39; will</span>
+<span class="sd">            the returned list of datetime. 'raw' will</span>
 <span class="sd">            return the input datetimes (no resampling).</span>
 <span class="sd">            Options for timeresampling are</span>
-<span class="sd">            &#39;daily&#39;, &#39;weekly&#39;, &#39;monthly&#39; and &#39;yearly&#39;. &#39;first&#39; will give</span>
-<span class="sd">            the first date (minimum),  &#39;last&#39; will give out the last</span>
+<span class="sd">            'daily', 'weekly', 'monthly' and 'yearly'. 'first' will give</span>
+<span class="sd">            the first date (minimum),  'last' will give out the last</span>
 <span class="sd">            date (maximum), as a list with one element. Can also be a single date.</span>
 <span class="sd">        normalize: Whether to normalize backwards at the start</span>
 <span class="sd">            and forwards at the end to ensure the raw</span>
@@ -313,8 +313,8 @@
 <span class="sd">        end_date: str or date with last date to be included.</span>
 <span class="sd">            Dates past this date will be dropped, supplied</span>
 <span class="sd">            end_date will always be included. Overrides</span>
-<span class="sd">            normalized dates. Overridden if freq is &#39;last&#39;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">            normalized dates. Overridden if freq is 'last'.</span>
+<span class="sd">    """</span>
     <span class="n">start_date</span> <span class="o">=</span> <span class="n">_ensure_date_or_none</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span>
     <span class="n">end_date</span> <span class="o">=</span> <span class="n">_ensure_date_or_none</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span>
 
@@ -344,12 +344,12 @@
         <span class="n">start_normalized</span> <span class="o">=</span> <span class="n">offset</span><span class="o">.</span><span class="n">rollback</span><span class="p">(</span><span class="n">start_smry</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">OutOfBoundsDatetime</span><span class="p">:</span>
         <span class="c1"># Pandas only supports datetime up to year 2262</span>
-        <span class="n">start_normalized</span> <span class="o">=</span> <span class="n">_fallback_date_roll</span><span class="p">(</span><span class="n">start_smry</span><span class="p">,</span> <span class="s2">&quot;back&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="n">start_normalized</span> <span class="o">=</span> <span class="n">_fallback_date_roll</span><span class="p">(</span><span class="n">start_smry</span><span class="p">,</span> <span class="s2">"back"</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">end_normalized</span> <span class="o">=</span> <span class="n">offset</span><span class="o">.</span><span class="n">rollforward</span><span class="p">(</span><span class="n">end_smry</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">OutOfBoundsDatetime</span><span class="p">:</span>
         <span class="c1"># Pandas only supports datetime up to year 2262</span>
-        <span class="n">end_normalized</span> <span class="o">=</span> <span class="n">_fallback_date_roll</span><span class="p">(</span><span class="n">end_smry</span><span class="p">,</span> <span class="s2">&quot;forward&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="n">end_normalized</span> <span class="o">=</span> <span class="n">_fallback_date_roll</span><span class="p">(</span><span class="n">end_smry</span><span class="p">,</span> <span class="s2">"forward"</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">start_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">start_date_range</span> <span class="o">=</span> <span class="n">start_normalized</span> <span class="k">if</span> <span class="n">normalize</span> <span class="k">else</span> <span class="n">start_smry</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
@@ -392,7 +392,7 @@
     <span class="n">paramfile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">datetime</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># A very poor choice of argument name [pylint]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extract data from UNSMRY as Pandas dataframes.</span>
 
 <span class="sd">    This is a thin wrapper for Summary.pandas_frame, by adding</span>
@@ -402,13 +402,13 @@
 <span class="sd">    index will usually be datetime64[ns] as long as all dates are</span>
 <span class="sd">    before year 2262. If a longer time range is detected, the index.dtype</span>
 <span class="sd">    will be object, and consisting of datetime.datetime() objects. The index</span>
-<span class="sd">    is always named &quot;DATE&quot;.</span>
+<span class="sd">    is always named "DATE".</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        resdatafiles: ResdataFiles object representing a</span>
 <span class="sd">            :term:`.DATA file`. Alternatively a Summary object.</span>
 <span class="sd">        time_index: string indicating a resampling frequency,</span>
-<span class="sd">           &#39;yearly&#39;, &#39;monthly&#39;, &#39;daily&#39;, &#39;last&#39; or &#39;raw&#39;, the latter will</span>
+<span class="sd">           'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will</span>
 <span class="sd">           return the simulated report steps (also default).</span>
 <span class="sd">           If a list of DateTime is supplied, data will be resampled</span>
 <span class="sd">           to these.</span>
@@ -419,7 +419,7 @@
 <span class="sd">        end_date: str or date with last date to be included.</span>
 <span class="sd">            Dates past this date will be dropped, supplied</span>
 <span class="sd">            end_date will always be included. Overridden if time_index</span>
-<span class="sd">            is &#39;last&#39;.</span>
+<span class="sd">            is 'last'.</span>
 <span class="sd">        include_restart: boolean sent to resdata for whether restart</span>
 <span class="sd">            files should be traversed</span>
 <span class="sd">        params: If set, parameters.txt will be attempted loaded</span>
@@ -434,7 +434,7 @@
 
 <span class="sd">    Returns empty dataframe if there is no summary file, or if the</span>
 <span class="sd">    column_keys are not existing.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column_keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">column_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_keys</span><span class="p">]</span>
 
@@ -444,14 +444,14 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_summary</span><span class="p">(</span><span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Error reading summary instance, returning empty dataframe&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Error reading summary instance, returning empty dataframe"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
     <span class="n">time_index_arg</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">time_index</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">time_index</span> <span class="o">==</span> <span class="s2">"raw"</span><span class="p">:</span>
         <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">resample_smry_dates</span><span class="p">(</span>
             <span class="n">summary</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span>
-            <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+            <span class="s2">"raw"</span><span class="p">,</span>
             <span class="kc">False</span><span class="p">,</span>
             <span class="n">start_date</span><span class="p">,</span>
             <span class="n">end_date</span><span class="p">,</span>
@@ -468,38 +468,38 @@
         <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">time_index</span>
 
     <span class="k">if</span> <span class="n">time_index_arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">time_index_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">time_index_str</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
             <span class="n">time_index_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">time_index_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> … </span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">time_index_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> … </span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">column_keys</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">column_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+        <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">"*"</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">))</span>
+        <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">))</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="s2">&quot;Requesting columns_keys: </span><span class="si">%s</span><span class="s2"> at time_index: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">"Requesting columns_keys: </span><span class="si">%s</span><span class="s2"> at time_index: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">column_keys_str</span><span class="p">,</span>
-        <span class="n">time_index_str</span> <span class="ow">or</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+        <span class="n">time_index_str</span> <span class="ow">or</span> <span class="s2">"raw"</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">pandas_frame</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="s2">&quot;Dataframe with smry data ready, </span><span class="si">%d</span><span class="s2"> columns and </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span>
+        <span class="s2">"Dataframe with smry data ready, </span><span class="si">%d</span><span class="s2"> columns and </span><span class="si">%d</span><span class="s2"> rows"</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;DATE&quot;</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"DATE"</span>
     <span class="k">if</span> <span class="n">params</span> <span class="ow">or</span> <span class="n">paramfile</span><span class="p">:</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">_merge_params</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">paramfile</span><span class="p">,</span> <span class="n">resdatafiles</span><span class="p">)</span>
 
     <span class="c1"># Add metadata as an attribute the dataframe, using experimental Pandas features:</span>
     <span class="n">meta</span> <span class="o">=</span> <span class="n">smry_meta</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
     <span class="c1"># Slice meta to dataframe columns:</span>
-    <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">column_key</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="n">column_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">if</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">meta</span>
     <span class="p">}</span>
 
@@ -508,15 +508,15 @@
     <span class="n">dupes</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">dupes</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Duplicated columns detected, check your .DATA file &quot;</span>
-            <span class="s2">&quot;for repeated vectors in the SUMMARY section&quot;</span>
+            <span class="s2">"Duplicated columns detected, check your .DATA file "</span>
+            <span class="s2">"for repeated vectors in the SUMMARY section"</span>
         <span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Duplicates: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">dupes</span><span class="p">]))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Duplicates: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">dupes</span><span class="p">]))</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()]</span>
 
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">_ensure_unique_datetime_index</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">datetime</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">datetime</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">"object"</span><span class="p">:</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">dframe</span></div>
@@ -524,7 +524,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_unique_datetime_index</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The TIME vector may be stored with a lower resolution than individual</span>
 <span class="sd">    timesteps, leading ecl to return non-unique datetimes.</span>
 
@@ -534,74 +534,74 @@
 <span class="sd">    If the optional TIMESTEP vector is not available, a ValueError is raised with a</span>
 <span class="sd">    recommendation to rerun the simulation with the TIMESTEP vector in the SUMMARY</span>
 <span class="sd">    section of the.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">index_duplicates</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">index_duplicates</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="s2">"first"</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">index_duplicates</span><span class="p">):</span>
-        <span class="n">index_duplicate_log_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">index_duplicate_log_string</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">index_duplicates</span><span class="p">]:</span>
-            <span class="n">index_duplicate_log_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">index_duplicate_log_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">"</span>
 
-        <span class="k">if</span> <span class="s2">&quot;TIMESTEP&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"TIMESTEP"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;Dataframe of summary data contained duplicate timestamps due to &quot;</span>
-                <span class="s2">&quot;limited output resolution. Vector TIMESTEP exists, utilizing it to &quot;</span>
-                <span class="s2">&quot;create discrete timestamps. &quot;</span>
-                <span class="s2">&quot;Original duplicates were: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">"Dataframe of summary data contained duplicate timestamps due to "</span>
+                <span class="s2">"limited output resolution. Vector TIMESTEP exists, utilizing it to "</span>
+                <span class="s2">"create discrete timestamps. "</span>
+                <span class="s2">"Original duplicates were: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
                 <span class="n">index_duplicate_log_string</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">index_as_list</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="s2">&quot;TIMESTEP&quot;</span><span class="p">][</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DAYS&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">][</span><span class="s2">"TIMESTEP"</span><span class="p">][</span><span class="s2">"unit"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"DAYS"</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">index_duplicates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
                     <span class="n">index_as_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span>
-                        <span class="n">days</span><span class="o">=</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;TIMESTEP&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                        <span class="n">days</span><span class="o">=</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"TIMESTEP"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
                     <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="s2">&quot;TIMESTEP&quot;</span><span class="p">][</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;HOURS&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">][</span><span class="s2">"TIMESTEP"</span><span class="p">][</span><span class="s2">"unit"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"HOURS"</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">index_duplicates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
                     <span class="n">index_as_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span>
-                        <span class="n">hours</span><span class="o">=</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;TIMESTEP&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                        <span class="n">hours</span><span class="o">=</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"TIMESTEP"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
                     <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Dataframe of smry data contained duplicate timestamps. &quot;</span>
-                    <span class="s2">&quot;Vector TIMESTEP exists, but unit could not be identified.&quot;</span>
+                    <span class="s2">"Dataframe of smry data contained duplicate timestamps. "</span>
+                    <span class="s2">"Vector TIMESTEP exists, but unit could not be identified."</span>
                 <span class="p">)</span>
             <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">index_as_list</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Dataframe of summary data contained duplicate timestamps due to &quot;</span>
-                <span class="s2">&quot;limited output resolution. Vector TIMESTEP was not found. Try to add &quot;</span>
-                <span class="s2">&quot;it to the SUMMARY section of the simulation deck, as it may be &quot;</span>
-                <span class="s2">&quot;utilized to separate duplicate timestamps.&quot;</span>
+                <span class="s2">"Dataframe of summary data contained duplicate timestamps due to "</span>
+                <span class="s2">"limited output resolution. Vector TIMESTEP was not found. Try to add "</span>
+                <span class="s2">"it to the SUMMARY section of the simulation deck, as it may be "</span>
+                <span class="s2">"utilized to separate duplicate timestamps."</span>
             <span class="p">)</span>
     <span class="k">return</span> <span class="n">dframe</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a Pyarrow table from a dataframe, conserving metadata.</span>
+<span class="w">    </span><span class="sd">"""Construct a Pyarrow table from a dataframe, conserving metadata.</span>
 
 <span class="sd">    All integer columns will have datatype int32, all floats will have float32</span>
 <span class="sd">    as this is Eclipse specific.</span>
 
 <span class="sd">    Metadata values will be written as strings. A True property is thus</span>
-<span class="sd">    represented as the string &quot;True&quot; in the arrow object.</span>
+<span class="sd">    represented as the string "True" in the arrow object.</span>
 
 <span class="sd">    The index in the dataframe is always assumed to be a time-index, but</span>
 <span class="sd">    not necessarily a Pandas datetimetype (which is only of nanosecond precision).</span>
 <span class="sd">    This index is always named DATE in the pyarrow table.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">field_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Field</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">field_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">timestamp</span><span class="p">(</span><span class="s2">&quot;ms&quot;</span><span class="p">)))</span>
-    <span class="n">column_arrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;datetime64[ms]&quot;</span><span class="p">)]</span>
+    <span class="n">field_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">"DATE"</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">timestamp</span><span class="p">(</span><span class="s2">"ms"</span><span class="p">)))</span>
+    <span class="n">column_arrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"datetime64[ms]"</span><span class="p">)]</span>
 
     <span class="n">dframe_values</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">col_idx</span><span class="p">,</span> <span class="n">colname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;meta&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span> <span class="ow">and</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s2">"meta"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span> <span class="ow">and</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">]:</span>
             <span class="c1"># Boolean objects in the metadata dictionary must be converted to bytes:</span>
             <span class="n">field_metadata</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="nb">bytes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="nb">bytes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"ascii"</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"ascii"</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">][</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">field_metadata</span> <span class="o">=</span> <span class="p">{}</span>
@@ -625,15 +625,15 @@
     <span class="n">paramfile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ResdataFiles</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate parameters in a &lt;key&gt; &lt;value&gt; file and add to the dataframe.</span>
+<span class="w">    </span><span class="sd">"""Locate parameters in a &lt;key&gt; &lt;value&gt; file and add to the dataframe.</span>
 
 <span class="sd">    Will fetch parameters directly from a text file if provided, or look up</span>
 <span class="sd">    the parameters.txt file based on the location of an Eclise run.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">paramfile</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">resdatafiles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">param_files</span> <span class="o">=</span> <span class="n">find_parameter_files</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from files: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">param_files</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading parameters from files: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">param_files</span><span class="p">)</span>
         <span class="n">param_dict</span> <span class="o">=</span> <span class="n">load_all</span><span class="p">(</span><span class="n">param_files</span><span class="p">)</span>
     <span class="k">elif</span> <span class="p">(</span>
         <span class="n">paramfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -641,14 +641,14 @@
         <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">paramfile</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span>
     <span class="p">):</span>
         <span class="n">param_files</span> <span class="o">=</span> <span class="n">find_parameter_files</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">filebase</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">paramfile</span><span class="p">))</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from files: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">param_files</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading parameters from files: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">param_files</span><span class="p">)</span>
         <span class="n">param_dict</span> <span class="o">=</span> <span class="n">load_all</span><span class="p">(</span><span class="n">param_files</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">paramfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">paramfile</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">paramfile</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading parameters from file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">paramfile</span><span class="p">)</span>
         <span class="n">param_dict</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">paramfile</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not able to locate parameters.txt&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> parameters&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_dict</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Not able to locate parameters.txt"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loaded </span><span class="si">%d</span><span class="s2"> parameters"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_dict</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="p">:</span>
         <span class="c1"># By converting to str we are more robust with respect to what objects are</span>
         <span class="c1"># read from the parameters.json/txt/yml. Since we are only going</span>
@@ -661,7 +661,7 @@
 <div class="viewcode-block" id="smry_meta">
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.smry_meta">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">smry_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide metadata for summary data vectors.</span>
+<span class="w">    </span><span class="sd">"""Provide metadata for summary data vectors.</span>
 
 <span class="sd">    A dictionary indexed by summary vector name is returned, and each</span>
 <span class="sd">    value is dictionary with the metadata types provided by the underlying</span>
@@ -674,7 +674,7 @@
 <span class="sd">    * get_num (int) (only provided if not None)</span>
 <span class="sd">    * keyword (str)</span>
 <span class="sd">    * wgname (str or None)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span>
     <span class="k">else</span><span class="p">:</span>
@@ -683,21 +683,21 @@
     <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">:</span>
         <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">unit</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;is_total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">is_total</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;is_rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">is_rate</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;is_historical&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">is_historical</span><span class="p">()</span>
-        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;keyword&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">keyword</span>
-        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;wgname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">wgname</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"unit"</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">unit</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"is_total"</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">is_total</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"is_rate"</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">is_rate</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"is_historical"</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">is_historical</span><span class="p">()</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"keyword"</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">keyword</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"wgname"</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">wgname</span>
         <span class="n">num</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">get_num</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">num</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;get_num&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+            <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"get_num"</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
     <span class="k">return</span> <span class="n">meta</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fix_dframe_for_resdata</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix a dataframe making it ready for Summary.from_pandas()</span>
+<span class="w">    </span><span class="sd">"""Fix a dataframe making it ready for Summary.from_pandas()</span>
 
 <span class="sd">    * Ensures that the index is always datetime, and sorted.</span>
 <span class="sd">    * Removes BLOCK vectors, these are currently not supported as</span>
@@ -709,53 +709,53 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Modified copy of incoming dataframe.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">dframe</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"DATE"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="c1"># Infer datatype (Pandas cannot answer it) based on the first element:</span>
         <span class="k">if</span> <span class="n">PANDAS_MAJOR_VERSION</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
             <span class="c1"># Do not use pd.Series.apply() here, Pandas would try to convert it to</span>
             <span class="c1"># datetime64[ns] which is limited at year 2262.</span>
-            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">datestr</span><span class="p">)</span> <span class="k">for</span> <span class="n">datestr</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]],</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">datestr</span><span class="p">)</span> <span class="k">for</span> <span class="n">datestr</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]],</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="s2">"object"</span><span class="p">,</span>
                 <span class="n">index</span><span class="o">=</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
-            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">dateobj</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-                    <span class="k">for</span> <span class="n">dateobj</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">dateobj</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]</span>
                 <span class="p">],</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="s2">"object"</span><span class="p">,</span>
                 <span class="n">index</span><span class="o">=</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"DATE"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">)</span>
     <span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;dataframe must have a datetime index, got &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="s2">"dataframe must have a datetime index, got "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># This column will appear if dataframes are naively written to CSV</span>
     <span class="c1"># files and read back in again.</span>
-    <span class="k">if</span> <span class="s2">&quot;Unnamed: 0&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;Unnamed: 0&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"Unnamed: 0"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">"Unnamed: 0"</span><span class="p">)</span>
 
-    <span class="n">block_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;LB&quot;</span><span class="p">)))]</span>
+    <span class="n">block_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"LB"</span><span class="p">)))]</span>
     <span class="k">if</span> <span class="n">block_columns</span><span class="p">:</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">block_columns</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Dropped columns with block data, not supported: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="p">{</span><span class="n">colname</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;:*&quot;</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">block_columns</span><span class="p">},</span>
+            <span class="s2">"Dropped columns with block data, not supported: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">{</span><span class="n">colname</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">":"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">":*"</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">block_columns</span><span class="p">},</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">dframe</span>
@@ -765,9 +765,9 @@
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.df2ressum">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2ressum</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-    <span class="n">casename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SYNTHETIC&quot;</span><span class="p">,</span>
+    <span class="n">casename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"SYNTHETIC"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dataframe to a Summary object</span>
+<span class="w">    </span><span class="sd">"""Convert a dataframe to a Summary object</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Dataframe with a DATE colum (or with the</span>
@@ -775,14 +775,14 @@
 <span class="sd">        casename: Name of casename/basename to be used for the Summary object</span>
 <span class="sd">            If the Summary object is later written to disk, this will be used</span>
 <span class="sd">            to construct the filenames.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">casename</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="n">casename</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;casename </span><span class="si">{</span><span class="n">casename</span><span class="si">}</span><span class="s2"> must be UPPER CASE&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">casename</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Do not use dots in casename </span><span class="si">{</span><span class="n">casename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"casename </span><span class="si">{</span><span class="n">casename</span><span class="si">}</span><span class="s2"> must be UPPER CASE"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"."</span> <span class="ow">in</span> <span class="n">casename</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Do not use dots in casename </span><span class="si">{</span><span class="n">casename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">_fix_dframe_for_resdata</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Summary</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">casename</span><span class="p">,</span> <span class="n">dframe</span><span class="p">)</span></div>
@@ -792,87 +792,87 @@
 <div class="viewcode-block" id="fill_parser">
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.fill_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">"""Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser: parser to fill with arguments</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the .DATA input file for the reservoir simulator.&quot;</span>
-        <span class="s2">&quot; There must exist a UNSMRY file with the same path and basename.&quot;</span><span class="p">,</span>
+        <span class="s2">"DATAFILE"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Name of the .DATA input file for the reservoir simulator."</span>
+        <span class="s2">" There must exist a UNSMRY file with the same path and basename."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--time_index&quot;</span><span class="p">,</span>
+        <span class="s2">"--time_index"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Time resolution mnemonic; raw, daily, monthly or yearly. &quot;</span>
-            <span class="s2">&quot;Data at a given point in time applies until the next point in time. &quot;</span>
-            <span class="s2">&quot;If not raw, data will be interpolated. Use interpolated rate vectors &quot;</span>
-            <span class="s2">&quot;with care. Default is raw, which will include clock times. first and last &quot;</span>
-            <span class="s2">&quot;are also accepted and will print data for the first or the last date. &quot;</span>
+            <span class="s2">"Time resolution mnemonic; raw, daily, monthly or yearly. "</span>
+            <span class="s2">"Data at a given point in time applies until the next point in time. "</span>
+            <span class="s2">"If not raw, data will be interpolated. Use interpolated rate vectors "</span>
+            <span class="s2">"with care. Default is raw, which will include clock times. first and last "</span>
+            <span class="s2">"are also accepted and will print data for the first or the last date. "</span>
         <span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"raw"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--column_keys&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="s2">"--column_keys"</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Summary column vector wildcards, space-separated. &quot;</span>
-            <span class="s2">&quot;Default is to include all summary vectors available.&quot;</span>
+            <span class="s2">"Summary column vector wildcards, space-separated. "</span>
+            <span class="s2">"Default is to include all summary vectors available."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--start_date&quot;</span><span class="p">,</span>
+        <span class="s2">"--start_date"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Start at a specific date, in ISO format YYYY-MM-DD. &quot;</span>
-            <span class="s2">&quot;Ignored if time_index is first or last&quot;</span>
+            <span class="s2">"Start at a specific date, in ISO format YYYY-MM-DD. "</span>
+            <span class="s2">"Ignored if time_index is first or last"</span>
         <span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--end_date&quot;</span><span class="p">,</span>
+        <span class="s2">"--end_date"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;End at a specific date, in ISO format YYYY-MM-DD. &quot;</span>
-            <span class="s2">&quot;Ignored if time_index is first or last&quot;</span>
+            <span class="s2">"End at a specific date, in ISO format YYYY-MM-DD. "</span>
+            <span class="s2">"Ignored if time_index is first or last"</span>
         <span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--params&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Merge key-value data from parameter file into each row.&quot;</span><span class="p">,</span>
+        <span class="s2">"-p"</span><span class="p">,</span>
+        <span class="s2">"--params"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Merge key-value data from parameter file into each row."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--paramfile&quot;</span><span class="p">,</span>
+        <span class="s2">"--paramfile"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Filename of key-value parameter file to look for if -p is set, &quot;</span>
-            <span class="s2">&quot;relative to simulator input (.DATA) file or an absolute filename. &quot;</span>
-            <span class="s2">&quot;If not supplied, parameters.{json,yml,txt} in &quot;</span>
-            <span class="s2">&quot;{., .. and ../..} will be merged in.&quot;</span>
+            <span class="s2">"Filename of key-value parameter file to look for if -p is set, "</span>
+            <span class="s2">"relative to simulator input (.DATA) file or an absolute filename. "</span>
+            <span class="s2">"If not supplied, parameters.{json,yml,txt} in "</span>
+            <span class="s2">"{., .. and ../..} will be merged in."</span>
         <span class="p">),</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s2">"--output"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Name of output file. Use &#39;-&#39; to write to stdout. Default &#39;summary.csv&#39;&quot;</span><span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;summary.csv&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">"Name of output file. Use '-' to write to stdout. Default 'summary.csv'"</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"summary.csv"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--arrow&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write to pyarrow format&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--arrow"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Write to pyarrow format"</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--include_restart&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Attempt to include data from before restart&quot;</span><span class="p">,</span>
+        <span class="s2">"--include_restart"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Attempt to include data from before restart"</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"--verbose"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Be verbose"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -880,18 +880,18 @@
 <div class="viewcode-block" id="fill_reverse_parser">
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.fill_reverse_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation:  dataframe -&gt; summary files&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Fill a parser for the operation:  dataframe -&gt; summary files"""</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s2">"--output"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Basename for output files&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SYNTSMRY&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Basename for output files"</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"SYNTSMRY"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;csvfile&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of CSV file with summary data.&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--debug&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"csvfile"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name of CSV file with summary data."</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"--verbose"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Be verbose"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--debug"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Be verbose"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -899,10 +899,10 @@
 <div class="viewcode-block" id="summary_main">
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.summary_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">summary_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read summary data from disk and write CSV back to disk&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Read summary data from disk and write CSV back to disk"""</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">eclbase</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.DATA&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.UNSMRY&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.SMSPEC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".DATA"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".UNSMRY"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".SMSPEC"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
     <span class="p">)</span>
 
     <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span>
@@ -919,7 +919,7 @@
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No data to write. The input file may be missing or invalid.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"No data to write. The input file may be missing or invalid."</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">arrow</span><span class="p">:</span>
@@ -932,11 +932,11 @@
 <div class="viewcode-block" id="summary_reverse_main">
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.summary_reverse_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">summary_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point for usage with &quot;csv2res summary&quot; on the command line&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Entry point for usage with "csv2res summary" on the command line"""</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
 
     <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Parsed </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
 
     <span class="n">outputdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
     <span class="n">eclbase</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
@@ -945,13 +945,13 @@
     <span class="n">summary</span> <span class="o">=</span> <span class="n">df2ressum</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">summary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data to write. The input CSV file may be empty.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"No data to write. The input CSV file may be empty."</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">outputdir</span><span class="p">):</span>
         <span class="n">Summary</span><span class="o">.</span><span class="n">fwrite</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Wrote to </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">+</span> <span class="s2">&quot;.UNSMRY&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">+</span> <span class="s2">&quot;.SMSPEC&quot;</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Wrote to </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">+</span> <span class="s2">".UNSMRY"</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">+</span> <span class="s2">".SMSPEC"</span><span class="p">)</span></div>
 
 </pre></div>
 

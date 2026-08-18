@@ -81,7 +81,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.rft</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Converter module for simulator RFT output files to Pandas Dataframes</span>
+<span></span><span class="sd">"""Converter module for simulator RFT output files to Pandas Dataframes</span>
 
 <span class="sd">If MULTISEG wells are found, the segment data associated to</span>
 <span class="sd">a connection is merged onto the same row as additional columns,</span>
@@ -94,7 +94,7 @@
 
 <span class="sd">The columns representing SEGxxxxx data on ICD segments are renamed</span>
 <span class="sd">by adding the prefix ``ICD_``</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">collections</span>
@@ -115,37 +115,37 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># In debug mode, these columns will be exported to three csv files.</span>
-<span class="n">CON_TOPOLOGY_COLS</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;CONIDX&quot;</span><span class="p">,</span> <span class="s2">&quot;CONBRNO&quot;</span><span class="p">,</span> <span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="s2">&quot;CONNXT&quot;</span><span class="p">,</span> <span class="s2">&quot;DEPTH&quot;</span><span class="p">}</span>
+<span class="n">CON_TOPOLOGY_COLS</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"CONIDX"</span><span class="p">,</span> <span class="s2">"CONBRNO"</span><span class="p">,</span> <span class="s2">"CONSEGNO"</span><span class="p">,</span> <span class="s2">"CONNXT"</span><span class="p">,</span> <span class="s2">"DEPTH"</span><span class="p">}</span>
 <span class="n">SEG_TOPOLOGY_COLS</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGBRNO&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGBRNO_upstream&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGNXT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGNXT_upstream&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;JUNCTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;JUNCTION_downstream&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;LONELYSEG&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;LEAF&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGDEPTH&quot;</span><span class="p">,</span>
+    <span class="s2">"SEGIDX"</span><span class="p">,</span>
+    <span class="s2">"SEGIDX_upstream"</span><span class="p">,</span>
+    <span class="s2">"SEGBRNO"</span><span class="p">,</span>
+    <span class="s2">"SEGBRNO_upstream"</span><span class="p">,</span>
+    <span class="s2">"SEGNXT"</span><span class="p">,</span>
+    <span class="s2">"SEGNXT_upstream"</span><span class="p">,</span>
+    <span class="s2">"JUNCTION"</span><span class="p">,</span>
+    <span class="s2">"JUNCTION_downstream"</span><span class="p">,</span>
+    <span class="s2">"LONELYSEG"</span><span class="p">,</span>
+    <span class="s2">"LEAF"</span><span class="p">,</span>
+    <span class="s2">"SEGDEPTH"</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">ICD_TOPOLOGY_COLS</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;ICD_SEGBRNO_upstream&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_SEGIDX_upstream&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_LEAF&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_JUNCTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_LONELYSEG&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_JUNCTION_downstream&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_SEGBRNO&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_SEGNXT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ICD_SEGDEPTH&quot;</span><span class="p">,</span>
+    <span class="s2">"ICD_SEGBRNO_upstream"</span><span class="p">,</span>
+    <span class="s2">"ICD_SEGIDX_upstream"</span><span class="p">,</span>
+    <span class="s2">"ICD_LEAF"</span><span class="p">,</span>
+    <span class="s2">"ICD_JUNCTION"</span><span class="p">,</span>
+    <span class="s2">"ICD_LONELYSEG"</span><span class="p">,</span>
+    <span class="s2">"ICD_JUNCTION_downstream"</span><span class="p">,</span>
+    <span class="s2">"ICD_SEGBRNO"</span><span class="p">,</span>
+    <span class="s2">"ICD_SEGNXT"</span><span class="p">,</span>
+    <span class="s2">"ICD_SEGIDX"</span><span class="p">,</span>
+    <span class="s2">"ICD_SEGDEPTH"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_rftrecords2df</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a dataframe just for navigation on the RFT records,</span>
-<span class="sd">    from the attribute &#39;headers&#39; in ResdataFile object constructed from the</span>
+<span class="w">    </span><span class="sd">"""Construct a dataframe just for navigation on the RFT records,</span>
+<span class="sd">    from the attribute 'headers' in ResdataFile object constructed from the</span>
 <span class="sd">    binary RFT file</span>
 
 <span class="sd">    The dataframe will consist of the columns and with example data:</span>
@@ -160,63 +160,63 @@
 <span class="sd">        3, 89, SWAT, 14, REAL</span>
 
 <span class="sd">    where the column recordidx refers to the RFT file such that</span>
-<span class="sd">        rftfile[89] = EclKW(size=14, name=&quot;SWAT&quot;, ...)</span>
+<span class="sd">        rftfile[89] = EclKW(size=14, name="SWAT", ...)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        rftfile (ResdataFile)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">nav_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rftfile</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
-    <span class="n">nav_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">,</span> <span class="s2">&quot;recordlength&quot;</span><span class="p">,</span> <span class="s2">&quot;recordtype&quot;</span><span class="p">]</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;TIME&quot;</span><span class="p">)</span>
-    <span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">nav_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">nav_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"recordname"</span><span class="p">,</span> <span class="s2">"recordlength"</span><span class="p">,</span> <span class="s2">"recordtype"</span><span class="p">]</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">nav_df</span><span class="p">[</span><span class="s2">"recordname"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">"TIME"</span><span class="p">)</span>
+    <span class="n">nav_df</span><span class="p">[</span><span class="s2">"timeindex"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">nav_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
     <span class="c1"># the TIME record (in recordname) signifies that the forthcoming records</span>
     <span class="c1"># belong to  this TIME value, and we make a new column in the header data that</span>
     <span class="c1"># tells us the row number for the associated TIME record</span>
     <span class="n">nav_df</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">nav_df</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
     <span class="p">)</span>  <span class="c1"># forward fill (because any record is associated to the previous TIME record)</span>
-    <span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">nav_df</span><span class="p">[</span><span class="s2">"timeindex"</span><span class="p">]</span> <span class="o">=</span> <span class="n">nav_df</span><span class="p">[</span><span class="s2">"timeindex"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="s2">&quot;Located </span><span class="si">%s</span><span class="s2"> RFT headers at </span><span class="si">%s</span><span class="s2"> distinct dates&quot;</span><span class="p">,</span>
+        <span class="s2">"Located </span><span class="si">%s</span><span class="s2"> RFT headers at </span><span class="si">%s</span><span class="s2"> distinct dates"</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">nav_df</span><span class="p">),</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">nav_df</span><span class="p">[</span><span class="s2">"timeindex"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
     <span class="p">)</span>
-    <span class="n">nav_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;recordidx&quot;</span>
+    <span class="n">nav_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"recordidx"</span>
     <span class="k">return</span> <span class="n">nav_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="rftrecords">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.rftrecords">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rftrecords</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generator for looping over RFT records in a ResdataFile object.</span>
+<span class="w">    </span><span class="sd">"""Generator for looping over RFT records in a ResdataFile object.</span>
 
 <span class="sd">    Each returned RFT record is represented as a dict with the keys:</span>
 <span class="sd">        headers: pd.DataFrame, indexed by recordname</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        ResdataFile made from a binary RFT file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">navigation_frame</span> <span class="o">=</span> <span class="n">_rftrecords2df</span><span class="p">(</span><span class="n">rftfile</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">timeindex</span><span class="p">,</span> <span class="n">headers</span> <span class="ow">in</span> <span class="n">navigation_frame</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;timeindex&quot;</span><span class="p">):</span>
-        <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;recordname&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">timeindex</span><span class="p">,</span> <span class="n">headers</span> <span class="ow">in</span> <span class="n">navigation_frame</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"timeindex"</span><span class="p">):</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"recordname"</span><span class="p">)</span>
         <span class="n">rftrecord</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">headers</span>
+        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"headers"</span><span class="p">]</span> <span class="o">=</span> <span class="n">headers</span>
         <span class="c1"># All rows in nav_record_df represents  the data in the current</span>
         <span class="c1"># RFT record</span>
-        <span class="n">dateidx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">][</span><span class="s2">&quot;recordidx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
-        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span>
+        <span class="n">dateidx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">][</span><span class="s2">"recordidx"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"date"</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span>
             <span class="n">rftfile</span><span class="p">[</span><span class="n">dateidx</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">rftfile</span><span class="p">[</span><span class="n">dateidx</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">rftfile</span><span class="p">[</span><span class="n">dateidx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftfile</span><span class="p">[</span>
-            <span class="nb">int</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;WELLETC&quot;</span><span class="p">][</span><span class="s2">&quot;recordidx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellname"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftfile</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"WELLETC"</span><span class="p">][</span><span class="s2">"recordidx"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
         <span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellmodel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftfile</span><span class="p">[</span>
-            <span class="nb">int</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;WELLETC&quot;</span><span class="p">][</span><span class="s2">&quot;recordidx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellmodel"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftfile</span><span class="p">[</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"WELLETC"</span><span class="p">][</span><span class="s2">"recordidx"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
         <span class="p">][</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="c1"># wellmodel is either &quot;STANDARD&quot; or &quot;MULTISEG&quot;</span>
+        <span class="c1"># wellmodel is either "STANDARD" or "MULTISEG"</span>
 
-        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeindex</span>
+        <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"timeindex"</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeindex</span>
         <span class="k">yield</span> <span class="n">rftrecord</span></div>
 
 
@@ -226,11 +226,11 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_con_seg_data</span><span class="p">(</span>
     <span class="n">rftrecord</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">,</span> <span class="n">datatype</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Build a dataframe of CON* or SEG* data for a specific RFT record,</span>
 <span class="sd">    that is for one well at one date.</span>
 
-<span class="sd">    Dataframe will for datatype==&quot;CON&quot; look like::</span>
+<span class="sd">    Dataframe will for datatype=="CON" look like::</span>
 
 <span class="sd">      DEPTH, SWAT, CONKH, CONIDX, ..</span>
 <span class="sd">      2300,  0.3, 3000, 1</span>
@@ -244,25 +244,25 @@
 <span class="sd">    Args:</span>
 <span class="sd">        rftrecord: Data for one RFT record, provided by rftrecords()</span>
 <span class="sd">        rftfile:</span>
-<span class="sd">        datatype: Either &quot;CON&quot; or &quot;SEG&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">datatype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CON&quot;</span><span class="p">,</span> <span class="s2">&quot;SEG&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;datatype must equal CON or SEG&quot;</span><span class="p">)</span>
+<span class="sd">        datatype: Either "CON" or "SEG"</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">datatype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"CON"</span><span class="p">,</span> <span class="s2">"SEG"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"datatype must equal CON or SEG"</span><span class="p">)</span>
 
-    <span class="n">headers</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s2">&quot;CON&quot;</span><span class="p">:</span>
-        <span class="n">rft_row_count</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">][</span><span class="s2">&quot;recordlength&quot;</span><span class="p">]</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"headers"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s2">"CON"</span><span class="p">:</span>
+        <span class="n">rft_row_count</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"DEPTH"</span><span class="p">][</span><span class="s2">"recordlength"</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">rft_row_count</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;SEGDEPTH&quot;</span><span class="p">][</span><span class="s2">&quot;recordlength&quot;</span><span class="p">]</span>
+        <span class="n">rft_row_count</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"SEGDEPTH"</span><span class="p">][</span><span class="s2">"recordlength"</span><span class="p">]</span>
 
     <span class="n">data_headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="o">.</span><span class="n">recordlength</span> <span class="o">==</span> <span class="n">rft_row_count</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()[</span>
-        <span class="p">[</span><span class="s2">&quot;recordidx&quot;</span><span class="p">,</span> <span class="s2">&quot;recordname&quot;</span><span class="p">]</span>
+        <span class="p">[</span><span class="s2">"recordidx"</span><span class="p">,</span> <span class="s2">"recordname"</span><span class="p">]</span>
     <span class="p">]</span>
     <span class="c1"># If CON type, ensure, no SEG data included, and vice versa</span>
-    <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s2">&quot;CON&quot;</span><span class="p">:</span>
-        <span class="n">data_headers</span> <span class="o">=</span> <span class="n">data_headers</span><span class="p">[</span><span class="o">~</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SEG&quot;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s2">"CON"</span><span class="p">:</span>
+        <span class="n">data_headers</span> <span class="o">=</span> <span class="n">data_headers</span><span class="p">[</span><span class="o">~</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">"recordname"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"SEG"</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">data_headers</span> <span class="o">=</span> <span class="n">data_headers</span><span class="p">[</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SEG&quot;</span><span class="p">)]</span>
+        <span class="n">data_headers</span> <span class="o">=</span> <span class="n">data_headers</span><span class="p">[</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">"recordname"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"SEG"</span><span class="p">)]</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
         <span class="p">{</span>
@@ -272,12 +272,12 @@
     <span class="p">)</span>
 
     <span class="c1"># Ensure integer headers are integers:</span>
-    <span class="n">integer_columns</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordtype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INTE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">integer_columns</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">&quot;DATE&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
-        <span class="nb">set</span><span class="p">(</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="n">integer_columns</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">"recordtype"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"INTE"</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">integer_columns</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"DATE"</span><span class="p">})</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+        <span class="nb">set</span><span class="p">(</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">"recordname"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
     <span class="p">):</span>
         <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">data</span><span class="p">[</span><span class="n">datatype</span> <span class="o">+</span> <span class="s2">&quot;IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add an index that starts with 1</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">datatype</span> <span class="o">+</span> <span class="s2">"IDX"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add an index that starts with 1</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
 
@@ -285,7 +285,7 @@
 <div class="viewcode-block" id="count_wellbranches">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.count_wellbranches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">count_wellbranches</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;From a segment dataframe, coming from get_con_seg_data(..., &quot;SEG&quot;)</span>
+<span class="w">    </span><span class="sd">"""From a segment dataframe, coming from get_con_seg_data(..., "SEG")</span>
 <span class="sd">    determine the number of well branche.</span>
 
 <span class="sd">    ICD segments must be split out first using split_seg_icd(), otherwise</span>
@@ -293,12 +293,12 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        pd.DataFrame, with at least the columns SEGIDX, SEGNXT and SEGBRNO</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;LEAF&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"LEAF"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
         <span class="n">seg_data</span> <span class="o">=</span> <span class="n">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
 
     <span class="n">branchcount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
-        <span class="n">seg_data</span><span class="p">[</span><span class="o">~</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;JUNCTION_downstream&quot;</span><span class="p">]][</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span>
+        <span class="n">seg_data</span><span class="p">[</span><span class="o">~</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">"LEAF"</span><span class="p">]</span> <span class="o">|</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">"JUNCTION_downstream"</span><span class="p">]][</span><span class="s2">"SEGBRNO"</span><span class="p">]</span>
         <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
         <span class="o">.</span><span class="n">unique</span><span class="p">()</span>
     <span class="p">)</span>
@@ -310,7 +310,7 @@
 <div class="viewcode-block" id="process_seg_topology">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.process_seg_topology">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine and process the segment topology.</span>
+<span class="w">    </span><span class="sd">"""Determine and process the segment topology.</span>
 
 <span class="sd">    The topology of the well segments are determined by the SEGNXT column in</span>
 <span class="sd">    incoming dataframe, which corresponds to SEGIDX.</span>
@@ -327,44 +327,44 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Augmented dataframe, extra columns and perhaps extra rows.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGNXT&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Insufficient topology columns in dataframe&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="s2">"SEGIDX"</span><span class="p">,</span> <span class="s2">"SEGNXT"</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Insufficient topology columns in dataframe"</span><span class="p">)</span>
 
-    <span class="n">seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">)</span>
+    <span class="n">seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"SEGIDX"</span><span class="p">)</span>
     <span class="c1"># For the first segment, None is allowed as SEGNXT, which excludes</span>
     <span class="c1"># int as a  Pandas type. Convert to 0 for the moment</span>
-    <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGNXT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGNXT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">seg_data</span><span class="p">[</span><span class="s2">"SEGNXT"</span><span class="p">]</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">"SEGNXT"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">"0"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># Outer merge first to add the upstream segment information to every row.</span>
     <span class="n">merged</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
         <span class="n">seg_data</span><span class="p">,</span>
-        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-        <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span>
-        <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGNXT&quot;</span><span class="p">,</span>
-        <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;_upstream&quot;</span><span class="p">),</span>
+        <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="s2">"SEGIDX"</span><span class="p">,</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="s2">"SEGNXT"</span><span class="p">,</span>
+        <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"_upstream"</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;SEGNXT_upstream&quot;</span><span class="p">)</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">"SEGNXT_upstream"</span><span class="p">)</span>
     <span class="c1"># Later this might be changed to use the Pandas nullable integer type, but</span>
     <span class="c1"># using zero for NaN works in this context.</span>
-    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGBRNO_upstream&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGBRNO_upstream&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">"SEGIDX_upstream"</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">"SEGIDX_upstream"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">"SEGBRNO_upstream"</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">"SEGBRNO_upstream"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># Now we can determine leaf segments by those with no extra information, since</span>
     <span class="c1"># we did an outer merge:</span>
-    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">"LEAF"</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">"SEGIDX_upstream"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
 
     <span class="c1"># Flag segments that have multiple upstream segments as junctions</span>
-    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;JUNCTION&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">"JUNCTION"</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">"SEGIDX"</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># Determine if a segment is alone on its own branch</span>
-    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;LONELYSEG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">~</span><span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">"LONELYSEG"</span><span class="p">]</span> <span class="o">=</span> <span class="o">~</span><span class="n">merged</span><span class="p">[</span><span class="s2">"SEGBRNO"</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># We also want to flag the segment that is upstream a junction,</span>
-    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;JUNCTION_downstream&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">upstream_of_junction</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">merged</span><span class="p">[</span><span class="s2">&quot;JUNCTION&quot;</span><span class="p">],</span> <span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">"JUNCTION_downstream"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">upstream_of_junction</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">merged</span><span class="p">[</span><span class="s2">"JUNCTION"</span><span class="p">],</span> <span class="s2">"SEGIDX_upstream"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
     <span class="n">upstream_of_junction</span> <span class="o">=</span> <span class="n">upstream_of_junction</span><span class="p">[</span><span class="n">upstream_of_junction</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Remove 0s</span>
-    <span class="n">merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">upstream_of_junction</span><span class="p">),</span> <span class="s2">&quot;JUNCTION_downstream&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">merged</span><span class="p">[</span><span class="s2">"SEGIDX"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">upstream_of_junction</span><span class="p">),</span> <span class="s2">"JUNCTION_downstream"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
         <span class="kc">True</span>
     <span class="p">)</span>
 
@@ -375,7 +375,7 @@
 <div class="viewcode-block" id="seg2dicttree">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.seg2dicttree">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">seg2dicttree</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a nested dictionary representing the</span>
+<span class="w">    </span><span class="sd">"""Generate a nested dictionary representing the</span>
 <span class="sd">    well through its segment topology</span>
 
 <span class="sd">    Args:</span>
@@ -384,22 +384,22 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Nested dict,</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{}</span>
 
-    <span class="k">if</span> <span class="s2">&quot;LEAF&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"LEAF"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
         <span class="n">seg_data</span> <span class="o">=</span> <span class="n">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
     <span class="n">subtrees</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">edges</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples</span>
-    <span class="k">if</span> <span class="s2">&quot;SEGIDX_upstream&quot;</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"SEGIDX_upstream"</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">edges</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
             <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">SEGIDX_upstream</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">SEGIDX</span><span class="p">)</span>  <span class="c1"># type: ignore[misc]</span>
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">itertuples</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">SEGIDX_upstream</span> <span class="o">&gt;</span> <span class="mi">0</span>  <span class="c1"># type: ignore[operator]</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">edges</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">{}}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">"SEGIDX"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">{}}</span>
     <span class="k">for</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
         <span class="n">subtrees</span><span class="p">[</span><span class="n">parent</span><span class="p">][</span><span class="n">child</span><span class="p">]</span> <span class="o">=</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">child</span><span class="p">]</span>
 
@@ -412,7 +412,7 @@
 <div class="viewcode-block" id="pretty_print_well">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.pretty_print_well">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pretty_print_well</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a multiline string with the segment structure</span>
+<span class="w">    </span><span class="sd">"""Return a multiline string with the segment structure</span>
 <span class="sd">    pretty printed as an ASCII tree.</span>
 
 <span class="sd">    Args:</span>
@@ -420,7 +420,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Multiline string</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">dicttree</span> <span class="o">=</span> <span class="n">seg2dicttree</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree_from_dict</span><span class="p">(</span><span class="n">dicttree</span><span class="p">))</span></div>
 
@@ -429,7 +429,7 @@
 <div class="viewcode-block" id="split_seg_icd">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.split_seg_icd">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_seg_icd</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split a segment dataframe into a dataframe</span>
+<span class="w">    </span><span class="sd">"""Split a segment dataframe into a dataframe</span>
 <span class="sd">    with non-ICD segments and one with.</span>
 
 <span class="sd">    The segment properties (data) are merged into the downstream segments</span>
@@ -438,13 +438,13 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Dataframe with the ICD segments only. Empty if no ICDs found.</span>
 <span class="sd">        and wider.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Ensure we have some topology data present:</span>
-    <span class="k">if</span> <span class="s2">&quot;LEAF&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"LEAF"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
         <span class="n">seg_data</span> <span class="o">=</span> <span class="n">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
 
-    <span class="n">icd_present</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">count_wellbranches</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
+    <span class="n">icd_present</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">"SEGBRNO"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">count_wellbranches</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">icd_present</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">())</span>
@@ -458,21 +458,21 @@
     <span class="c1">#    are legit.</span>
     <span class="c1">#  * The segment must be on a branch with only one segment</span>
     <span class="n">icd_seg_indices</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span>
-        <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LONELYSEG&quot;</span><span class="p">]</span>
+        <span class="n">seg_data</span><span class="p">[</span><span class="s2">"LEAF"</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">"LONELYSEG"</span><span class="p">]</span>
     <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="n">non_icd_seg_indices</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span>
-        <span class="o">~</span><span class="p">(</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LONELYSEG&quot;</span><span class="p">])</span>
+        <span class="o">~</span><span class="p">(</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">"LEAF"</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">"LONELYSEG"</span><span class="p">])</span>
     <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 
     <span class="n">icd_seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">icd_seg_indices</span><span class="p">)</span>
     <span class="n">seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">non_icd_seg_indices</span><span class="p">)</span>
 
-    <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ICD_&quot;</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ICD_"</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-        <span class="s2">&quot;Found </span><span class="si">%d</span><span class="s2"> ICD segments, indices </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">"Found </span><span class="si">%d</span><span class="s2"> ICD segments, indices </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">icd_seg_data</span><span class="p">),</span>
-        <span class="n">icd_seg_data</span><span class="p">[</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+        <span class="n">icd_seg_data</span><span class="p">[</span><span class="s2">"ICD_SEGIDX"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">icd_seg_data</span><span class="p">)</span></div>
@@ -486,7 +486,7 @@
     <span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">icd_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Merge ICD segments to the CONxxxxx data. We will be</span>
 <span class="sd">    connection-centric in the outputted rows, that is</span>
 <span class="sd">    one row pr. connection. If the setup is with more</span>
@@ -509,47 +509,47 @@
 <span class="sd">        icd_data: ICD data, ICD_SEGxxxx columns. One row pr</span>
 <span class="sd">            ICD segment. One-to-one correspondence to con_data through ICD_SEGBRNO</span>
 <span class="sd">            and CONBRNO required. Can be empty or None if no ICD present.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">seg_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">seg_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">icd_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">icd_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing connection data to con.csv&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Writing connection data to con.csv"</span><span class="p">)</span>
         <span class="n">con_data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">CON_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">con_data</span><span class="o">.</span><span class="n">columns</span><span class="p">))]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-            <span class="s2">&quot;con.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+            <span class="s2">"con.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing segment data to seg.csv&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Writing segment data to seg.csv"</span><span class="p">)</span>
         <span class="n">seg_data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">SEG_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">))]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-            <span class="s2">&quot;seg.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+            <span class="s2">"seg.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing ICD data to icd.csv&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Writing ICD data to icd.csv"</span><span class="p">)</span>
         <span class="n">icd_data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">ICD_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">icd_data</span><span class="o">.</span><span class="n">columns</span><span class="p">))]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-            <span class="s2">&quot;icd.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+            <span class="s2">"icd.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">icd_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="c1"># Merge ICD_* columns onto the dataframe representing reservoir</span>
         <span class="c1"># connections.</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">icd_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">icd_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">"CONSEGNO"</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">"ICD_SEGIDX"</span><span class="p">)</span>
 
-        <span class="c1"># Merge SEGxxxxx to the dataframe with icd&#39;s and reservoir connections.</span>
+        <span class="c1"># Merge SEGxxxxx to the dataframe with icd's and reservoir connections.</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">empty</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGNXT&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">"ICD_SEGNXT"</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">"SEGIDX"</span><span class="p">)</span>
 
         <span class="c1"># The merge has potentially included extra rows due to junctions.</span>
         <span class="c1"># After ICD merge, we can require that SEGIDX_upstream equals CONSEGNO</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">"CONSEGNO"</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="s2">"SEGIDX_upstream"</span><span class="p">]]</span>
 
         <span class="c1"># Now the data for a reservoir connection, its ICD segment and the tubing</span>
         <span class="c1">#  segment is on the same row in the dataframe.</span>
 
         <span class="c1"># Gather connections that are not associated to ICDs:</span>
-        <span class="n">no_icd_con_segments</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">icd_data</span><span class="p">[</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">])</span>
+        <span class="n">no_icd_con_segments</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">con_data</span><span class="p">[</span><span class="s2">"CONSEGNO"</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">icd_data</span><span class="p">[</span><span class="s2">"ICD_SEGIDX"</span><span class="p">])</span>
         <span class="n">con_data_no_icd</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">con_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">no_icd_con_segments</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="n">con_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"CONSEGNO"</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">no_icd_con_segments</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">con_data_no_icd</span> <span class="o">=</span> <span class="n">con_data</span>
@@ -558,7 +558,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">data</span><span class="p">,</span>
-                <span class="n">con_data_no_icd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">),</span>
+                <span class="n">con_data_no_icd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">"CONSEGNO"</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">"SEGIDX"</span><span class="p">),</span>
             <span class="p">],</span>
             <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
@@ -572,7 +572,7 @@
 <div class="viewcode-block" id="add_extras">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.add_extras">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_extras</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add extra nice-to-have columns to the dataframe</span>
+<span class="w">    </span><span class="sd">"""Add extra nice-to-have columns to the dataframe</span>
 <span class="sd">    with tubing, icd-segments, and reservoir  connections matched</span>
 <span class="sd">    on rows</span>
 
@@ -582,39 +582,39 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The (possibly) augmented incoming dataframe.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="s2">&quot;CONPRES&quot;</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">&quot;SEGPRES&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;COMPLETION_DP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">nonzero_pres</span> <span class="o">=</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;SEGPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">&quot;COMPLETION_DP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">&quot;SEGPRES&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"CONPRES"</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">"SEGPRES"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"COMPLETION_DP"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">nonzero_pres</span> <span class="o">=</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"CONPRES"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"SEGPRES"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">"COMPLETION_DP"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">"CONPRES"</span><span class="p">]</span> <span class="o">-</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">"SEGPRES"</span><span class="p">]</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Set a default so that the column always exists</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"DRAWDOWN"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Set a default so that the column always exists</span>
 
-    <span class="k">if</span> <span class="s2">&quot;CONPRES&quot;</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">&quot;PRESSURE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">nonzero_conpres</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_conpres</span><span class="p">,</span> <span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_conpres</span><span class="p">,</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>
-            <span class="o">-</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_conpres</span><span class="p">,</span> <span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"CONPRES"</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">"PRESSURE"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">nonzero_conpres</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONPRES"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_conpres</span><span class="p">,</span> <span class="s2">"DRAWDOWN"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_conpres</span><span class="p">,</span> <span class="s2">"PRESSURE"</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_conpres</span><span class="p">,</span> <span class="s2">"CONPRES"</span><span class="p">]</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;PRESSURE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONBPRES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>  <span class="c1"># Just an alias</span>
-    <span class="k">if</span> <span class="s2">&quot;CONLENEN&quot;</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">&quot;CONLENST&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONMD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENST&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENEN&quot;</span><span class="p">])</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENEN&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENST&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"PRESSURE"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONBPRES"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"PRESSURE"</span><span class="p">]</span>  <span class="c1"># Just an alias</span>
+    <span class="k">if</span> <span class="s2">"CONLENEN"</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">"CONLENST"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONMD"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENST"</span><span class="p">]</span> <span class="o">+</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENEN"</span><span class="p">])</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENTH"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENEN"</span><span class="p">]</span> <span class="o">-</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENST"</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="s2">&quot;CONORAT&quot;</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">&quot;CONLENTH&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONORATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONORAT&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENTH&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;CONWRAT&quot;</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">&quot;CONLENTH&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONWRATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONWRAT&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENTH&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;CONGRAT&quot;</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">&quot;CONLENTH&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONGRATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONGRAT&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONLENTH&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"CONORAT"</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">"CONLENTH"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONORATS"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONORAT"</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENTH"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"CONWRAT"</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">"CONLENTH"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONWRATS"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONWRAT"</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENTH"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"CONGRAT"</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">"CONLENTH"</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONGRATS"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONGRAT"</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"CONLENTH"</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">dframe</span></div>
 
@@ -627,7 +627,7 @@
     <span class="n">wellname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loop over an RFT file and construct a dataframe representation</span>
+<span class="w">    </span><span class="sd">"""Loop over an RFT file and construct a dataframe representation</span>
 <span class="sd">    of the data, ordered by well and date.</span>
 
 <span class="sd">    Args:</span>
@@ -635,53 +635,53 @@
 <span class="sd">        wellname: If provided, only wells matching this string exactly</span>
 <span class="sd">            will be included</span>
 <span class="sd">        date: If provided, all other dates will be ignored. YYYY-MM-DD.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">rftfile</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_rftfile</span><span class="p">()</span>
 
     <span class="n">rftdata</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">rftrecord</span> <span class="ow">in</span> <span class="n">rftrecords</span><span class="p">(</span><span class="n">rftfile</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">wellname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">wellname</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">wellname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellname"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">wellname</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span> <span class="o">!=</span> <span class="n">date</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">[</span><span class="s2">"date"</span><span class="p">])</span> <span class="o">!=</span> <span class="n">date</span><span class="p">:</span>
             <span class="k">continue</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Extracting </span><span class="si">%s</span><span class="s2"> well </span><span class="si">%s</span><span class="s2"> at </span><span class="si">%s</span><span class="s2">, record index: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellmodel&quot;</span><span class="p">],</span>
-            <span class="nb">str</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">],</span> <span class="mi">8</span><span class="p">),</span>
-            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span>
-            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">],</span>
+            <span class="s2">"Extracting </span><span class="si">%s</span><span class="s2"> well </span><span class="si">%s</span><span class="s2"> at </span><span class="si">%s</span><span class="s2">, record index: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellmodel"</span><span class="p">],</span>
+            <span class="nb">str</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellname"</span><span class="p">],</span> <span class="mi">8</span><span class="p">),</span>
+            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"date"</span><span class="p">],</span>
+            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"timeindex"</span><span class="p">],</span>
         <span class="p">)</span>
 
-        <span class="n">headers</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"headers"</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s2">&quot;DEPTH&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"DEPTH"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> has no data to extract at </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">],</span>
-                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span>
+                <span class="s2">"Well </span><span class="si">%s</span><span class="s2"> has no data to extract at </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellname"</span><span class="p">],</span>
+                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"date"</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="k">continue</span>
 
-        <span class="n">con_data</span> <span class="o">=</span> <span class="n">get_con_seg_data</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">,</span> <span class="n">rftfile</span><span class="p">,</span> <span class="s2">&quot;CON&quot;</span><span class="p">)</span>
+        <span class="n">con_data</span> <span class="o">=</span> <span class="n">get_con_seg_data</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">,</span> <span class="n">rftfile</span><span class="p">,</span> <span class="s2">"CON"</span><span class="p">)</span>
 
         <span class="c1"># Process multisegment data (not necessarily the same number</span>
         <span class="c1"># of rows as the connection data). Data for segments</span>
         <span class="c1"># that are not associated with a connection will not be</span>
         <span class="c1"># included.</span>
 
-        <span class="n">has_seg_data</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SEG&quot;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellmodel&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MULTISEG&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_seg_data</span><span class="p">:</span>
+        <span class="n">has_seg_data</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"SEG"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellmodel"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"MULTISEG"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_seg_data</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> is a multisegment well, but has no SEG data&quot;</span><span class="p">,</span>
-                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">],</span>
+                <span class="s2">"Well </span><span class="si">%s</span><span class="s2"> is a multisegment well, but has no SEG data"</span><span class="p">,</span>
+                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellname"</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="c1"># This should probably never happen (?)</span>
 
         <span class="n">seg_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="n">icd_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">has_seg_data</span><span class="p">:</span>
-            <span class="n">seg_data</span> <span class="o">=</span> <span class="n">get_con_seg_data</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">,</span> <span class="n">rftfile</span><span class="p">,</span> <span class="s2">&quot;SEG&quot;</span><span class="p">)</span>
+            <span class="n">seg_data</span> <span class="o">=</span> <span class="n">get_con_seg_data</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">,</span> <span class="n">rftfile</span><span class="p">,</span> <span class="s2">"SEG"</span><span class="p">)</span>
 
             <span class="c1"># For each downstream segment, merge in the data for its</span>
             <span class="c1"># upstream segment, and determine leaf nodes:</span>
@@ -697,31 +697,31 @@
 
             <span class="n">seg_data</span><span class="p">,</span> <span class="n">icd_data</span> <span class="o">=</span> <span class="n">split_seg_icd</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
 
-            <span class="c1"># Branch counting must be done after ICD&#39;s are split out.</span>
+            <span class="c1"># Branch counting must be done after ICD's are split out.</span>
             <span class="n">branchcount</span> <span class="o">=</span> <span class="n">count_wellbranches</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;Found </span><span class="si">%d</span><span class="s2"> branch(es), and </span><span class="si">%d</span><span class="s2"> icd segment(s)&quot;</span><span class="p">,</span> <span class="n">branchcount</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">icd_data</span><span class="p">)</span>
+                <span class="s2">"Found </span><span class="si">%d</span><span class="s2"> branch(es), and </span><span class="si">%d</span><span class="s2"> icd segment(s)"</span><span class="p">,</span> <span class="n">branchcount</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">icd_data</span><span class="p">)</span>
             <span class="p">)</span>
 
         <span class="n">con_icd_seg</span> <span class="o">=</span> <span class="n">merge_icd_seg_conseg</span><span class="p">(</span><span class="n">con_data</span><span class="p">,</span> <span class="n">seg_data</span><span class="p">,</span> <span class="n">icd_data</span><span class="p">)</span>
 
         <span class="n">con_icd_seg</span> <span class="o">=</span> <span class="n">add_extras</span><span class="p">(</span><span class="n">con_icd_seg</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">con_icd_seg</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span>
-        <span class="n">con_icd_seg</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">]</span>
-        <span class="n">con_icd_seg</span><span class="p">[</span><span class="s2">&quot;WELLMODEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellmodel&quot;</span><span class="p">]</span>
+        <span class="n">con_icd_seg</span><span class="p">[</span><span class="s2">"DATE"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"date"</span><span class="p">]</span>
+        <span class="n">con_icd_seg</span><span class="p">[</span><span class="s2">"WELL"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellname"</span><span class="p">]</span>
+        <span class="n">con_icd_seg</span><span class="p">[</span><span class="s2">"WELLMODEL"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">"wellmodel"</span><span class="p">]</span>
 
         <span class="c1"># Delete topology columns</span>
-        <span class="n">delete_cols</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">con_icd_seg</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;stream&quot;</span><span class="p">)}</span>
+        <span class="n">delete_cols</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">con_icd_seg</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"stream"</span><span class="p">)}</span>
         <span class="n">delete_cols</span> <span class="o">=</span> <span class="n">delete_cols</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;LEAF&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ICD_LEAF&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;JUNCTION&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ICD_JUNCTION&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;LONELYSEG&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ICD_LONELYSEG&quot;</span><span class="p">,</span>
+                <span class="s2">"LEAF"</span><span class="p">,</span>
+                <span class="s2">"ICD_LEAF"</span><span class="p">,</span>
+                <span class="s2">"JUNCTION"</span><span class="p">,</span>
+                <span class="s2">"ICD_JUNCTION"</span><span class="p">,</span>
+                <span class="s2">"LONELYSEG"</span><span class="p">,</span>
+                <span class="s2">"ICD_LONELYSEG"</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
         <span class="n">con_icd_seg</span> <span class="o">=</span> <span class="n">con_icd_seg</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">con_icd_seg</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="n">delete_cols</span><span class="p">)]</span>
@@ -734,21 +734,21 @@
 
     <span class="c1"># Fill empty cells with zeros for numeric columns and empty</span>
     <span class="c1"># strings for string/object columns. This avoids mixed types</span>
-    <span class="c1"># (e.g. 0 and &#39;        &#39; in the same column) that break pyarrow conversion.</span>
-    <span class="n">numeric_cols</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+    <span class="c1"># (e.g. 0 and '        ' in the same column) that break pyarrow conversion.</span>
+    <span class="n">numeric_cols</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">"number"</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
     <span class="n">non_numeric_cols</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">numeric_cols</span><span class="p">)</span>
     <span class="n">rftdata_df</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">rftdata_df</span><span class="p">[</span><span class="n">non_numeric_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="p">[</span><span class="n">non_numeric_cols</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">rftdata_df</span><span class="p">[</span><span class="n">non_numeric_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="p">[</span><span class="n">non_numeric_cols</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
 
     <span class="c1"># The HOSTGRID data seems often to be empty, check if it is and delete if so:</span>
-    <span class="k">if</span> <span class="s2">&quot;HOSTGRID&quot;</span> <span class="ow">in</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
+    <span class="k">if</span> <span class="s2">"HOSTGRID"</span> <span class="ow">in</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
         <span class="ow">not</span> <span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">HOSTGRID</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
     <span class="p">):</span>
-        <span class="n">rftdata_df</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;HOSTGRID&quot;</span><span class="p">)</span>
+        <span class="n">rftdata_df</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">"HOSTGRID"</span><span class="p">)</span>
 
     <span class="n">zonemap</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
-        <span class="n">kname</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span> <span class="k">if</span> <span class="s2">&quot;K&quot;</span> <span class="ow">in</span> <span class="n">rftdata_df</span> <span class="k">else</span> <span class="s2">&quot;CONKPOS&quot;</span>
+        <span class="n">kname</span> <span class="o">=</span> <span class="s2">"K"</span> <span class="k">if</span> <span class="s2">"K"</span> <span class="ow">in</span> <span class="n">rftdata_df</span> <span class="k">else</span> <span class="s2">"CONKPOS"</span>
         <span class="n">rftdata_df</span> <span class="o">=</span> <span class="n">merge_zones</span><span class="p">(</span><span class="n">rftdata_df</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="n">kname</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">rftdata_df</span></div>
@@ -758,31 +758,31 @@
 <div class="viewcode-block" id="fill_parser">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.fill_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">"""Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser to fill with arguments</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span>
+        <span class="s2">"DATAFILE"</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Name of .DATA input file for the reservoir simulator, or RFT file. &quot;</span>
-            <span class="s2">&quot;If .DATA file is provided, it will look for&quot;</span>
-            <span class="s2">&quot; the associated .DATA file&quot;</span>
+            <span class="s2">"Name of .DATA input file for the reservoir simulator, or RFT file. "</span>
+            <span class="s2">"If .DATA file is provided, it will look for"</span>
+            <span class="s2">" the associated .DATA file"</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--wellname&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Restrict data to one named well&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
+        <span class="s2">"--wellname"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Restrict data to one named well"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--date&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Restrict data to one date, YYYY-MM-DD&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
+        <span class="s2">"--date"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Restrict data to one date, YYYY-MM-DD"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output CSV file.&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;rft.csv&quot;</span>
+        <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name of output CSV file."</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"rft.csv"</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--debug&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Debug mode&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"--verbose"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Be verbose"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--debug"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Debug mode"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -790,19 +790,19 @@
 <div class="viewcode-block" id="rft_main">
 <a class="viewcode-back" href="../../res2df/res2df/rft/index.html#res2df.rft.rft_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Entry-point for module, for command line utility"""</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.RFT&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".RFT"</span><span class="p">):</span>
         <span class="c1"># Support the RFT file as an argument also:</span>
-        <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.RFT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span><span class="p">)</span>
+        <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".RFT"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span> <span class="o">+</span> <span class="s2">".DATA"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">rft_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">wellname</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">wellname</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">rft_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">wellname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data. Check your well and/or date filter&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"No data. Check your well and/or date filter"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No data found. Bug?&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"No data found. Bug?"</span><span class="p">)</span>
         <span class="k">return</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">rft_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 

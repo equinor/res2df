@@ -81,9 +81,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.equil</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -112,53 +112,53 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">SUPPORTED_KEYWORDS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span> <span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="s2">&quot;PDVD&quot;</span><span class="p">,</span> <span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="s2">&quot;RVVD&quot;</span><span class="p">]</span>
+<span class="n">SUPPORTED_KEYWORDS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"EQUIL"</span><span class="p">,</span> <span class="s2">"PBVD"</span><span class="p">,</span> <span class="s2">"PDVD"</span><span class="p">,</span> <span class="s2">"RSVD"</span><span class="p">,</span> <span class="s2">"RVVD"</span><span class="p">]</span>
 <span class="n">TABLE_RENAMERS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;PBVD&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;PB&quot;</span><span class="p">]},</span>
-    <span class="s2">&quot;PDVD&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;PD&quot;</span><span class="p">]},</span>
-    <span class="s2">&quot;RSVD&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;RS&quot;</span><span class="p">]},</span>
-    <span class="s2">&quot;RVVD&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;RV&quot;</span><span class="p">]},</span>
+    <span class="s2">"PBVD"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"PB"</span><span class="p">]},</span>
+    <span class="s2">"PDVD"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"PD"</span><span class="p">]},</span>
+    <span class="s2">"RSVD"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"RS"</span><span class="p">]},</span>
+    <span class="s2">"RVVD"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"DATA"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"RV"</span><span class="p">]},</span>
 <span class="p">}</span>
 <span class="n">PHASE_RENAMERS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;oil-water-gas&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;INITRS&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;INITRV&quot;</span><span class="p">,</span>
+    <span class="s2">"oil-water-gas"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"DATUM_DEPTH"</span><span class="p">:</span> <span class="s2">"Z"</span><span class="p">,</span>
+        <span class="s2">"DATUM_PRESSURE"</span><span class="p">:</span> <span class="s2">"PRESSURE"</span><span class="p">,</span>
+        <span class="s2">"OWC"</span><span class="p">:</span> <span class="s2">"OWC"</span><span class="p">,</span>
+        <span class="s2">"PC_OWC"</span><span class="p">:</span> <span class="s2">"PCOWC"</span><span class="p">,</span>
+        <span class="s2">"GOC"</span><span class="p">:</span> <span class="s2">"GOC"</span><span class="p">,</span>
+        <span class="s2">"PC_GOC"</span><span class="p">:</span> <span class="s2">"PCGOC"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT"</span><span class="p">:</span> <span class="s2">"INITRS"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT_WG"</span><span class="p">:</span> <span class="s2">"INITRV"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;gas-water&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;GWC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCGWC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+    <span class="s2">"gas-water"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"DATUM_DEPTH"</span><span class="p">:</span> <span class="s2">"Z"</span><span class="p">,</span>
+        <span class="s2">"DATUM_PRESSURE"</span><span class="p">:</span> <span class="s2">"PRESSURE"</span><span class="p">,</span>
+        <span class="s2">"OWC"</span><span class="p">:</span> <span class="s2">"GWC"</span><span class="p">,</span>
+        <span class="s2">"PC_OWC"</span><span class="p">:</span> <span class="s2">"PCGWC"</span><span class="p">,</span>
+        <span class="s2">"GOC"</span><span class="p">:</span> <span class="s2">"IGNORE1"</span><span class="p">,</span>
+        <span class="s2">"PC_GOC"</span><span class="p">:</span> <span class="s2">"IGNORE2"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT"</span><span class="p">:</span> <span class="s2">"IGNORE3"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT_WG"</span><span class="p">:</span> <span class="s2">"IGNORE4"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;oil-water&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+    <span class="s2">"oil-water"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"DATUM_DEPTH"</span><span class="p">:</span> <span class="s2">"Z"</span><span class="p">,</span>
+        <span class="s2">"DATUM_PRESSURE"</span><span class="p">:</span> <span class="s2">"PRESSURE"</span><span class="p">,</span>
+        <span class="s2">"OWC"</span><span class="p">:</span> <span class="s2">"OWC"</span><span class="p">,</span>
+        <span class="s2">"PC_OWC"</span><span class="p">:</span> <span class="s2">"PCOWC"</span><span class="p">,</span>
+        <span class="s2">"GOC"</span><span class="p">:</span> <span class="s2">"IGNORE1"</span><span class="p">,</span>
+        <span class="s2">"PC_GOC"</span><span class="p">:</span> <span class="s2">"IGNORE2"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT"</span><span class="p">:</span> <span class="s2">"IGNORE3"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT_WG"</span><span class="p">:</span> <span class="s2">"IGNORE4"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;oil-gas&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+    <span class="s2">"oil-gas"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"DATUM_DEPTH"</span><span class="p">:</span> <span class="s2">"Z"</span><span class="p">,</span>
+        <span class="s2">"DATUM_PRESSURE"</span><span class="p">:</span> <span class="s2">"PRESSURE"</span><span class="p">,</span>
+        <span class="s2">"OWC"</span><span class="p">:</span> <span class="s2">"IGNORE1"</span><span class="p">,</span>
+        <span class="s2">"PC_OWC"</span><span class="p">:</span> <span class="s2">"IGNORE2"</span><span class="p">,</span>
+        <span class="s2">"GOC"</span><span class="p">:</span> <span class="s2">"GOC"</span><span class="p">,</span>
+        <span class="s2">"PC_GOC"</span><span class="p">:</span> <span class="s2">"PCGOC"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT"</span><span class="p">:</span> <span class="s2">"IGNORE3"</span><span class="p">,</span>
+        <span class="s2">"BLACK_OIL_INIT_WG"</span><span class="p">:</span> <span class="s2">"IGNORE4"</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
@@ -170,7 +170,7 @@
     <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract EQUIL related keyword data, EQUIL, RSVD, RVVD</span>
+<span class="w">    </span><span class="sd">"""Extract EQUIL related keyword data, EQUIL, RSVD, RVVD</span>
 <span class="sd">    PBVD and PDVD.</span>
 
 <span class="sd">    How each data value in the EQUIL records are to be interpreted</span>
@@ -194,19 +194,19 @@
 
 <span class="sd">    Return:</span>
 <span class="sd">        pd.DataFrame, at least with columns KEYWORD and EQLNUM</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">):</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
 
-    <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
-    <span class="n">ntequl</span> <span class="o">=</span> <span class="n">deck</span><span class="p">[</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">DIMS_POS</span><span class="p">[</span><span class="s2">&quot;NTEQUL&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">"EQLDIMS"</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+    <span class="n">ntequl</span> <span class="o">=</span> <span class="n">deck</span><span class="p">[</span><span class="s2">"EQLDIMS"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">DIMS_POS</span><span class="p">[</span><span class="s2">"NTEQUL"</span><span class="p">]]</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">wanted_keywords</span> <span class="o">=</span> <span class="n">handle_wanted_keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
 
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">wanted_keywords</span><span class="p">:</span>
         <span class="c1"># Construct the associated function names</span>
-        <span class="n">function_name</span> <span class="o">=</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_fromdeck&quot;</span>
+        <span class="n">function_name</span> <span class="o">=</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">"_fromdeck"</span>
         <span class="n">function</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">function_name</span><span class="p">]</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="n">ntequl</span><span class="p">)</span>
         <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">KEYWORD</span><span class="o">=</span><span class="n">keyword</span><span class="p">))</span>
@@ -214,12 +214,12 @@
     <span class="k">if</span> <span class="n">nonempty_frames</span><span class="p">:</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">nonempty_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Extracted keywords </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%g</span><span class="s2"> EQLNUMs&quot;</span><span class="p">,</span>
-            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
+            <span class="s2">"Extracted keywords </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%g</span><span class="s2"> EQLNUMs"</span><span class="p">,</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"EQLNUM"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">dframe</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No equil data found&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"No equil data found"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 
@@ -229,17 +229,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">rsvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RSVD data from a :term:`deck`</span>
+<span class="w">    </span><span class="sd">"""Extract RSVD data from a :term:`deck`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
 <span class="sd">        ntequl: Number of EQLNUM regions in :term:`deck`. Will</span>
 <span class="sd">            be inferred if not present in :term:`deck`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"EQLDIMS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">"EQLDIMS"</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">keyworddata_to_df</span><span class="p">(</span>
-        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">&quot;RSVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">"RSVD"</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">"RSVD"</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">"EQLNUM"</span>
     <span class="p">)</span></div>
 
 
@@ -249,17 +249,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">rvvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RVVD data from a :term:`deck`</span>
+<span class="w">    </span><span class="sd">"""Extract RVVD data from a :term:`deck`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
 <span class="sd">        ntequl: Number of EQLNUM regions in :term:`deck`. Will</span>
 <span class="sd">            be inferred if not present in :term:`deck`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"EQLDIMS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">"EQLDIMS"</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">keyworddata_to_df</span><span class="p">(</span>
-        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;RVVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">&quot;RVVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">"RVVD"</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">"RVVD"</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">"EQLNUM"</span>
     <span class="p">)</span></div>
 
 
@@ -269,17 +269,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">pbvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PBVD data from a :term:`deck`</span>
+<span class="w">    </span><span class="sd">"""Extract PBVD data from a :term:`deck`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
 <span class="sd">        ntequl: Number of EQLNUM regions in :term:`deck`. Will</span>
 <span class="sd">            be inferred if not present in :term:`deck`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"EQLDIMS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">"EQLDIMS"</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">keyworddata_to_df</span><span class="p">(</span>
-        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">&quot;PBVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">"PBVD"</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">"PBVD"</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">"EQLNUM"</span>
     <span class="p">)</span></div>
 
 
@@ -289,17 +289,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">pdvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PDVD data from a :term:`deck`</span>
+<span class="w">    </span><span class="sd">"""Extract PDVD data from a :term:`deck`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
 <span class="sd">        ntequl: Number of EQLNUM regions in :term:`deck`. Will</span>
 <span class="sd">            be inferred if not present in :term:`deck`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"EQLDIMS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">"EQLDIMS"</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">keyworddata_to_df</span><span class="p">(</span>
-        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PDVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">&quot;PDVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">"PDVD"</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="s2">"PDVD"</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">"EQLNUM"</span>
     <span class="p">)</span></div>
 
 
@@ -307,35 +307,35 @@
 <div class="viewcode-block" id="phases_from_deck">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.phases_from_deck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determined the set of phases from a :term:`deck`, as</span>
-<span class="sd">    a string with values &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
-<span class="sd">    or &quot;oil-gas&quot;</span>
+<span class="w">    </span><span class="sd">"""Determined the set of phases from a :term:`deck`, as</span>
+<span class="sd">    a string with values "oil-water-gas", "gas-water", "oil-water",</span>
+<span class="sd">    or "oil-gas"</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck: A parsed :term:`deck` or :term:`.DATA file` as a string</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        String with phase configuration. Empty string if inconclusive.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;oil-water-gas&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;gas-water&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;oil-water&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;oil-gas&quot;</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"OIL"</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"GAS"</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"WATER"</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"oil-water-gas"</span>
+    <span class="k">if</span> <span class="s2">"OIL"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"GAS"</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"WATER"</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"gas-water"</span>
+    <span class="k">if</span> <span class="s2">"OIL"</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"GAS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"WATER"</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"oil-water"</span>
+    <span class="k">if</span> <span class="s2">"OIL"</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"GAS"</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">"WATER"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"oil-gas"</span>
+    <span class="k">return</span> <span class="s2">""</span></div>
 
 
 
 <div class="viewcode-block" id="phases_from_columns">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.phases_from_columns">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">phases_from_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="n">Container</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine the set of phases available in an</span>
+<span class="w">    </span><span class="sd">"""Determine the set of phases available in an</span>
 <span class="sd">    equil dataframe, based on which columns are there.</span>
-<span class="sd">    Returns &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
-<span class="sd">    or &quot;oil-gas&quot;</span>
+<span class="sd">    Returns "oil-water-gas", "gas-water", "oil-water",</span>
+<span class="sd">    or "oil-gas"</span>
 
 <span class="sd">    By this, we can pick the correct RENAMER to use.</span>
 
@@ -344,16 +344,16 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        String with phase configuration. Empty string if inconclusive.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;oil-water-gas&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;GWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;gas-water&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;oil-water&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;oil-gas&quot;</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"OWC"</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">"GOC"</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"oil-water-gas"</span>
+    <span class="k">if</span> <span class="s2">"GWC"</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">"OWC"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">"GOC"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"gas-water"</span>
+    <span class="k">if</span> <span class="s2">"OWC"</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">"GOC"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">"GWC"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"oil-water"</span>
+    <span class="k">if</span> <span class="s2">"OWC"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">"GOC"</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">"GWC"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"oil-gas"</span>
+    <span class="k">return</span> <span class="s2">""</span></div>
 
 
 
@@ -362,7 +362,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">equil_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">opm</span><span class="o">.</span><span class="n">opmcommon_python</span><span class="o">.</span><span class="n">Deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract EQUIL data from a :term:`deck`</span>
+<span class="w">    </span><span class="sd">"""Extract EQUIL data from a :term:`deck`</span>
 
 <span class="sd">    If the :term:`deck` is supplied as a string object, the number</span>
 <span class="sd">    of EQLNUM regions will be inferred if needed.</span>
@@ -370,22 +370,22 @@
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
 <span class="sd">        ntequl: Number of EQLNUM regions in :term:`deck`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"EQLDIMS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">"EQLDIMS"</span><span class="p">,</span> <span class="s2">"NTEQUL"</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
 
     <span class="n">phases</span> <span class="o">=</span> <span class="n">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">phases</span> <span class="ow">or</span> <span class="n">phases</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PHASE_RENAMERS</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not determine phase configuration, got &#39;</span><span class="si">{</span><span class="n">phases</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not determine phase configuration, got '</span><span class="si">{</span><span class="n">phases</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
     <span class="n">columnrenamer</span> <span class="o">=</span> <span class="n">PHASE_RENAMERS</span><span class="p">[</span><span class="n">phases</span><span class="p">]</span>
 
     <span class="n">dataframe</span> <span class="o">=</span> <span class="n">keyworddata_to_df</span><span class="p">(</span>
-        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">columnrenamer</span><span class="p">,</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">"EQUIL"</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">columnrenamer</span><span class="p">,</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">"EQLNUM"</span>
     <span class="p">)</span>
 
     <span class="c1"># The column handling can be made prettier..</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;IGNORE&quot;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"IGNORE"</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">dataframe</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">dataframe</span></div>
@@ -395,32 +395,32 @@
 <div class="viewcode-block" id="fill_parser">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.fill_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">"""Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser to</span>
 <span class="sd">            fill with arguments</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the .DATA input file for the reservoir simulator&quot;</span>
+        <span class="s2">"DATAFILE"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name of the .DATA input file for the reservoir simulator"</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s2">"--output"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Name of output csv file. Use &#39;-&#39; for stdout.&quot;</span><span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;equil.csv&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">"Name of output csv file. Use '-' for stdout."</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"equil.csv"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-k&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--keywords&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="s2">"-k"</span><span class="p">,</span>
+        <span class="s2">"--keywords"</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;List of EQUIL/SOLUTION keywords to include. &quot;</span>
-            <span class="s2">&quot;If not supplied, all supported keywords will be included.&quot;</span>
+            <span class="s2">"List of EQUIL/SOLUTION keywords to include. "</span>
+            <span class="s2">"If not supplied, all supported keywords will be included."</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"--verbose"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Be verbose"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -428,39 +428,39 @@
 <div class="viewcode-block" id="fill_reverse_parser">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.fill_reverse_parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; resdata :term:`include file`&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;EQUIL, RSVD++&quot;</span><span class="p">,</span> <span class="s2">&quot;solution.inc&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Fill a parser for the operation dataframe -&gt; resdata :term:`include file`"""</span>
+    <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">"EQUIL, RSVD++"</span><span class="p">,</span> <span class="s2">"solution.inc"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="equil_main">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.equil_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">equil_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Read from disk and write CSV back to disk"""</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">deck</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"EQLDIMS"</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># Things are easier when a full deck with (correct) EQLDIMS</span>
         <span class="c1"># is supplied:</span>
         <span class="n">equil_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># This might be an include file for which we have to infer/guess</span>
         <span class="c1"># EQLDIMS. Then we send it to df() as a string</span>
-        <span class="n">equil_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="n">equil_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="s2">&quot;EQLNUM&quot;</span> <span class="ow">in</span> <span class="n">equil_df</span> <span class="ow">and</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">in</span> <span class="n">equil_df</span><span class="p">:</span>
-        <span class="n">eqlnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="k">if</span> <span class="s2">"EQLNUM"</span> <span class="ow">in</span> <span class="n">equil_df</span> <span class="ow">and</span> <span class="s2">"KEYWORD"</span> <span class="ow">in</span> <span class="n">equil_df</span><span class="p">:</span>
+        <span class="n">eqlnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">"EQLNUM"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">eqlnums</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">eqlnums</span> <span class="o">=</span> <span class="s2">"-"</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="s2">"-"</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
         <span class="n">equil_df</span><span class="p">,</span>
         <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unique EQLNUMs: </span><span class="si">{</span><span class="n">eqlnums</span><span class="si">}</span><span class="s2">, keywords: </span><span class="si">{</span><span class="n">keywords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Unique EQLNUMs: </span><span class="si">{</span><span class="n">eqlnums</span><span class="si">}</span><span class="s2">, keywords: </span><span class="si">{</span><span class="n">keywords</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -468,12 +468,12 @@
 <div class="viewcode-block" id="equil_reverse_main">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.equil_reverse_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">equil_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
+<span class="w">    </span><span class="sd">"""Entry-point for module, for command line utility</span>
 <span class="sd">    for CSV to reservoir simulator :term:`include files &lt;include file&gt;`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">equil_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Parsed </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2res</span><span class="p">(</span><span class="n">equil_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
     <span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
@@ -488,7 +488,7 @@
     <span class="n">withphases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate string contents of :term:`include files &lt;include file&gt;`</span>
+<span class="w">    </span><span class="sd">"""Generate string contents of :term:`include files &lt;include file&gt;`</span>
 <span class="sd">    from dataframes with solution (EQUIL, RSVD++) data.</span>
 
 <span class="sd">    Args:</span>
@@ -496,7 +496,7 @@
 <span class="sd">        keywords: List of keywords to include. Must be</span>
 <span class="sd">            supported and present in the incoming dataframe.</span>
 <span class="sd">        comments: Dictionary indexed by keyword with comments to be</span>
-<span class="sd">            included pr. keyword. If a key named &quot;master&quot; is present</span>
+<span class="sd">            included pr. keyword. If a key named "master" is present</span>
 <span class="sd">            it will be used as a master comment for the outputted file.</span>
 <span class="sd">        withphases: If True, the phase configuration keywords</span>
 <span class="sd">            will be outputted. This is mostly for testing, and should</span>
@@ -504,18 +504,18 @@
 <span class="sd">        filename: If supplied, the generated text will also be dumped</span>
 <span class="sd">            to file.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">if</span> <span class="n">withphases</span><span class="p">:</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
-            <span class="n">phases_from_columns</span><span class="p">(</span><span class="n">equil_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="n">phases_from_columns</span><span class="p">(</span><span class="n">equil_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common_df2res</span><span class="p">(</span>
         <span class="n">equil_df</span><span class="p">,</span>
         <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
         <span class="n">comments</span><span class="o">=</span><span class="n">comments</span><span class="p">,</span>
         <span class="n">supported</span><span class="o">=</span><span class="n">SUPPORTED_KEYWORDS</span><span class="p">,</span>
-        <span class="n">consecutive</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">,</span>
+        <span class="n">consecutive</span><span class="o">=</span><span class="s2">"EQLNUM"</span><span class="p">,</span>
         <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">string</span></div>
@@ -525,30 +525,30 @@
 <div class="viewcode-block" id="df2res_equil">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.df2res_equil">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_equil</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for EQUIL keyword</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for EQUIL keyword</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing EQUIL data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;EQUIL</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="s2">"-- No data!"</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">"EQUIL</span><span class="se">\n</span><span class="s2">"</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="c1"># Use everything if KEYWORD not in dframe..</span>
-    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;EQUIL&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">"KEYWORD"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"EQUIL"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"EQLNUM"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If EQLNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">"If EQLNUM is not supplied, only one row should be given"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">""</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">"EQLNUM"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"EQLNUM"</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 
     <span class="n">phases</span> <span class="o">=</span> <span class="n">phases_from_columns</span><span class="p">(</span><span class="n">subset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">generic_deck_table</span><span class="p">(</span>
         <span class="n">subset</span><span class="p">,</span>
-        <span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span>
+        <span class="s2">"EQUIL"</span><span class="p">,</span>
         <span class="n">renamer</span><span class="o">=</span><span class="n">PHASE_RENAMERS</span><span class="p">[</span><span class="n">phases</span><span class="p">],</span>
         <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">,</span>
         <span class="n">drop_trailing_columns</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -559,7 +559,7 @@
 <div class="viewcode-block" id="df2res_rsvd">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.df2res_rsvd">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_rsvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for RSVD keyword</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for RSVD keyword</span>
 
 <span class="sd">    This data consists of one table (rs as a function</span>
 <span class="sd">    of depth) for each EQLNUM</span>
@@ -567,15 +567,15 @@
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing RSVD data</span>
 <span class="sd">        comment Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">"RSVD"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_rvvd">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.df2res_rvvd">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_rvvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for RVVD keyword</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for RVVD keyword</span>
 
 <span class="sd">    This data consists of one table (rv as a function</span>
 <span class="sd">    of depth) for each EQLNUM</span>
@@ -583,15 +583,15 @@
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing RVVD data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RVVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">"RVVD"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_pbvd">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.df2res_pbvd">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_pbvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PBVD keyword</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for PBVD keyword</span>
 
 <span class="sd">    Bubble-point versus depth</span>
 
@@ -601,15 +601,15 @@
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing PBVD data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">"PBVD"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="df2res_pdvd">
 <a class="viewcode-back" href="../../res2df/res2df/equil/index.html#res2df.equil.df2res_pdvd">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res_pdvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PDVD keyword.</span>
+<span class="w">    </span><span class="sd">"""Create string with :term:`include file` contents for PDVD keyword.</span>
 
 <span class="sd">    Dew-point versus depth.</span>
 
@@ -619,27 +619,27 @@
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing PDVD data</span>
 <span class="sd">        comment: Text that will be included as a comment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;PDVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">"PDVD"</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_df2res_equilfuncs</span><span class="p">(</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal function to be used by df2res_&lt;keyword&gt;() functions&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Internal function to be used by df2res_&lt;keyword&gt;() functions"""</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="s2">"-- No data!"</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
-    <span class="n">col_headers</span> <span class="o">=</span> <span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">&quot;DATA&quot;</span><span class="p">]</span>
+    <span class="n">col_headers</span> <span class="o">=</span> <span class="n">TABLE_RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">"DATA"</span><span class="p">]</span>
 
-    <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;DEPTH&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"--   </span><span class="si">{</span><span class="s1">'DEPTH'</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">"</span>
     <span class="c1"># Use everything if KEYWORD not in dframe..</span>
-    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">"KEYWORD"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_df2res_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
+<span class="w">        </span><span class="sd">"""Create string with :term:`include file` contents</span>
 <span class="sd">        for one equilibriation function table for a specific EQLNUM</span>
 
 <span class="sd">        Args:</span>
@@ -647,18 +647,18 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            string</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"Z"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">"/</span><span class="se">\n</span><span class="s2">"</span>
 
-    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"EQLNUM"</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">eqlnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;-- EQLNUM: </span><span class="si">{</span><span class="n">eqlnum</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"-- EQLNUM: </span><span class="si">{</span><span class="n">eqlnum</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="n">_df2res_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">eqlnum</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
 </pre></div>
 
            </div>

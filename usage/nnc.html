@@ -113,7 +113,7 @@ non-neigbour connections.</p>
 Run in serial to get this output.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">'MYDATADECK.DATA'</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">nnc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -270,11 +270,11 @@ transmissibility multipliers in a new column <code class="docutils literal notra
 to an <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file:</span></a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2f</span><span class="w"> </span><span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">"MYDATADECK.DATA"</span><span class="p">)</span>
 <span class="n">nnc_df</span> <span class="o">=</span> <span class="n">nnc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
-<span class="n">nnc_df</span><span class="p">[</span><span class="s2">&quot;TRANM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Reduce all NNC transmissibilities</span>
+<span class="n">nnc_df</span><span class="p">[</span><span class="s2">"TRANM"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Reduce all NNC transmissibilities</span>
 
-<span class="n">nnc</span><span class="o">.</span><span class="n">df2res_editnnc</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;editnnc.inc&quot;</span><span class="p">)</span>
+<span class="n">nnc</span><span class="o">.</span><span class="n">df2res_editnnc</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"editnnc.inc"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>and the contents of the exported file can be:</p>

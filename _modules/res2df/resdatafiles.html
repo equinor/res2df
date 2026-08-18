@@ -81,7 +81,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.resdatafiles</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Module to hold simulator input and output filenames&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Module to hold simulator input and output filenames"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">errno</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -101,24 +101,24 @@
 
 <span class="c1"># Default parse option to opm.io for a very permissive parsing</span>
 <span class="n">OPMIOPARSER_RECOVERY</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_DATA&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_RECORDS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_INVALID_KEYWORD_COMBINATION&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_DIMS_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_SLASH&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_UNKNOWN_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;SUMMARY_UNKNOWN_GROUP&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;UNSUPPORTED_*&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_EXTRA_DATA"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_EXTRA_RECORDS"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_INVALID_KEYWORD_COMBINATION"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_MISSING_DIMS_KEYWORD"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_MISSING_INCLUDE"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_MISSING_SECTIONS"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_RANDOM_SLASH"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_RANDOM_TEXT"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"PARSE_UNKNOWN_KEYWORD"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"SUMMARY_UNKNOWN_GROUP"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"UNSUPPORTED_*"</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
 <span class="p">]</span>
 
 
 <div class="viewcode-block" id="ResdataFiles">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResdataFiles</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Class for holding reservoir simulator :term:`output files &lt;output file&gt;`</span>
 
 <span class="sd">    Exists only for convenience, so that loading of</span>
@@ -128,21 +128,21 @@
 <span class="sd">    Various functions that needs some of the simulator :term:`output &lt;output file&gt;`</span>
 <span class="sd">    (or :term:`include file`) should be able to ask this class, and</span>
 <span class="sd">    it should be loaded or served from cache.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># eclbase might be a a Posix path object</span>
         <span class="n">eclbase</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span>
 
         <span class="c1"># Hint about possible wrong filenames:</span>
-        <span class="k">if</span> <span class="s2">&quot;.DATA&quot;</span> <span class="ow">in</span> <span class="n">eclbase</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> does not exist&quot;</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">".DATA"</span> <span class="ow">in</span> <span class="n">eclbase</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"File </span><span class="si">%s</span><span class="s2"> does not exist"</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
             <span class="c1"># (this is not an error, because it is possible</span>
             <span class="c1"># to obtain summary without the .DATA file being present)</span>
 
         <span class="c1"># Strip .DATA or . at end of eclbase:</span>
-        <span class="n">eclbase</span> <span class="o">=</span> <span class="n">rreplace</span><span class="p">(</span><span class="s2">&quot;.DATA&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
-        <span class="n">eclbase</span> <span class="o">=</span> <span class="n">rreplace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
+        <span class="n">eclbase</span> <span class="o">=</span> <span class="n">rreplace</span><span class="p">(</span><span class="s2">".DATA"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
+        <span class="n">eclbase</span> <span class="o">=</span> <span class="n">rreplace</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">=</span> <span class="n">eclbase</span>
 
         <span class="c1"># Set class variables to None</span>
@@ -160,20 +160,20 @@
 <div class="viewcode-block" id="ResdataFiles.get_path">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_path">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the full path to the directory with the .DATA file&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return the full path to the directory with the .DATA file"""</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span></div>
 
 
 <div class="viewcode-block" id="ResdataFiles.get_deck">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_deck">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_deck</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.opmcommon_python.Deck&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a opm.io :term:`deck` of the .DATA file&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_deck</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"opm.opmcommon_python.Deck"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a opm.io :term:`deck` of the .DATA file"""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-                <span class="n">deckfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span>
+            <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".DATA"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="n">deckfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".DATA"</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">deckfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span>  <span class="c1"># Will be any filename</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing deck file </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">deckfile</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Parsing deck file </span><span class="si">%s</span><span class="s2">..."</span><span class="p">,</span> <span class="n">deckfile</span><span class="p">)</span>
             <span class="n">parsecontext</span> <span class="o">=</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ParseContext</span><span class="p">(</span><span class="n">OPMIOPARSER_RECOVERY</span><span class="p">)</span>
             <span class="n">deck</span> <span class="o">=</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">Parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">deckfile</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span> <span class="o">=</span> <span class="n">deck</span>
@@ -185,9 +185,9 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">str2deck</span><span class="p">(</span>
         <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.opmcommon_python.Deck&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Produce a opm.io :term:`deck` from a string, using permissive</span>
-<span class="sd">        parsing by default&quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"opm.opmcommon_python.Deck"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Produce a opm.io :term:`deck` from a string, using permissive</span>
+<span class="sd">        parsing by default"""</span>
         <span class="k">if</span> <span class="n">parsecontext</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">parsecontext</span> <span class="o">=</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ParseContext</span><span class="p">(</span><span class="n">OPMIOPARSER_RECOVERY</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">Parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">)</span></div>
@@ -196,22 +196,22 @@
 <div class="viewcode-block" id="ResdataFiles.file2deck">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.file2deck">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.opmcommon_python.Deck&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Try to convert standalone files into opm.io Deck objects&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ResdataFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"opm.opmcommon_python.Deck"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Try to convert standalone files into opm.io Deck objects"""</span>
+        <span class="k">return</span> <span class="n">ResdataFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ResdataFiles.get_egrid">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_egrid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return EGRID file as a Grid object&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Find and return EGRID file as a Grid object"""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span><span class="p">:</span>
-            <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.EGRID&quot;</span>
+            <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".EGRID"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">egridfilename</span>
                 <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening grid data from EGRID file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Opening grid data from EGRID file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span></div>
 
@@ -219,16 +219,16 @@
 <div class="viewcode-block" id="ResdataFiles.get_egridfile">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_egridfile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the EGRID file as a ResdataFile object</span>
+<span class="w">        </span><span class="sd">"""Find and return the EGRID file as a ResdataFile object</span>
 
-<span class="sd">        This gives access to data vectors defined on the grid.&quot;&quot;&quot;</span>
+<span class="sd">        This gives access to data vectors defined on the grid."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span><span class="p">:</span>
-            <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.EGRID&quot;</span>
+            <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".EGRID"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">egridfilename</span>
                 <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening data vectors from EGRID file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Opening data vectors from EGRID file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span></div>
@@ -237,20 +237,20 @@
 <div class="viewcode-block" id="ResdataFiles.get_summary">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_summary">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the summary file and</span>
+<span class="w">        </span><span class="sd">"""Find and return the summary file and</span>
 <span class="sd">        return as Summary object</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            include_restart: Sent to resdata for whether restart files</span>
 <span class="sd">                should be traversed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_summary</span><span class="p">:</span>
-            <span class="n">smryfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNSMRY&quot;</span>
+            <span class="n">smryfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".UNSMRY"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">smryfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">smryfilename</span>
                 <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening UNSMRY file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">smryfilename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Opening UNSMRY file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">smryfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_summary</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="n">smryfilename</span><span class="p">,</span> <span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_summary</span></div>
 
@@ -258,14 +258,14 @@
 <div class="viewcode-block" id="ResdataFiles.get_initfile">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_initfile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_initfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the INIT file as a ResdataFile object&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Find and return the INIT file as a ResdataFile object"""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span><span class="p">:</span>
-            <span class="n">initfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.INIT&quot;</span>
+            <span class="n">initfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".INIT"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">initfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">initfilename</span>
                 <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening INIT file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">initfilename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Opening INIT file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">initfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">initfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span></div>
 
@@ -273,14 +273,14 @@
 <div class="viewcode-block" id="ResdataFiles.get_rftfile">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_rftfile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_rftfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the RFT file as a ResdataFile object&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Find and return the RFT file as a ResdataFile object"""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span><span class="p">:</span>
-            <span class="n">rftfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.RFT&quot;</span>
+            <span class="n">rftfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".RFT"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">rftfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">rftfilename</span>
                 <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening RFT file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rftfilename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Opening RFT file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">rftfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">rftfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span></div>
 
@@ -288,14 +288,14 @@
 <div class="viewcode-block" id="ResdataFiles.get_rstfile">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_rstfile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_rstfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the UNRST file as a ResdataFile object&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Find and return the UNRST file as a ResdataFile object"""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span><span class="p">:</span>
-            <span class="n">rstfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNRST&quot;</span>
+            <span class="n">rstfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".UNRST"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">rstfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">rstfilename</span>
                 <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening RST file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rstfilename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Opening RST file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">rstfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">rstfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span></div>
 
@@ -303,23 +303,23 @@
 <div class="viewcode-block" id="ResdataFiles.get_rstfilename">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_rstfilename">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_rstfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the inferred name of the UNRST file&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNRST&quot;</span></div>
+<span class="w">        </span><span class="sd">"""Return the inferred name of the UNRST file"""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".UNRST"</span></div>
 
 
 <div class="viewcode-block" id="ResdataFiles.get_prtfilename">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_prtfilename">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_prtfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the inferred name of the PRT file&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.PRT&quot;</span></div>
+<span class="w">        </span><span class="sd">"""Return the inferred name of the PRT file"""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">".PRT"</span></div>
 
 
 <div class="viewcode-block" id="ResdataFiles.close">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.close">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close any opened files. Most files are opened though ResData with</span>
+<span class="w">        </span><span class="sd">"""Close any opened files. Most files are opened though ResData with</span>
 <span class="sd">        an option to close the stream as possible, leaving not much work</span>
-<span class="sd">        for this function.&quot;&quot;&quot;</span>
+<span class="sd">        for this function."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># This is necessary for garbage collection to close the Summary file:</span>
@@ -331,14 +331,14 @@
 <div class="viewcode-block" id="ResdataFiles.get_zonemap">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.ResdataFiles.get_zonemap">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_zonemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a dictionary from (int) K layers in the simgrid to strings</span>
+<span class="w">        </span><span class="sd">"""Return a dictionary from (int) K layers in the simgrid to strings</span>
 
 <span class="sd">        Typical usage is to map from grid layer to zone names.</span>
 
 <span class="sd">        The layer filename must currently follow format::</span>
 
-<span class="sd">          &#39;ZoneA&#39; 1-4</span>
-<span class="sd">          &#39;ZoneB&#39; 5-10</span>
+<span class="sd">          'ZoneA' 1-4</span>
+<span class="sd">          'ZoneB' 5-10</span>
 
 <span class="sd">        where the single quotes are optional for zones without spaces.</span>
 <span class="sd">        Write single layer zones as 11-11. NB: ResInsight requires single</span>
@@ -352,10 +352,10 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            dict, integer keys which are the K layers. Every layer mentioned</span>
 <span class="sd">                in the interval in the input file is present. Can be empty.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
             <span class="n">filename_defaulted</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;zones.lyr&quot;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">"zones.lyr"</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">filename_defaulted</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
@@ -367,7 +367,7 @@
             <span class="k">if</span> <span class="n">filename_defaulted</span><span class="p">:</span>
                 <span class="c1"># No warnings when the default filename is not there.</span>
                 <span class="k">return</span> <span class="p">{}</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Zonefile </span><span class="si">%s</span><span class="s2"> not found, ignoring&quot;</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Zonefile </span><span class="si">%s</span><span class="s2"> not found, ignoring"</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">{}</span>
         <span class="n">lyrlist</span> <span class="o">=</span> <span class="n">parse_lyrfile</span><span class="p">(</span><span class="n">fullpath</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span></div>
@@ -378,7 +378,7 @@
 <div class="viewcode-block" id="rreplace">
 <a class="viewcode-back" href="../../res2df/res2df/resdatafiles/index.html#res2df.resdatafiles.rreplace">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rreplace</span><span class="p">(</span><span class="n">pat</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variant of str.replace() that only replaces at the end of the string&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Variant of str.replace() that only replaces at the end of the string"""</span>
     <span class="k">return</span> <span class="n">string</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">pat</span><span class="p">)]</span> <span class="o">+</span> <span class="n">sub</span> <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">pat</span><span class="p">)</span> <span class="k">else</span> <span class="n">string</span></div>
 
 </pre></div>

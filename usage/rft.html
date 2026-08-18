@@ -125,13 +125,13 @@ processed well.</p>
 <p>In order to get RFT files emitted from Eclipse, you need the <code class="docutils literal notranslate"><span class="pre">WRFTPLT</span></code> keyword
 in your <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>, example:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">WRFTPLT</span>
-<span class="go">  &#39;*&#39; &#39;REPT&#39; &#39;REPT&#39; &#39;REPT&#39; /</span>
+<span class="go">  '*' 'REPT' 'REPT' 'REPT' /</span>
 <span class="go">/</span>
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">*</span></code> will match all wells defined up to this point.</p>
 <p>From RMS11, you can insert</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">YYYY-MM-DD IORFT NAME=&#39;*&#39; PLTFREQ=&#39;Yes&#39; RFTFREQ=&#39;Yes&#39; SEGFREQ=&#39;Yes&#39;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">YYYY-MM-DD IORFT NAME='*' PLTFREQ='Yes' RFTFREQ='Yes' SEGFREQ='Yes'</span>
 </pre></div>
 </div>
 <p>into your events files to obtain the same (input a date in your

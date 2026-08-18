@@ -112,7 +112,7 @@ the <a class="reference internal" href="../glossary.html#term-.DATA-file"><span 
 <code class="docutils literal notranslate"><span class="pre">PDVD</span></code>. Typical usage is</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">equil</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">equil</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDECK.DATA&#39;</span><span class="p">))</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">equil</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">'MYDECK.DATA'</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Which will provide a dataframe similar to the example below. Note that the column
@@ -189,14 +189,14 @@ operations.</p>
 <h2>Transforming data<a class="headerlink" href="#transforming-data" title="Link to this heading"></a></h2>
 <p>Shifting all oil-water contacts down by one meter could for example
 be accomplished by the operation</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;OWC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;OWC&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span><span class="p">[</span><span class="s2">"OWC"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"OWC"</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>This statement will not interfere with the <code class="docutils literal notranslate"><span class="pre">RSVD</span></code> lines, as they are NaN for
 this column. But still, you might want to push your <cite>Rs</cite> initialization down
 one meter for compatibility, which you could do by the statements:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rsvd_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RSVD&quot;</span>
-<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rsvd_rows</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rsvd_rows</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rsvd_rows</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">"KEYWORD"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"RSVD"</span>
+<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rsvd_rows</span><span class="p">,</span> <span class="s2">"Z"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rsvd_rows</span><span class="p">,</span> <span class="s2">"Z"</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
 </pre></div>
 </div>
 </section>
@@ -205,7 +205,7 @@ one meter for compatibility, which you could do by the statements:</p>
 <p>When you are done with the table, you can generate new
 <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a> from your modified
 data by issuing</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">equil</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;solution.inc&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">equil</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"solution.inc"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The last step can also be done using the <code class="docutils literal notranslate"><span class="pre">csv2res</span></code> command line utility

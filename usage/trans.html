@@ -114,7 +114,7 @@ from a simulation grid.</p>
 connections</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">"MYDATADECK.DATA"</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -237,7 +237,7 @@ where this region parameter <em>changes</em>, which implies the connection is ov
 a region boundary. This is accomplished by providing a vector to include, and the
 option <code class="docutils literal notranslate"><span class="pre">boundaryfilter</span></code>. It is recommmended to include NNC in applications
 like this. Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">"FIPNUM"</span><span class="p">,</span> <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>which gives the dataframe</p>
@@ -381,8 +381,8 @@ over a region interface. This is accomplished by adding the <code class="docutil
 <code class="docutils literal notranslate"><span class="pre">boundaryfilter=True</span></code>). NNC is not required, but recommended.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">"MYDATADECK.DATA"</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">"FIPNUM"</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id3">

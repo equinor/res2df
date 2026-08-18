@@ -81,8 +81,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for res2df.parameters</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Support module for extra files with key-value information</span>
-<span class="sd">related to simulator runs&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Support module for extra files with key-value information</span>
+<span class="sd">related to simulator runs"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -101,9 +101,9 @@
 <div class="viewcode-block" id="find_parameter_files">
 <a class="viewcode-back" href="../../res2df/res2df/parameters/index.html#res2df.parameters.find_parameter_files">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_parameter_files</span><span class="p">(</span>
-    <span class="n">deckpath</span><span class="p">:</span> <span class="n">ResdataFiles</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">filebase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;parameters&quot;</span>
+    <span class="n">deckpath</span><span class="p">:</span> <span class="n">ResdataFiles</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">filebase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"parameters"</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate a default prioritized list of files to try to read as key-value</span>
+<span class="w">    </span><span class="sd">"""Locate a default prioritized list of files to try to read as key-value</span>
 
 <span class="sd">    File extensions .yml, .json and .txt are recognized and will be found in</span>
 <span class="sd">    current dir, one directory up, and two directories up.</span>
@@ -117,7 +117,7 @@
 
 <span class="sd">    Return:</span>
 <span class="sd">        Absolute paths to filenames. Empty list if nothing found</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">eclbasepath</span><span class="p">:</span> <span class="n">Path</span>
     <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deckpath</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">):</span>
@@ -127,12 +127,12 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span>
     <span class="n">files_to_lookfor</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">filebase</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span>
-        <span class="n">filebase</span> <span class="o">+</span> <span class="s2">&quot;.yml&quot;</span><span class="p">,</span>
-        <span class="n">filebase</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span>
+        <span class="n">filebase</span> <span class="o">+</span> <span class="s2">".json"</span><span class="p">,</span>
+        <span class="n">filebase</span> <span class="o">+</span> <span class="s2">".yml"</span><span class="p">,</span>
+        <span class="n">filebase</span> <span class="o">+</span> <span class="s2">".txt"</span><span class="p">,</span>
         <span class="n">filebase</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="n">paths_to_check</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(),</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)]</span>
+    <span class="n">paths_to_check</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(),</span> <span class="n">Path</span><span class="p">(</span><span class="s2">".."</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="s2">".."</span><span class="p">)</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s2">".."</span><span class="p">)]</span>
     <span class="n">foundfiles</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths_to_check</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">files_to_lookfor</span><span class="p">:</span>
@@ -146,33 +146,33 @@
 <div class="viewcode-block" id="load_parameterstxt">
 <a class="viewcode-back" href="../../res2df/res2df/parameters/index.html#res2df.parameters.load_parameterstxt">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_parameterstxt</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read parameters.txt into a dictionary</span>
+<span class="w">    </span><span class="sd">"""Read parameters.txt into a dictionary</span>
 
 <span class="sd">    Lines starting with a hash will be ignored.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename: file containing one key-value pair pr. line,</span>
 <span class="sd">            separated by whitespace</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="c1"># From pandas 1.4, too many columns result in a ParserWarning for dropped</span>
         <span class="c1"># data. This is risky, and therefore catching the warning and raising a</span>
         <span class="c1"># ParserError instead.</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"error"</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
                 <span class="n">filename</span><span class="p">,</span>
-                <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span>
-                <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\s&quot;</span><span class="p">,</span>
-                <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
-                <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">],</span>
+                <span class="n">comment</span><span class="o">=</span><span class="s2">"#"</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s2">"\s"</span><span class="p">,</span>
+                <span class="n">engine</span><span class="o">=</span><span class="s2">"python"</span><span class="p">,</span>
+                <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"KEY"</span><span class="p">,</span> <span class="s2">"VALUE"</span><span class="p">],</span>
                 <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;KEY&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">},</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">"KEY"</span><span class="p">:</span> <span class="nb">str</span><span class="p">},</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserWarning</span> <span class="k">as</span> <span class="n">txt_exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserError</span><span class="p">(</span><span class="n">txt_exc</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">txt_exc</span>
 
-    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;KEY&quot;</span><span class="p">)[</span><span class="s2">&quot;VALUE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"KEY"</span><span class="p">)[</span><span class="s2">"VALUE"</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
 
 
@@ -181,7 +181,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">load_all</span><span class="p">(</span>
     <span class="n">filenames</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">warnduplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads a list of parameter filenames</span>
+<span class="w">    </span><span class="sd">"""Reads a list of parameter filenames</span>
 
 <span class="sd">    Dictionaries for all files will be merged into one.</span>
 
@@ -192,14 +192,14 @@
 <span class="sd">    Args:</span>
 <span class="sd">        filenames: Order matters.</span>
 <span class="sd">        warnduplicates: If True (default), overlapping keys will be warned.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">keyvalues</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
         <span class="n">new_params</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">warnduplicates</span> <span class="ow">and</span> <span class="n">keyvalues</span><span class="p">:</span>
             <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keyvalues</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_params</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
             <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Duplicates keys </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">duplicates</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Duplicates keys </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">duplicates</span><span class="p">)</span>
         <span class="n">new_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">)</span>
         <span class="n">keyvalues</span> <span class="o">=</span> <span class="n">new_params</span>
     <span class="k">return</span> <span class="n">keyvalues</span></div>
@@ -209,66 +209,66 @@
 <div class="viewcode-block" id="load">
 <a class="viewcode-back" href="../../res2df/res2df/parameters/index.html#res2df.parameters.load">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a parameter file as txt, yaml or json</span>
+<span class="w">    </span><span class="sd">"""Read a parameter file as txt, yaml or json</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        dict() with parameter names as keys. Empty dictionary if</span>
 <span class="sd">            no parameters in the file.</span>
 
 <span class="sd">    Raises ValueError or IOError if no files are readable</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not found&quot;</span><span class="p">)</span>
-    <span class="n">file_content</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" not found"</span><span class="p">)</span>
+    <span class="n">file_content</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">file_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was empty&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> was empty"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{}</span>
 
-    <span class="n">yaml_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">yaml_error</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with yaml.safe_load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Trying to parse </span><span class="si">%s</span><span class="s2"> with yaml.safe_load()"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="n">params_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">file_content</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">" - ok, parsed as yaml"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="c1"># yaml happily parses txt files into a single line, don&#39;t want that.</span>
+            <span class="c1"># yaml happily parses txt files into a single line, don't want that.</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">yaml_exc</span><span class="p">:</span>
         <span class="n">yaml_error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">yaml_exc</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with yaml, trying json.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> was not parseable with yaml, trying json."</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
-    <span class="n">json_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">json_error</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">if</span> <span class="n">params_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with json.load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Trying to parse </span><span class="si">%s</span><span class="s2"> with json.load()"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">file_content</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as json&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">" - ok, parsed as json"</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">json_exc</span><span class="p">:</span>
             <span class="n">json_error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">json_exc</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with json, trying txt.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> was not parseable with json, trying txt."</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
-    <span class="n">txt_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">txt_error</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">if</span> <span class="n">params_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> as txt with pd.read_csv()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Trying to parse </span><span class="si">%s</span><span class="s2"> as txt with pd.read_csv()"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">load_parameterstxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as txt&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">" - ok, parsed as txt"</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">txt_exc</span><span class="p">:</span>
             <span class="n">txt_error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt_exc</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable as txt, no more options&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> was not parseable as txt, no more options"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">params_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> could not be parsed as yaml, json or txt&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">yaml_error</span><span class="p">,</span> <span class="n">json_error</span><span class="p">,</span> <span class="n">txt_error</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not parse </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> could not be parsed as yaml, json or txt"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"</span><span class="si">%s%s%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">yaml_error</span><span class="p">,</span> <span class="n">json_error</span><span class="p">,</span> <span class="n">txt_error</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not parse </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="c1"># Filter to values that are NOT dict&#39;s. We can have dict as value when</span>
-    <span class="c1"># &quot;grouped&quot; keys are present in the json files, both as &quot;group:key value&quot;</span>
+    <span class="c1"># Filter to values that are NOT dict's. We can have dict as value when</span>
+    <span class="c1"># "grouped" keys are present in the json files, both as "group:key value"</span>
     <span class="c1"># and in a dict called group</span>
     <span class="n">params_dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">key</span><span class="p">:</span> <span class="n">value</span>

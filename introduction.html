@@ -125,7 +125,7 @@ view the CSV data.</p>
 <h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; res2csv --help</span>
 <span class="go">&gt; res2csv summary --help</span>
-<span class="go">&gt; res2csv summary --column_keys &quot;F*&quot; --time_index monthly --output output.csv MYDECK.DATA</span>
+<span class="go">&gt; res2csv summary --column_keys "F*" --time_index monthly --output output.csv MYDECK.DATA</span>
 <span class="go">&gt; res2csv pillars --help</span>
 <span class="go">&gt; res2csv pillars --rstdates all MYDECK.DATA</span>
 </pre></div>
@@ -136,9 +136,9 @@ functionality as through <code class="docutils literal notranslate"><span class=
 a Pandas Dataframe.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">res2df</span>
 
-<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">smry</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">&quot;F*&quot;</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">&quot;monthly&quot;</span><span class="p">)</span>
-<span class="n">hc_contacts</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">pillars</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">"MYDECK.DATA"</span><span class="p">)</span>
+<span class="n">smry</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">"F*"</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">"monthly"</span><span class="p">)</span>
+<span class="n">hc_contacts</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">pillars</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s2">"all"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>See the API for more documentation and possibilities for each module.</p>
@@ -273,8 +273,8 @@ have to be merged with pandas.merge().</p>
 <p>If a text file with zone names are found alongside <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a>,
 some of the modules will add that information to rows where appropriate.
 The zone or layer file should contains lines like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;ZoneA&#39;</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
-<span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">'ZoneA'</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
+<span class="s1">'ZoneB'</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
 </pre></div>
 </div>
 <p>The default filename looked for is <code class="docutils literal notranslate"><span class="pre">zones.lyr</span></code>.</p>

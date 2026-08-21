@@ -38,4 +38,4 @@ available. For correct rates, you must use the raw time index for get_smry(),
 anything else will only give you an approximation. Also, you can not assume that
 summing the rates at every point in time corresponds to the associated
 cumulative summary vectors, e.g. FOPT, as there are multiple features into play
-here with efficienty factors etc.
+here with efficiency factors etc.

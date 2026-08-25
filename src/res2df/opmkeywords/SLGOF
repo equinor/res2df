@@ -11,7 +11,8 @@
     "GAS"
   ],
   "prohibits": [
-    "SGOF"
+    "SGOF",
+    "GSF"
   ],
   "items": [
     {

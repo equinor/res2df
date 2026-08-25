@@ -12,7 +12,8 @@
     "OIL"
   ],
   "prohibits": [
-    "SLGOF"
+    "SLGOF",
+    "GSF"
   ],
   "items": [
     {

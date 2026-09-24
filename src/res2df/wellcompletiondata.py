@@ -198,9 +198,6 @@ def _merge_compdat_and_connstatus(
     wellconnstatus_df = wellconnstatus_df.rename(columns={"K": "K1"}).copy()
     compdat_df = compdat_df.copy()
 
-    wellconnstatus_df["DATE"] = pd.to_datetime(wellconnstatus_df["DATE"])
-    compdat_df["DATE"] = pd.to_datetime(compdat_df["DATE"])
-
     dframe = wellconnstatus_df.merge(
         compdat_df[[*match_on, "KH", "ZONE"]],
         on=match_on,

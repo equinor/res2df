@@ -26,6 +26,15 @@ def test_eightcells_with_wellconnstatus():
     option activated (connection status extracted from summary data)
     """
     resdatafiles = ResdataFiles(EIGHTCELLS)
+
+    result = wellcompletiondata.df(
+        resdatafiles,
+        zonemap=EIGHTCELLS_ZONEMAP,
+        use_wellconnstatus=True,
+    )
+
+    # DATE is 2000-01-02, not 2000-01-01 as in the compdat-only case,
+    # because connection status dates come from summary data.
     expected_dframe = pd.DataFrame(
         [
             {
@@ -37,10 +46,9 @@ def test_eightcells_with_wellconnstatus():
             }
         ]
     )
+
     pd.testing.assert_frame_equal(
-        wellcompletiondata.df(
-            resdatafiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=True
-        ),
+        result,
         expected_dframe,
         check_dtype=False,
     )
@@ -301,3 +309,48 @@ def test_excl_well_startswith():
         expected_df,
         check_like=True,
     )
+
+
+def test_merge_compdat_and_connstatus_without_missing_wells():
+    """Merge when every compdat well is present in the connection status data
+    (i.e. there are no compdat-only wells to append)."""
+    df_compdat = pd.DataFrame(
+        {
+            "DATE": pd.to_datetime(["2021-01-01"]),
+            "WELL": ["A1"],
+            "I": [1],
+            "J": [1],
+            "K1": [1],
+            "OP/SH": ["OPEN"],
+            "KH": [100.0],
+            "ZONE": ["ZONE1"],
+        }
+    )
+
+    df_connstatus = pd.DataFrame(
+        {
+            "DATE": pd.to_datetime(["2021-03-01"]),
+            "WELL": ["A1"],
+            "I": [1],
+            "J": [1],
+            "K1": [1],
+            "OP/SH": ["OPEN"],
+        }
+    )
+
+    result = _merge_compdat_and_connstatus(df_compdat, df_connstatus)
+
+    expected = pd.DataFrame(
+        {
+            "DATE": pd.to_datetime(["2021-03-01"]),
+            "WELL": ["A1"],
+            "I": [1],
+            "J": [1],
+            "K1": [1],
+            "OP/SH": ["OPEN"],
+            "KH": [100.0],
+            "ZONE": ["ZONE1"],
+        }
+    )
+
+    pd.testing.assert_frame_equal(result, expected)

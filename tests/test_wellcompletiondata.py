@@ -354,3 +354,49 @@ def test_merge_compdat_and_connstatus_without_missing_wells():
     )
 
     pd.testing.assert_frame_equal(result, expected)
+
+
+def test_merge_compdat_and_connstatus_out_of_bounds_date():
+    """Dates beyond the pandas datetime64[ns] range (year > 2262) must survive the
+    merge without raising.
+
+    summary.df (and therefore wellconnstatus.df) preserves such dates as Python
+    datetime objects because pandas <3 cannot represent them as datetime64[ns].
+    _merge_compdat_and_connstatus must therefore not call pd.to_datetime on the
+    DATE column, or it would raise OutOfBoundsDatetime on valid input.
+    """
+    far_future = datetime(year=2300, month=1, day=1)
+
+    # object dtype holding a Python datetime, mirroring summary.df's out-of-bounds
+    # handling. Note: we intentionally do NOT use pd.to_datetime here.
+    df_compdat = pd.DataFrame(
+        {
+            "DATE": pd.Series([far_future], dtype=object),
+            "WELL": ["A1"],
+            "I": [1],
+            "J": [1],
+            "K1": [1],
+            "OP/SH": ["OPEN"],
+            "KH": [100.0],
+            "ZONE": ["ZONE1"],
+        }
+    )
+    df_connstatus = pd.DataFrame(
+        {
+            "DATE": pd.Series([far_future], dtype=object),
+            "WELL": ["A1"],
+            "I": [1],
+            "J": [1],
+            "K1": [1],
+            "OP/SH": ["OPEN"],
+        }
+    )
+
+    # Must not raise OutOfBoundsDatetime
+    result = _merge_compdat_and_connstatus(df_compdat, df_connstatus)
+
+    # The far-future date is preserved unchanged
+    assert result["DATE"].iloc[0] == far_future
+    # And the KH is merged in from compdat
+    assert result["KH"].iloc[0] == 100.0
+    assert list(result["WELL"]) == ["A1"]

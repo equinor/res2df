@@ -194,7 +194,9 @@ def _merge_compdat_and_connstatus(
         pd.DataFrame with one row per unique combination of well, zone and date.
     """
     match_on = ["WELL", "I", "J", "K1"]
-    wellconnstatus_df = wellconnstatus_df.rename({"K": "K1"}, axis=1)
+
+    wellconnstatus_df = wellconnstatus_df.rename(columns={"K": "K1"}).copy()
+    compdat_df = compdat_df.copy()
 
     dframe = wellconnstatus_df.merge(
         compdat_df[[*match_on, "KH", "ZONE"]],
@@ -206,12 +208,19 @@ def _merge_compdat_and_connstatus(
     # Only the first is kept
     dframe = dframe.drop_duplicates(subset=["DATE", *match_on], keep="first")
 
+    missing_wells = compdat_df[~compdat_df["WELL"].isin(dframe["WELL"].unique())]
+
     # Concat from compdat the wells that are not in well connection status
-    dframe = pd.concat(
-        [dframe, compdat_df[~compdat_df["WELL"].isin(dframe["WELL"].unique())]]
-    )
-    dframe = dframe.reset_index(drop=True)
+    if not missing_wells.empty:
+        dframe = pd.concat(
+            [dframe, missing_wells],
+            ignore_index=True,
+        )
+    else:
+        dframe = dframe.reset_index(drop=True)
+
     dframe["KH"] = dframe["KH"].fillna(0)
+
     return dframe
 
 

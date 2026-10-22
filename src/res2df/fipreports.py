@@ -240,8 +240,16 @@ def df(
     df_fip = pd.DataFrame(data=fip_records, columns=REGION_REPORT_COLUMNS)
 
     if porv:
-        df_porv = pd.DataFrame(data=porv_records)
-        df_fip = df_fip.merge(df_porv, how="outer", on=["DATE", "FIPNAME", "REGION"])
+        if len(porv_records) > 0:
+            df_porv = pd.DataFrame(data=porv_records)
+            df_fip = df_fip.merge(
+                df_porv, how="outer", on=["DATE", "FIPNAME", "REGION"]
+            )
+        else:
+            logger.warning(
+                "No RESERVOIR VOLUMES tables found in PRT file."
+                "Include RPTSOL or RPTSCHED with FIP=2 (or 3) and 'FIPRESV' in the DATA file.",
+            )
 
     return df_fip
 

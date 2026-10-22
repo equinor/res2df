@@ -48,6 +48,35 @@ def test_opm_prt_file():
     }.issubset(set(fipreport_df.columns))
 
 
+def test_prt_file_porv():
+    """Test parsing a PRT file from OPM"""
+    fipreport_df = fipreports.df(
+        TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.PRT", porv=True
+    )
+
+    assert len(fipreport_df) == 30
+    assert len(fipreport_df["DATE"].unique()) == 1
+    assert set(fipreport_df["REGION"]) == {1, 2, 3, 4, 5, 6}
+    assert {
+        "DATE",
+        "FIPNAME",
+        "REGION",
+        "DATATYPE",
+        "STOIIP_OIL",
+        "ASSOCIATEDOIL_GAS",
+        "STOIIP_TOTAL",
+        "WIIP_TOTAL",
+        "GIIP_GAS",
+        "ASSOCIATEDGAS_OIL",
+        "GIIP_TOTAL",
+        "PORV_TOTAL",
+        "HCPV_OIL",
+        "WATPV_TOTAL",
+        "HCPV_GAS",
+        "HCPV_TOTAL",
+    }.issubset(set(fipreport_df.columns))
+
+
 def test_mockprtfile():
     """
     Test (a) mocked PRT file(s)

@@ -30,6 +30,11 @@ REGION_REPORT_COLUMNS: list[str] = [
     "GIIP_GAS",
     "ASSOCIATEDGAS_OIL",
     "GIIP_TOTAL",
+    # "PORV_TOTAL",
+    # "HCPV_OIL",
+    # "WATPV_TOTAL",
+    # "HCPV_GAS",
+    # "HCPV_TOTAL",
 ]
 
 
@@ -99,7 +104,9 @@ def report_block_lineparser(line: str) -> tuple:
     )
 
 
-def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
+def df(
+    prtfile: str | ResdataFiles, fipname: str = "FIPNUM", porv: bool = False
+) -> pd.DataFrame:
     """
     Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and
     organizes those numbers into a dataframe
@@ -121,10 +128,12 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
         raise ValueError("fipname can be at most 8 characters")
 
     # List of rows in final dataframe
-    records = []
+    fip_records = []
+    porv_records = []
 
     # State variables while parsing line by line:
-    in_report_block = False
+    in_fip_report_block = False
+    in_porv_report_block = False
     region_index = None
     date = None
 
@@ -132,9 +141,10 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
     opm_datematcher = re.compile(r"Starting time step.*? date = (\d+)-(\w+)-(\d+)\s*")
 
     # When case insensitive, this one works with both Eclipse100 and OPM:
-    reportblockmatcher = re.compile(
+    fipreportblockmatcher = re.compile(
         ".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)", re.IGNORECASE
     )
+    porvreportblockmatcher = re.compile(r"^\s*:\s*RESERVOIR VOLUMES.*$")
 
     with Path(prtfile).open(encoding="utf-8") as prt_fh:
         logger.info(
@@ -156,17 +166,21 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
                     date = newdate
                     logger.debug("Found date: %s", date)
                 continue
-            matchedreportblock = re.match(reportblockmatcher, line)
-            if matchedreportblock:
-                in_report_block = True
-                region_index = int(matchedreportblock.group(1))
+
+            matchedfipreportblock = re.match(fipreportblockmatcher, line)
+            matchedporvreportblock = re.match(porvreportblockmatcher, line)
+
+            # FIP report
+            if matchedfipreportblock:
+                in_fip_report_block = True
+                region_index = int(matchedfipreportblock.group(1))
                 logger.debug("  Region report for region %s", region_index)
                 continue
             if line.startswith(" ============================"):
-                in_report_block = False
+                in_fip_report_block = False
                 continue
 
-            if in_report_block:
+            if in_fip_report_block:
                 interesting_strings = ["IN PLACE", "OUTFLOW", "MATERIAL"]
                 if not sum(string in line.upper() for string in interesting_strings):
                     # Skip if we are not on an interesting line.
@@ -187,10 +201,54 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
                     linechars[26] = ":"
                     line = "".join(linechars)
 
-                records.append(
+                fip_records.append(
                     [date, fipname, region_index, *list(report_block_lineparser(line))]
                 )
-    return pd.DataFrame(data=records, columns=REGION_REPORT_COLUMNS)
+
+            if porv:
+                # Reservoir pore volumes report block
+                if matchedporvreportblock:
+                    in_porv_report_block = True
+                    # region_index = int(matchedfipreportblock.group(1))
+                    # logger.debug("  Region report for region %s", region_index)
+                    # continue
+                if line.startswith(" ============================"):
+                    in_porv_report_block = False
+                    continue
+
+                if in_porv_report_block:
+                    # Extract lines with only numbers in between colons
+                    line_split = [
+                        part.strip() for part in line.split(":") if part.strip()
+                    ]
+                    if len(line_split) != 6:
+                        continue
+                    try:
+                        int(line_split[0])
+                    except ValueError:
+                        # Not the line we are looking for.
+                        continue
+
+                    porv_records.append(
+                        {
+                            "DATE": date,
+                            "FIPNAME": fipname,
+                            "REGION": int(line_split[0]),
+                            "PORV_TOTAL": float(line_split[1]),
+                            "HCPV_OIL": float(line_split[2]),
+                            "WATPV_TOTAL": float(line_split[3]),
+                            "HCPV_GAS": float(line_split[4]),
+                            "HCPV_TOTAL": float(line_split[5]),
+                        }
+                    )
+
+    df_fip = pd.DataFrame(data=fip_records, columns=REGION_REPORT_COLUMNS)
+
+    if porv:
+        df_porv = pd.DataFrame(data=porv_records)
+        df_fip = df_fip.merge(df_porv, how="outer", on=["DATE", "FIPNAME", "REGION"])
+
+    return df_fip
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
@@ -219,20 +277,6 @@ def fipreports_main(args: argparse.Namespace) -> None:
         prtfile = ResdataFiles(args.PRTFILE).get_prtfilename()
     dframe = df(prtfile, args.fipname)
     write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
-
-
-# Compile regex patterns once globally, to reduce run time
-
-# To find a report in PRT file:
-# Eclipse, Flow: Look for "  REPORT " at start of line (Eclipse: up to REPORT 999)
-DATE_MATCHER = re.compile(r"^\s{2}REPORT\s{1}")
-
-# To find the initial date in PRT file, use different pattern for Eclipse and Flow
-# Eclipse: Look for "  REPORT   0" at start of line
-DATE_MATCHER_ECL = re.compile(r"^\s{2}REPORT\s{3}0")
-
-# Flow: Look for "Report step  0" at start of line
-DATE_MATCHER_FLOW = re.compile(r"^Report step\s{2}0")
 
 
 def _find_report_date_in_prt(line: str, find_initial: bool = False) -> date | None:

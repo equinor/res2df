@@ -49,7 +49,8 @@ def test_opm_prt_file():
 
 
 def test_prt_file_porv():
-    """Test parsing a PRT file from OPM"""
+    """Test parsing a PRT file with reservoir pore volume data reported (using
+    FIPRESV)"""
     fipreport_df = fipreports.df(
         TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.PRT", porv=True
     )
@@ -75,6 +76,62 @@ def test_prt_file_porv():
         "HCPV_GAS",
         "HCPV_TOTAL",
     }.issubset(set(fipreport_df.columns))
+
+
+def test_porvstring(tmp_path, monkeypatch):
+    """Test a PRT from string, verifying every detail of the dataframe"""
+    prtstring = """
+  REPORT   0     1 JAN 2000
+                                                =================================
+                                                : FIPNUM  REPORT REGION    1    :
+                                                :     PAV =        305.89  BARSA:
+                                                :     PORV=     78815548.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :     10656981.                    10656981.:      59957809. :            0.   1960884420.    1960884420.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+                                                      ===================================
+                                                     :  RESERVOIR VOLUMES      RM3     :
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
+ :         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   :
+ :         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON :
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ :   FIELD :     399202846.:      45224669.:     353978177.:             0.:      45224669.:
+ :       1 :      78802733.:      17000359.:      61802374.:             0.:      17000359.:
+ ===========================================================================================
+"""  # noqa: E501
+    monkeypatch.chdir(tmp_path)
+    Path("FOO.PRT").write_text(prtstring, encoding="utf8")
+    dframe = fipreports.df("FOO.PRT", porv=True)
+    expected_dframe = pd.DataFrame(
+        [
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 1,
+                "DATATYPE": "CURRENTLY IN PLACE",
+                "TO_REGION": None,
+                "STOIIP_OIL": 10656981.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 10656981.0,
+                "WIIP_TOTAL": 59957809.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 1960884420.0,
+                "GIIP_TOTAL": 1960884420.0,
+                "PORV_TOTAL": 78802733.0,
+                "HCPV_OIL": 17000359.0,
+                "WATPV_TOTAL": 61802374.0,
+                "HCPV_GAS": 0.0,
+                "HCPV_TOTAL": 17000359.0,
+            }
+        ]
+    )
+
+    pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 
 def test_mockprtfile():

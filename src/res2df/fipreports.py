@@ -198,9 +198,6 @@ def df(
                 # Reservoir pore volumes report block
                 if matchedporvreportblock:
                     in_porv_report_block = True
-                    # region_index = int(matchedfipreportblock.group(1))
-                    # logger.debug("  Region report for region %s", region_index)
-                    # continue
                 if line.startswith(" ============================"):
                     in_porv_report_block = False
                     continue

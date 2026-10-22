@@ -9,8 +9,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from datetime import date
-
 from .common import parse_month, write_dframe_stdout_file
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
@@ -244,7 +242,8 @@ def df(
         else:
             logger.warning(
                 "No RESERVOIR VOLUMES tables found in PRT file."
-                "Include RPTSOL or RPTSCHED with FIP=2 (or 3) and 'FIPRESV' in the DATA file.",
+                "Include RPTSOL or RPTSCHED with FIP=2 (or 3) and "
+                "FIPRESV in the DATA file.",
             )
 
     return df_fip

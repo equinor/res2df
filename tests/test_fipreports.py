@@ -78,7 +78,7 @@ def test_prt_file_porv():
     }.issubset(set(fipreport_df.columns))
 
 
-def test_porvstring(tmp_path, monkeypatch):
+def test_prtstring_porv(tmp_path, monkeypatch):
     """Test a PRT from string, verifying every detail of the dataframe"""
     prtstring = """
   REPORT   0     1 JAN 2000
@@ -132,6 +132,111 @@ def test_porvstring(tmp_path, monkeypatch):
     )
 
     pd.testing.assert_frame_equal(dframe, expected_dframe)
+
+
+def test_prtstring_multiple_fip(tmp_path, monkeypatch):
+    """Test a PRT from string, verifying every detail of the dataframe"""
+    prtstring = """
+  REPORT   0     1 JAN 2000
+                                                =================================
+                                                : FIPNUM  REPORT REGION    1    :
+                                                :     PAV =        305.89  BARSA:
+                                                :     PORV=     78815548.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :     10656981.                    10656981.:      59957809. :            0.   1960884420.    1960884420.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+                                                      ===================================
+                                                     :  RESERVOIR VOLUMES      RM3     :
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
+ :         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   :
+ :         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON :
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ :   FIELD :     399202846.:      45224669.:     353978177.:             0.:      45224669.:
+ :       1 :      78802733.:      17000359.:      61802374.:             0.:      17000359.:
+ ===========================================================================================
+
+ REPORT   0     1 JAN 2000
+                                                     ==================================================
+                                                     :              FIPZON REPORT REGION  1           :
+                                                     :        PAV  =           300  BARSA             :
+                                                     :        PORV =     162142040  RM3               :
+                           :--------------- OIL  SM3 ------------------:-- WAT    SM3 --:--------------  GAS     SM3 ---------------:
+                           :    LIQUID         VAPOUR        TOTAL     :     TOTAL      :     FREE        DISSOLVED       TOTAL     :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :   14561822        78065        14639887   :   134681306    :   509378403     2061869685    2571248089  :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+                                                      ===================================
+                                                     :  RESERVOIR VOLUMES      RM3     :
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  :  PORE VOLUME  :  PORE VOLUME  :
+ :         :    VOLUME     :  CONTAINING   :  CONTAINING   :  CONTAINING   :  CONTAINING   :
+ :         :               :      OIL      :     WATER     :      GAS      : HYDRO-CARBON  :
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ :FIELD    :      493690391:       50050527:      439300637:        4339228:       54389755:
+ :1        :      162385818:       20924379:      139267871:        2193568:       23117946:
+ ===========================================================================================
+"""  # noqa: E501
+    monkeypatch.chdir(tmp_path)
+    Path("FOO.PRT").write_text(prtstring, encoding="utf8")
+    dframe = fipreports.df("FOO.PRT", fipname="FIPNUM", porv=True)
+    expected_dframe = pd.DataFrame(
+        [
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 1,
+                "DATATYPE": "CURRENTLY IN PLACE",
+                "TO_REGION": None,
+                "STOIIP_OIL": 10656981.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 10656981.0,
+                "WIIP_TOTAL": 59957809.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 1960884420.0,
+                "GIIP_TOTAL": 1960884420.0,
+                "PORV_TOTAL": 78802733.0,
+                "HCPV_OIL": 17000359.0,
+                "WATPV_TOTAL": 61802374.0,
+                "HCPV_GAS": 0.0,
+                "HCPV_TOTAL": 17000359.0,
+            }
+        ]
+    )
+
+    dframe_zon = fipreports.df("FOO.PRT", fipname="FIPZON", porv=True)
+    expected_dframe_zon = pd.DataFrame(
+        [
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPZON",
+                "REGION": 1,
+                "DATATYPE": "CURRENTLY IN PLACE",
+                "TO_REGION": None,
+                "STOIIP_OIL": 14561822.0,
+                "ASSOCIATEDOIL_GAS": 78065.0,
+                "STOIIP_TOTAL": 14639887.0,
+                "WIIP_TOTAL": 134681306.0,
+                "GIIP_GAS": 509378403.0,
+                "ASSOCIATEDGAS_OIL": 2061869685.0,
+                "GIIP_TOTAL": 2571248089.0,
+                "PORV_TOTAL": 162385818.0,
+                "HCPV_OIL": 20924379.0,
+                "WATPV_TOTAL": 139267871.0,
+                "HCPV_GAS": 2193568.0,
+                "HCPV_TOTAL": 23117946.0,
+            }
+        ]
+    )
+
+    pd.testing.assert_frame_equal(dframe, expected_dframe)
+    pd.testing.assert_frame_equal(dframe_zon, expected_dframe_zon)
 
 
 def test_mockprtfile():

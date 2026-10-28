@@ -122,6 +122,7 @@ def df(
 
     # State variables while parsing line by line:
     in_fip_report_block = False
+    last_seen_region = None
     in_porv_report_block = False
     region_index = None
     date = None
@@ -130,9 +131,16 @@ def df(
     opm_datematcher = re.compile(r"Starting time step.*? date = (\d+)-(\w+)-(\d+)\s*")
 
     # When case insensitive, this one works with both Eclipse100 and OPM:
-    fipreportblockmatcher = re.compile(
+    # Match provided fipname
+    fipnamereportblockmatcher = re.compile(
         ".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)", re.IGNORECASE
     )
+    # Match any fipreport block. Group 1 = the FIP name
+    fipreportblockmatcher = re.compile(
+        r".+(FIP[A-Z]{1,3})\s+REPORT\s+REGION\s+(\d+)",
+        re.IGNORECASE,
+    )
+
     porvreportblockmatcher = re.compile(r"^\s*:\s*RESERVOIR VOLUMES.*$")
 
     with Path(prtfile).open(encoding="utf-8") as prt_fh:
@@ -156,17 +164,22 @@ def df(
                     logger.debug("Found date: %s", date)
                 continue
 
-            matchedfipreportblock = re.match(fipreportblockmatcher, line)
+            matchedfipnamereportblock = re.match(fipnamereportblockmatcher, line)
+            matchedfipreportblockmatcher = re.match(fipreportblockmatcher, line)
             matchedporvreportblock = re.match(porvreportblockmatcher, line)
 
+            if matchedfipreportblockmatcher:
+                last_seen_region = matchedfipreportblockmatcher.group(1)
+
             # FIP report
-            if matchedfipreportblock:
+            if matchedfipnamereportblock:
                 in_fip_report_block = True
-                region_index = int(matchedfipreportblock.group(1))
+                region_index = int(matchedfipnamereportblock.group(1))
                 logger.debug("  Region report for region %s", region_index)
                 continue
             if line.startswith(" ============================"):
                 in_fip_report_block = False
+                in_porv_report_block = False
                 continue
 
             if in_fip_report_block:
@@ -196,7 +209,7 @@ def df(
 
             if porv:
                 # Reservoir pore volumes report block
-                if matchedporvreportblock:
+                if matchedporvreportblock and (last_seen_region == fipname):
                     in_porv_report_block = True
                 if line.startswith(" ============================"):
                     in_porv_report_block = False

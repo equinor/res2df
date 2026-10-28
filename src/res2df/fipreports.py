@@ -209,7 +209,11 @@ def df(
 
             if porv:
                 # Reservoir pore volumes report block
-                if matchedporvreportblock and (last_seen_region == fipname):
+                if (
+                    matchedporvreportblock
+                    and last_seen_region is not None
+                    and last_seen_region.upper() == fipname.upper()
+                ):
                     in_porv_report_block = True
                 if line.startswith(" ============================"):
                     in_porv_report_block = False

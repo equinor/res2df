@@ -235,7 +235,7 @@ def test_prtstring_multiple_fip(tmp_path, monkeypatch):
         ]
     )
 
-    # pd.testing.assert_frame_equal(dframe, expected_dframe)
+    pd.testing.assert_frame_equal(dframe, expected_dframe)
     pd.testing.assert_frame_equal(dframe_zon, expected_dframe_zon)
 
 

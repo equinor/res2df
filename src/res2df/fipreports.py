@@ -94,7 +94,7 @@ def report_block_lineparser(line: str) -> tuple:
 
 
 def df(
-    prtfile: str | ResdataFiles, fipname: str = "FIPNUM", porv: bool = False
+    prtfile: str | ResdataFiles, fipname: str = "FIPNUM", resv: bool = False
 ) -> pd.DataFrame:
     """
     Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and
@@ -118,12 +118,12 @@ def df(
 
     # List of rows in final dataframe
     fip_records = []
-    porv_records = []
+    resv_records = []
 
     # State variables while parsing line by line:
     in_fip_report_block = False
     last_seen_region = None
-    in_porv_report_block = False
+    in_resv_report_block = False
     region_index = None
     date = None
 
@@ -141,7 +141,7 @@ def df(
         re.IGNORECASE,
     )
 
-    porvreportblockmatcher = re.compile(r"^\s*:\s*RESERVOIR VOLUMES.*$")
+    resvreportblockmatcher = re.compile(r"^\s*:\s*RESERVOIR VOLUMES.*$")
 
     with Path(prtfile).open(encoding="utf-8") as prt_fh:
         logger.info(
@@ -166,7 +166,7 @@ def df(
 
             matchedfipnamereportblock = re.match(fipnamereportblockmatcher, line)
             matchedfipreportblockmatcher = re.match(fipreportblockmatcher, line)
-            matchedporvreportblock = re.match(porvreportblockmatcher, line)
+            matchedresvreportblock = re.match(resvreportblockmatcher, line)
 
             if matchedfipreportblockmatcher:
                 last_seen_region = matchedfipreportblockmatcher.group(1)
@@ -179,7 +179,7 @@ def df(
                 continue
             if line.startswith(" ============================"):
                 in_fip_report_block = False
-                in_porv_report_block = False
+                in_resv_report_block = False
                 continue
 
             if in_fip_report_block:
@@ -207,19 +207,19 @@ def df(
                     [date, fipname, region_index, *list(report_block_lineparser(line))]
                 )
 
-            if porv:
+            if resv:
                 # Reservoir pore volumes report block
                 if (
-                    matchedporvreportblock
+                    matchedresvreportblock
                     and last_seen_region is not None
                     and last_seen_region.upper() == fipname.upper()
                 ):
-                    in_porv_report_block = True
+                    in_resv_report_block = True
                 if line.startswith(" ============================"):
-                    in_porv_report_block = False
+                    in_resv_report_block = False
                     continue
 
-                if in_porv_report_block:
+                if in_resv_report_block:
                     # Extract lines with only numbers in between colons
                     line_split = [
                         part.strip() for part in line.split(":") if part.strip()
@@ -232,7 +232,7 @@ def df(
                         # Not the line we are looking for.
                         continue
 
-                    porv_records.append(
+                    resv_records.append(
                         {
                             "DATE": date,
                             "FIPNAME": fipname,
@@ -247,11 +247,11 @@ def df(
 
     df_fip = pd.DataFrame(data=fip_records, columns=REGION_REPORT_COLUMNS)
 
-    if porv:
-        if len(porv_records) > 0:
-            df_porv = pd.DataFrame(data=porv_records)
+    if resv:
+        if len(resv_records) > 0:
+            df_resv = pd.DataFrame(data=resv_records)
             df_fip = df_fip.merge(
-                df_porv, how="outer", on=["DATE", "FIPNAME", "REGION"]
+                df_resv, how="outer", on=["DATE", "FIPNAME", "REGION"]
             )
         else:
             logger.warning(

@@ -137,7 +137,7 @@ def df(
     )
     # Match any fipreport block. Group 1 = the FIP name
     fipreportblockmatcher = re.compile(
-        r".+(FIP[A-Z]{1,3})\s+REPORT\s+REGION\s+(\d+)",
+        r".+(FIP[^\s:]{0,5})\s+REPORT\s+REGION\s+(\d+)",
         re.IGNORECASE,
     )
 

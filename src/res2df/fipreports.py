@@ -31,18 +31,19 @@ REGION_REPORT_COLUMNS: list[str] = [
 ]
 
 
+def float_or_nan(string: str) -> float:
+    try:
+        return float(string)
+    except ValueError:
+        return np.nan
+
+
 def report_block_lineparser(line: str) -> tuple:
     """
     Parses single lines within region reports, splits data into a tuple.
 
     Does not support many different phase configurations yet.
     """
-
-    def float_or_nan(string: str) -> float:
-        try:
-            return float(string)
-        except ValueError:
-            return np.nan
 
     allowed_line_starts = [":CURRENTLY", ":OUTFLOW", ":MATERIAL", ":ORIGINALLY"]
     if not any(line.strip().upper().startswith(x) for x in allowed_line_starts):
@@ -215,10 +216,6 @@ def df(
                     and last_seen_region.upper() == fipname.upper()
                 ):
                     in_resv_report_block = True
-                if line.startswith(" ============================"):
-                    in_resv_report_block = False
-                    continue
-
                 if in_resv_report_block:
                     # Extract lines with only numbers in between colons
                     line_split = [
@@ -237,11 +234,11 @@ def df(
                             "DATE": date,
                             "FIPNAME": fipname,
                             "REGION": int(line_split[0]),
-                            "PORV_TOTAL": float(line_split[1]),
-                            "HCPV_OIL": float(line_split[2]),
-                            "WATPV_TOTAL": float(line_split[3]),
-                            "HCPV_GAS": float(line_split[4]),
-                            "HCPV_TOTAL": float(line_split[5]),
+                            "PORV_TOTAL": float_or_nan(line_split[1]),
+                            "HCPV_OIL": float_or_nan(line_split[2]),
+                            "WATPV_TOTAL": float_or_nan(line_split[3]),
+                            "HCPV_GAS": float_or_nan(line_split[4]),
+                            "HCPV_TOTAL": float_or_nan(line_split[5]),
                         }
                     )
 
@@ -255,7 +252,7 @@ def df(
             )
         else:
             logger.warning(
-                "No RESERVOIR VOLUMES tables found in PRT file."
+                "No RESERVOIR VOLUMES tables found in PRT file. "
                 "Include RPTSOL or RPTSCHED with FIP=2 (or 3) and "
                 "FIPRESV in the DATA file.",
             )

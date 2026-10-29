@@ -30,6 +30,32 @@ REGION_REPORT_COLUMNS: list[str] = [
     "GIIP_TOTAL",
 ]
 
+RESV_COLS: list[str] = [
+    "DATE",
+    "FIPNAME",
+    "REGION",
+    "PORV_TOTAL",
+    "HCPV_OIL",
+    "WATPV_TOTAL",
+    "HCPV_GAS",
+    "HCPV_TOTAL",
+]
+
+RESV_COLS_DTYPES = {
+    "PORV_TOTAL": float,
+    "HCPV_OIL": float,
+    "WATPV_TOTAL": float,
+    "HCPV_GAS": float,
+    "HCPV_TOTAL": float,
+}
+
+
+def float_or_nan(string: str) -> float:
+    try:
+        return float(string)
+    except ValueError:
+        return np.nan
+
 
 def report_block_lineparser(line: str) -> tuple:
     """
@@ -37,12 +63,6 @@ def report_block_lineparser(line: str) -> tuple:
 
     Does not support many different phase configurations yet.
     """
-
-    def float_or_nan(string: str) -> float:
-        try:
-            return float(string)
-        except ValueError:
-            return np.nan
 
     allowed_line_starts = [":CURRENTLY", ":OUTFLOW", ":MATERIAL", ":ORIGINALLY"]
     if not any(line.strip().upper().startswith(x) for x in allowed_line_starts):
@@ -62,11 +82,9 @@ def report_block_lineparser(line: str) -> tuple:
     vapour_oil: float | None = None
     total_oil: float | None = None
     if len(colonsections[2].split()) == 3:
-        (liquid_oil, vapour_oil, total_oil) = map(
-            float_or_nan, colonsections[2].split()
-        )
+        liquid_oil, vapour_oil, total_oil = map(float_or_nan, colonsections[2].split())
     elif len(colonsections[2].split()) == 2:
-        (liquid_oil, total_oil) = map(float_or_nan, colonsections[2].split())
+        liquid_oil, total_oil = map(float_or_nan, colonsections[2].split())
     elif len(colonsections[2].split()) == 1:
         total_oil = float_or_nan(colonsections[2])
 
@@ -79,11 +97,9 @@ def report_block_lineparser(line: str) -> tuple:
     if len(colonsections[4].split()) == 1:
         total_gas = float_or_nan(colonsections[4])
     elif len(colonsections[4].split()) == 2:
-        (free_gas, total_gas) = map(float_or_nan, colonsections[4].split())
+        free_gas, total_gas = map(float_or_nan, colonsections[4].split())
     else:
-        (free_gas, dissolved_gas, total_gas) = map(
-            float_or_nan, colonsections[4].split()
-        )
+        free_gas, dissolved_gas, total_gas = map(float_or_nan, colonsections[4].split())
     return (
         row_name,
         to_index,
@@ -97,7 +113,9 @@ def report_block_lineparser(line: str) -> tuple:
     )
 
 
-def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
+def df(
+    prtfile: str | ResdataFiles, fipname: str = "FIPNUM", resv: bool = False
+) -> pd.DataFrame:
     """
     Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and
     organizes those numbers into a dataframe
@@ -119,10 +137,13 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
         raise ValueError("fipname can be at most 8 characters")
 
     # List of rows in final dataframe
-    records = []
+    fip_records = []
+    resv_records = []
 
     # State variables while parsing line by line:
-    in_report_block = False
+    in_fip_report_block = False
+    last_seen_region = None
+    in_resv_report_block = False
     region_index = None
     date = None
 
@@ -130,9 +151,17 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
     opm_datematcher = re.compile(r"Starting time step.*? date = (\d+)-(\w+)-(\d+)\s*")
 
     # When case insensitive, this one works with both Eclipse100 and OPM:
-    reportblockmatcher = re.compile(
+    # Match provided fipname
+    fipnamereportblockmatcher = re.compile(
         ".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)", re.IGNORECASE
     )
+    # Match any fipreport block. Group 1 = the FIP name
+    fipreportblockmatcher = re.compile(
+        r".+?\b(FIP[^\s:]{0,5})\s+REPORT\s+REGION\s+(\d+)",
+        re.IGNORECASE,
+    )
+
+    resvreportblockmatcher = re.compile(r"^\s*:\s*RESERVOIR VOLUMES.*$")
 
     with Path(prtfile).open(encoding="utf-8") as prt_fh:
         logger.info(
@@ -154,17 +183,26 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
                     date = newdate
                     logger.debug("Found date: %s", date)
                 continue
-            matchedreportblock = re.match(reportblockmatcher, line)
-            if matchedreportblock:
-                in_report_block = True
-                region_index = int(matchedreportblock.group(1))
+
+            matchedfipnamereportblock = re.match(fipnamereportblockmatcher, line)
+            matchedfipreportblockmatcher = re.match(fipreportblockmatcher, line)
+            matchedresvreportblock = re.match(resvreportblockmatcher, line)
+
+            if matchedfipreportblockmatcher:
+                last_seen_region = matchedfipreportblockmatcher.group(1)
+
+            # FIP report
+            if matchedfipnamereportblock:
+                in_fip_report_block = True
+                region_index = int(matchedfipnamereportblock.group(1))
                 logger.debug("  Region report for region %s", region_index)
                 continue
             if line.startswith(" ============================"):
-                in_report_block = False
+                in_fip_report_block = False
+                in_resv_report_block = False
                 continue
 
-            if in_report_block:
+            if in_fip_report_block:
                 interesting_strings = ["IN PLACE", "OUTFLOW", "MATERIAL"]
                 if not sum(string in line.upper() for string in interesting_strings):
                     # Skip if we are not on an interesting line.
@@ -185,10 +223,64 @@ def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
                     linechars[26] = ":"
                     line = "".join(linechars)
 
-                records.append(
+                fip_records.append(
                     [date, fipname, region_index, *list(report_block_lineparser(line))]
                 )
-    return pd.DataFrame(data=records, columns=REGION_REPORT_COLUMNS)
+
+            if resv:
+                # Reservoir pore volumes report block
+                if (
+                    matchedresvreportblock
+                    and last_seen_region is not None
+                    and last_seen_region.upper() == fipname.upper()
+                ):
+                    in_resv_report_block = True
+                if in_resv_report_block:
+                    # Extract lines with only numbers in between colons
+                    line_split = [
+                        part.strip() for part in line.split(":") if part.strip()
+                    ]
+                    if len(line_split) != 6:
+                        continue
+                    try:
+                        int(line_split[0])
+                    except ValueError:
+                        # Not the line we are looking for.
+                        continue
+
+                    resv_records.append(
+                        {
+                            "DATE": date,
+                            "FIPNAME": fipname,
+                            "REGION": int(line_split[0]),
+                            "PORV_TOTAL": float_or_nan(line_split[1]),
+                            "HCPV_OIL": float_or_nan(line_split[2]),
+                            "WATPV_TOTAL": float_or_nan(line_split[3]),
+                            "HCPV_GAS": float_or_nan(line_split[4]),
+                            "HCPV_TOTAL": float_or_nan(line_split[5]),
+                        }
+                    )
+
+    df_fip = pd.DataFrame(
+        data=fip_records,
+        columns=REGION_REPORT_COLUMNS,
+    )
+
+    if resv:
+        if len(resv_records) == 0:
+            logger.warning(
+                "No RESERVOIR VOLUMES tables found in PRT file. "
+                "Include RPTSOL or RPTSCHED with FIP=2 (or 3) and "
+                "FIPRESV in the DATA file.",
+            )
+
+        df_resv = pd.DataFrame(data=resv_records, columns=RESV_COLS)
+        # Set explicit data types for columns that could be empty or NaN,
+        # ensuring that they remain numeric.
+        df_resv = df_resv.astype(RESV_COLS_DTYPES)
+        df_fip = df_fip.merge(df_resv, how="outer", on=["DATE", "FIPNAME", "REGION"])
+
+    return df_fip
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

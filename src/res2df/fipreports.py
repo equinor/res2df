@@ -267,7 +267,7 @@ def df(
     )
 
     if resv:
-        if len(resv_records) > 0:
+        if len(resv_records) == 0:
             logger.warning(
                 "No RESERVOIR VOLUMES tables found in PRT file. "
                 "Include RPTSOL or RPTSCHED with FIP=2 (or 3) and "

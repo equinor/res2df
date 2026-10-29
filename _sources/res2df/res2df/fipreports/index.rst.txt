@@ -14,6 +14,7 @@ Functions
 
 .. autoapisummary::
 
+   res2df.fipreports.float_or_nan
    res2df.fipreports.report_block_lineparser
    res2df.fipreports.df
    res2df.fipreports.fill_parser
@@ -23,6 +24,8 @@ Functions
 Module Contents
 ---------------
 
+.. py:function:: float_or_nan(string: str) -> float
+
 .. py:function:: report_block_lineparser(line: str) -> tuple
 
    Parses single lines within region reports, splits data into a tuple.
@@ -30,7 +33,7 @@ Module Contents
    Does not support many different phase configurations yet.
 
 
-.. py:function:: df(prtfile: str | res2df.resdatafiles.ResdataFiles, fipname: str = 'FIPNUM') -> pandas.DataFrame
+.. py:function:: df(prtfile: str | res2df.resdatafiles.ResdataFiles, fipname: str = 'FIPNUM', resv: bool = False) -> pandas.DataFrame
 
    Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and
    organizes those numbers into a dataframe

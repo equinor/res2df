@@ -135,7 +135,11 @@ def test_prtstring_resv(tmp_path, monkeypatch):
 
 
 def test_prtstring_resv_missing(tmp_path, monkeypatch):
-    """Test a PRT from string, verifying every detail of the dataframe"""
+    """Test a PRT from string, verifying every detail of the dataframe
+
+    resv=True but no reservoir volume data present in PRT file
+
+    """
     prtstring = """
   REPORT   0     1 JAN 2000
                                                 =================================
@@ -148,8 +152,7 @@ def test_prtstring_resv_missing(tmp_path, monkeypatch):
  :CURRENTLY IN PLACE       :     10656981.                    10656981.:      59957809. :            0.   1960884420.    1960884420.:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
  ====================================================================================================================================
- 
- -- resv=True but no reservoir volume data present in PRT file
+
 """  # noqa: E501
     monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")

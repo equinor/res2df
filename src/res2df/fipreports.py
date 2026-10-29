@@ -30,6 +30,25 @@ REGION_REPORT_COLUMNS: list[str] = [
     "GIIP_TOTAL",
 ]
 
+RESV_COLS: list[str] = [
+    "DATE",
+    "FIPNAME",
+    "REGION",
+    "PORV_TOTAL",
+    "HCPV_OIL",
+    "WATPV_TOTAL",
+    "HCPV_GAS",
+    "HCPV_TOTAL",
+]
+
+RESV_COLS_DTYPES = {
+    "PORV_TOTAL": float,
+    "HCPV_OIL": float,
+    "WATPV_TOTAL": float,
+    "HCPV_GAS": float,
+    "HCPV_TOTAL": float,
+}
+
 
 def float_or_nan(string: str) -> float:
     try:
@@ -242,20 +261,24 @@ def df(
                         }
                     )
 
-    df_fip = pd.DataFrame(data=fip_records, columns=REGION_REPORT_COLUMNS)
+    df_fip = pd.DataFrame(
+        data=fip_records,
+        columns=REGION_REPORT_COLUMNS,
+    )
 
     if resv:
         if len(resv_records) > 0:
-            df_resv = pd.DataFrame(data=resv_records)
-            df_fip = df_fip.merge(
-                df_resv, how="outer", on=["DATE", "FIPNAME", "REGION"]
-            )
-        else:
             logger.warning(
                 "No RESERVOIR VOLUMES tables found in PRT file. "
                 "Include RPTSOL or RPTSCHED with FIP=2 (or 3) and "
                 "FIPRESV in the DATA file.",
             )
+
+        df_resv = pd.DataFrame(data=resv_records, columns=RESV_COLS)
+        # Explicitly set datatypes of columns which could be empty/nan
+        # to ensure they are numeric and objects
+        df_resv = df_resv.astype(RESV_COLS_DTYPES)
+        df_fip = df_fip.merge(df_resv, how="outer", on=["DATE", "FIPNAME", "REGION"])
 
     return df_fip
 

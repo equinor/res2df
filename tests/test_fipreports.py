@@ -134,6 +134,53 @@ def test_prtstring_resv(tmp_path, monkeypatch):
     pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 
+def test_prtstring_resv_missing(tmp_path, monkeypatch):
+    """Test a PRT from string, verifying every detail of the dataframe"""
+    prtstring = """
+  REPORT   0     1 JAN 2000
+                                                =================================
+                                                : FIPNUM  REPORT REGION    1    :
+                                                :     PAV =        305.89  BARSA:
+                                                :     PORV=     78815548.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :     10656981.                    10656981.:      59957809. :            0.   1960884420.    1960884420.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+ 
+ -- resv=True but no reservoir volume data present in PRT file
+"""  # noqa: E501
+    monkeypatch.chdir(tmp_path)
+    Path("FOO.PRT").write_text(prtstring, encoding="utf8")
+    dframe = fipreports.df("FOO.PRT", resv=True)
+    expected_dframe = pd.DataFrame(
+        [
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 1,
+                "DATATYPE": "CURRENTLY IN PLACE",
+                "TO_REGION": None,
+                "STOIIP_OIL": 10656981.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 10656981.0,
+                "WIIP_TOTAL": 59957809.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 1960884420.0,
+                "GIIP_TOTAL": 1960884420.0,
+                "PORV_TOTAL": np.nan,
+                "HCPV_OIL": np.nan,
+                "WATPV_TOTAL": np.nan,
+                "HCPV_GAS": np.nan,
+                "HCPV_TOTAL": np.nan,
+            }
+        ]
+    )
+
+    pd.testing.assert_frame_equal(dframe, expected_dframe)
+
+
 def test_prtstring_multiple_fip(tmp_path, monkeypatch):
     """Test a PRT from string, verifying every detail of the dataframe"""
     prtstring = """

@@ -275,8 +275,8 @@ def df(
             )
 
         df_resv = pd.DataFrame(data=resv_records, columns=RESV_COLS)
-        # Explicitly set datatypes of columns which could be empty/nan
-        # to ensure they are numeric and objects
+        # Set explicit data types for columns that could be empty or NaN,
+        # ensuring that they remain numeric.
         df_resv = df_resv.astype(RESV_COLS_DTYPES)
         df_fip = df_fip.merge(df_resv, how="outer", on=["DATE", "FIPNAME", "REGION"])
 

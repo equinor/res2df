@@ -16,6 +16,7 @@ import pandas as pd
 import pyarrow as pa
 from resdata.summary import Summary
 
+from ._summary_pandas_frame import summary_pandas_frame
 from .common import write_dframe_stdout_file
 from .parameters import find_parameter_files, load, load_all
 from .res2csvlogger import getLogger_res2csv
@@ -301,17 +302,12 @@ def df(
     paramfile: str | None = None,
     datetime: bool = False,  # A very poor choice of argument name [pylint]
 ) -> pd.DataFrame:
-    """
-    Extract data from UNSMRY as Pandas dataframes.
+    """Extract data from UNSMRY as Pandas dataframes.
 
-    This is a thin wrapper for Summary.pandas_frame, by adding
-    support for string mnenomics for the time index.
-
-    The dataframe is always indexed by DATE, and the datatype for the
-    index will usually be datetime64[ns] as long as all dates are
-    before year 2262. If a longer time range is detected, the index.dtype
-    will be object, and consisting of datetime.datetime() objects. The index
-    is always named "DATE".
+    The dataframe is always indexed by DATE. By default, the index datatype is
+    datetime64[us]. For the resampling frequencies 'yearly', 'monthly' and
+    'daily' the index consists of datetime.date objects (object dtype), unless
+    datetime=True.
 
     Arguments:
         resdatafiles: ResdataFiles object representing a
@@ -394,7 +390,12 @@ def df(
         time_index_str or "raw",
     )
 
-    dframe = summary.pandas_frame(time_index_arg, column_keys)
+    dframe = summary_pandas_frame(
+        summary if isinstance(resdatafiles, Summary) else resdatafiles._eclbase,
+        time_index_arg,
+        column_keys,
+        include_restart,
+    )
 
     logger.info(
         "Dataframe with smry data ready, %d columns and %d rows",

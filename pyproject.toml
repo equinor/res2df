@@ -37,6 +37,8 @@ dynamic = ["version"]
 dependencies= [
 "resdata>=5",
 "resfo",
+"resfo-utilities",
+"natsort",
 "networkx",
 "numpy",
 "opm>=2020.10.2",
@@ -48,6 +50,8 @@ dependencies= [
 
 [project.optional-dependencies]
 tests = [
+    "hypothesis",
+    "pydantic",
     "pytest",
     "pytest-cov",
     "pytest-mock",
@@ -110,6 +114,7 @@ module = [
     "opm.*",
     "pyarrow", # should be removed for pyarrow > 21.0.0
     "resdata.*",
+    "resfo_utilities.*", # no py.typed marker
 ]
 ignore_missing_imports = true
 

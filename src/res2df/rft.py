@@ -299,7 +299,7 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
         edges.extend(
             (row.SEGIDX_upstream, row.SEGIDX)  # type: ignore[misc]
             for row in seg_data.itertuples()
-            if row.SEGIDX_upstream > 0  # type: ignore[operator]
+            if row.SEGIDX_upstream > 0  # type: ignore[operator,arg-type]
         )
     if not edges:
         return {seg_data["SEGIDX"].to_numpy()[0]: {}}

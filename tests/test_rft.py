@@ -1,6 +1,7 @@
 """Test module for rft"""
 
 import datetime
+import logging
 import random
 from pathlib import Path
 
@@ -520,8 +521,11 @@ def test_main_subparsers(tmp_path, mocker):
     assert not disk_df.empty
 
 
-def test_main_debugmode(tmp_path, mocker, monkeypatch):
+def test_main_debugmode(tmp_path, mocker, monkeypatch, caplog):
     """Test debug mode"""
+    # Restores the logger level afterwards, so that debug mode does not leak
+    # into other tests, which would then write con.csv etc. in the cwd
+    caplog.set_level(logging.WARNING, logger="res2df.rft")
     monkeypatch.chdir(tmp_path)
     mocker.patch(
         "sys.argv", ["res2csv", "rft", "--debug", EIGHTCELLS, "-o", "indebugmode.csv"]

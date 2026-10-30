@@ -412,7 +412,7 @@ def test_extrapolation():
     )["FOPT"].to_numpy()[0]
     answer = pd.DataFrame(
         # This is the maximal date for datetime64[ns]
-        index=[pd.to_datetime("2262-04-11")],
+        index=pd.DatetimeIndex([pd.to_datetime("2262-04-11")]).as_unit("us"),
         columns=["FOPT", "FOPR"],
         data=[[lastfopt, 0.0]],
     ).rename_axis("DATE")

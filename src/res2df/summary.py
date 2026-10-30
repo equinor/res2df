@@ -16,6 +16,7 @@ import pandas as pd
 import pyarrow as pa
 from resdata.summary import Summary
 
+from ._summary_pandas_frame import summary_pandas_frame
 from .common import write_dframe_stdout_file
 from .parameters import find_parameter_files, load, load_all
 from .res2csvlogger import getLogger_res2csv
@@ -394,7 +395,12 @@ def df(
         time_index_str or "raw",
     )
 
-    dframe = summary.pandas_frame(time_index_arg, column_keys)
+    dframe = summary_pandas_frame(
+        summary if isinstance(resdatafiles, Summary) else resdatafiles._eclbase,
+        time_index_arg,
+        column_keys,
+        include_restart,
+    )
 
     logger.info(
         "Dataframe with smry data ready, %d columns and %d rows",

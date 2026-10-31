@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.common &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.common &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -127,64 +127,64 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.write_dframe_stdout_file" title="res2df.common.write_dframe_stdout_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_dframe_stdout_file</span></code></a>(→ None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.write_dframe_stdout_file" title="res2df.common.write_dframe_stdout_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_dframe_stdout_file</span></code></a>(dframe, output[, index, ...]) → None</p></td>
 <td><p>Write a dataframe to either stdout or a file</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.write_inc_stdout_file" title="res2df.common.write_inc_stdout_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_inc_stdout_file</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.write_inc_stdout_file" title="res2df.common.write_inc_stdout_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_inc_stdout_file</span></code></a>(string, outputfilename) → None</p></td>
 <td><p>Write a string (typically an <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> string) to stdout</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.parse_month" title="res2df.common.parse_month"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_month</span></code></a>(→ int)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.parse_month" title="res2df.common.parse_month"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_month</span></code></a>(rdmonth) → int</p></td>
 <td><p>Translate resdata month strings to integer months</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.datetime_to_ecldate" title="res2df.common.datetime_to_ecldate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime_to_ecldate</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.datetime_to_ecldate" title="res2df.common.datetime_to_ecldate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime_to_ecldate</span></code></a>(timestamp) → str</p></td>
 <td><p>Convert a Python timestamp or date to the Eclipse DATE format</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.keyworddata_to_df" title="res2df.common.keyworddata_to_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keyworddata_to_df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.keyworddata_to_df" title="res2df.common.keyworddata_to_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keyworddata_to_df</span></code></a>(deck, keyword[, renamer, ...]) → pandas.DataFrame</p></td>
 <td><p>Extract data associated to a keyword into tabular form.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_deckrecord" title="res2df.common.parse_opmio_deckrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_deckrecord</span></code></a>(→ dict[str, Any])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_deckrecord" title="res2df.common.parse_opmio_deckrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_deckrecord</span></code></a>(record, keyword[, ...]) → dict[str, Any]</p></td>
 <td><p>Parse an opm.io.DeckRecord belonging to a certain keyword</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_date_rec" title="res2df.common.parse_opmio_date_rec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_date_rec</span></code></a>(→ datetime.date)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_date_rec" title="res2df.common.parse_opmio_date_rec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_date_rec</span></code></a>(record) → datetime.date</p></td>
 <td><p>Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_tstep_rec" title="res2df.common.parse_opmio_tstep_rec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_tstep_rec</span></code></a>(→ list[float | int])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_opmio_tstep_rec" title="res2df.common.parse_opmio_tstep_rec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_opmio_tstep_rec</span></code></a>(record) → list[float | int]</p></td>
 <td><p>Parse a record with TSTEP data</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.merge_zones" title="res2df.common.merge_zones"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_zones</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.merge_zones" title="res2df.common.merge_zones"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_zones</span></code></a>(df, zonedict[, zoneheader, kname]) → pandas.DataFrame</p></td>
 <td><p>Merge in a column with zone names, from a dictionary mapping</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.comment_formatter" title="res2df.common.comment_formatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comment_formatter</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.comment_formatter" title="res2df.common.comment_formatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comment_formatter</span></code></a>(multiline[, prefix]) → str</p></td>
 <td><p>Prepends comment characters to every line in input</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.handle_wanted_keywords" title="res2df.common.handle_wanted_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_wanted_keywords</span></code></a>(→ list[str])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.handle_wanted_keywords" title="res2df.common.handle_wanted_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_wanted_keywords</span></code></a>(wanted, deck, supported[, ...]) → list[str]</p></td>
 <td><p>Handle three list of keywords, wanted, available and supported</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.fill_reverse_parser" title="res2df.common.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.fill_reverse_parser" title="res2df.common.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(parser, modulename, defaultoutputfile) → argparse.ArgumentParser</p></td>
 <td><p>A standardized submodule parser for the command line utility</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.df2res" title="res2df.common.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.df2res" title="res2df.common.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(dataframe[, keywords, comments, supported, ...]) → str</p></td>
 <td><p>Generate resdata <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content from dataframes in res2df format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.generic_deck_table" title="res2df.common.generic_deck_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_deck_table</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.generic_deck_table" title="res2df.common.generic_deck_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_deck_table</span></code></a>(dframe, keyword[, comment, ...]) → str</p></td>
 <td><p>Construct string contents of a <a class="reference internal" href="../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.runlength_compress" title="res2df.common.runlength_compress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">runlength_compress</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.runlength_compress" title="res2df.common.runlength_compress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">runlength_compress</span></code></a>(string[, sep]) → str</p></td>
 <td><p>Compress a string of space-separated elements so that</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.stack_on_colnames" title="res2df.common.stack_on_colnames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stack_on_colnames</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.stack_on_colnames" title="res2df.common.stack_on_colnames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stack_on_colnames</span></code></a>(dframe[, sep, stackcolname, inplace]) → pandas.DataFrame</p></td>
 <td><p>For a dataframe where some columns are multilevel, but where</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.is_color" title="res2df.common.is_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_color</span></code></a>(→ bool)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.is_color" title="res2df.common.is_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_color</span></code></a>(input_string) → bool</p></td>
 <td><p>Checks if the input string is a valid color.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_lyrfile" title="res2df.common.parse_lyrfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_lyrfile</span></code></a>(→ list[dict[str, Any]] | None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.parse_lyrfile" title="res2df.common.parse_lyrfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_lyrfile</span></code></a>(filename) → list[dict[str, Any]] | None</p></td>
 <td><p>Return a list of dicts representation of the lyr file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.convert_lyrlist_to_zonemap" title="res2df.common.convert_lyrlist_to_zonemap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_lyrlist_to_zonemap</span></code></a>(→ dict[int, str] | None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.common.convert_lyrlist_to_zonemap" title="res2df.common.convert_lyrlist_to_zonemap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_lyrlist_to_zonemap</span></code></a>(lyrlist) → dict[int, str] | None</p></td>
 <td><p>Returns a layer to zone map as a dictionary</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.get_wells_matching_template" title="res2df.common.get_wells_matching_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wells_matching_template</span></code></a>(→ list[str])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.common.get_wells_matching_template" title="res2df.common.get_wells_matching_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wells_matching_template</span></code></a>(template, wells) → list[str]</p></td>
 <td><p>Returns the wells in the list that is matching the template</p></td>
 </tr>
 </tbody>

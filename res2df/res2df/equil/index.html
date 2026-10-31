@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.equil &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.equil &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -127,58 +127,58 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df" title="res2df.equil.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df" title="res2df.equil.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(deck[, keywords, ntequl]) → pandas.DataFrame</p></td>
 <td><p>Extract EQUIL related keyword data, EQUIL, RSVD, RVVD</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.rsvd_fromdeck" title="res2df.equil.rsvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsvd_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.rsvd_fromdeck" title="res2df.equil.rsvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsvd_fromdeck</span></code></a>(deck[, ntequl]) → pandas.DataFrame</p></td>
 <td><p>Extract RSVD data from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.rvvd_fromdeck" title="res2df.equil.rvvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rvvd_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.rvvd_fromdeck" title="res2df.equil.rvvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rvvd_fromdeck</span></code></a>(deck[, ntequl]) → pandas.DataFrame</p></td>
 <td><p>Extract RVVD data from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.pbvd_fromdeck" title="res2df.equil.pbvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pbvd_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.pbvd_fromdeck" title="res2df.equil.pbvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pbvd_fromdeck</span></code></a>(deck[, ntequl]) → pandas.DataFrame</p></td>
 <td><p>Extract PBVD data from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.pdvd_fromdeck" title="res2df.equil.pdvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pdvd_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.pdvd_fromdeck" title="res2df.equil.pdvd_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pdvd_fromdeck</span></code></a>(deck[, ntequl]) → pandas.DataFrame</p></td>
 <td><p>Extract PDVD data from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.phases_from_deck" title="res2df.equil.phases_from_deck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phases_from_deck</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.phases_from_deck" title="res2df.equil.phases_from_deck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phases_from_deck</span></code></a>(deck) → str</p></td>
 <td><p>Determined the set of phases from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, as</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.phases_from_columns" title="res2df.equil.phases_from_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phases_from_columns</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.phases_from_columns" title="res2df.equil.phases_from_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phases_from_columns</span></code></a>(columns) → str</p></td>
 <td><p>Determine the set of phases available in an</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.equil_fromdeck" title="res2df.equil.equil_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equil_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.equil_fromdeck" title="res2df.equil.equil_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equil_fromdeck</span></code></a>(deck[, ntequl]) → pandas.DataFrame</p></td>
 <td><p>Extract EQUIL data from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.fill_parser" title="res2df.equil.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.fill_parser" title="res2df.equil.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Set up sys.argv parsers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.fill_reverse_parser" title="res2df.equil.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.fill_reverse_parser" title="res2df.equil.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Fill a parser for the operation dataframe -&gt; resdata <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.equil_main" title="res2df.equil.equil_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equil_main</span></code></a>(→ None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.equil_main" title="res2df.equil.equil_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equil_main</span></code></a>(args) → None</p></td>
 <td><p>Read from disk and write CSV back to disk</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.equil_reverse_main" title="res2df.equil.equil_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equil_reverse_main</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.equil_reverse_main" title="res2df.equil.equil_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equil_reverse_main</span></code></a>(args) → None</p></td>
 <td><p>Entry-point for module, for command line utility</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df2res" title="res2df.equil.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df2res" title="res2df.equil.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(equil_df[, keywords, comments, withphases, ...]) → str</p></td>
 <td><p>Generate string contents of <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.df2res_equil" title="res2df.equil.df2res_equil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_equil</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.df2res_equil" title="res2df.equil.df2res_equil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_equil</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for EQUIL keyword</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df2res_rsvd" title="res2df.equil.df2res_rsvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_rsvd</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df2res_rsvd" title="res2df.equil.df2res_rsvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_rsvd</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for RSVD keyword</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.df2res_rvvd" title="res2df.equil.df2res_rvvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_rvvd</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.df2res_rvvd" title="res2df.equil.df2res_rvvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_rvvd</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for RVVD keyword</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df2res_pbvd" title="res2df.equil.df2res_pbvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pbvd</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.equil.df2res_pbvd" title="res2df.equil.df2res_pbvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pbvd</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PBVD keyword</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.df2res_pdvd" title="res2df.equil.df2res_pdvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pdvd</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.equil.df2res_pdvd" title="res2df.equil.df2res_pdvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pdvd</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PDVD keyword.</p></td>
 </tr>
 </tbody>

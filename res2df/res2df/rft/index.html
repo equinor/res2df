@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.rft &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.rft &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -136,40 +136,40 @@ by adding the prefix <code class="docutils literal notranslate"><span class="pre
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.rftrecords" title="res2df.rft.rftrecords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rftrecords</span></code></a>(→ collections.abc.Iterable[dict[str, Any]])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.rftrecords" title="res2df.rft.rftrecords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rftrecords</span></code></a>(rftfile) → collections.abc.Iterable[dict[str, Any]]</p></td>
 <td><p>Generator for looping over RFT records in a ResdataFile object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.get_con_seg_data" title="res2df.rft.get_con_seg_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_con_seg_data</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.get_con_seg_data" title="res2df.rft.get_con_seg_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_con_seg_data</span></code></a>(rftrecord, rftfile, datatype) → pandas.DataFrame</p></td>
 <td><p>Build a dataframe of CON* or SEG* data for a specific RFT record,</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.count_wellbranches" title="res2df.rft.count_wellbranches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_wellbranches</span></code></a>(→ int)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.count_wellbranches" title="res2df.rft.count_wellbranches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_wellbranches</span></code></a>(seg_data) → int</p></td>
 <td><p>From a segment dataframe, coming from get_con_seg_data(..., &quot;SEG&quot;)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.process_seg_topology" title="res2df.rft.process_seg_topology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_seg_topology</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.process_seg_topology" title="res2df.rft.process_seg_topology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_seg_topology</span></code></a>(seg_data) → pandas.DataFrame</p></td>
 <td><p>Determine and process the segment topology.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.seg2dicttree" title="res2df.rft.seg2dicttree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">seg2dicttree</span></code></a>(→ dict)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.seg2dicttree" title="res2df.rft.seg2dicttree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">seg2dicttree</span></code></a>(seg_data) → dict</p></td>
 <td><p>Generate a nested dictionary representing the</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.pretty_print_well" title="res2df.rft.pretty_print_well"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pretty_print_well</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.pretty_print_well" title="res2df.rft.pretty_print_well"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pretty_print_well</span></code></a>(seg_data) → str</p></td>
 <td><p>Return a multiline string with the segment structure</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.split_seg_icd" title="res2df.rft.split_seg_icd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_seg_icd</span></code></a>(→ tuple[pandas.DataFrame, pandas.DataFrame])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.split_seg_icd" title="res2df.rft.split_seg_icd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_seg_icd</span></code></a>(seg_data) → tuple[pandas.DataFrame, pandas.DataFrame]</p></td>
 <td><p>Split a segment dataframe into a dataframe</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.merge_icd_seg_conseg" title="res2df.rft.merge_icd_seg_conseg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_icd_seg_conseg</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.merge_icd_seg_conseg" title="res2df.rft.merge_icd_seg_conseg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_icd_seg_conseg</span></code></a>(con_data[, seg_data, icd_data]) → pandas.DataFrame</p></td>
 <td><p>Merge ICD segments to the CONxxxxx data. We will be</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.add_extras" title="res2df.rft.add_extras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_extras</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.add_extras" title="res2df.rft.add_extras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_extras</span></code></a>(dframe[, inplace]) → pandas.DataFrame</p></td>
 <td><p>Add extra nice-to-have columns to the dataframe</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.df" title="res2df.rft.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.df" title="res2df.rft.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(resdatafiles[, wellname, date]) → pandas.DataFrame</p></td>
 <td><p>Loop over an RFT file and construct a dataframe representation</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.fill_parser" title="res2df.rft.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.rft.fill_parser" title="res2df.rft.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Set up sys.argv parsers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.rft_main" title="res2df.rft.rft_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rft_main</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.rft.rft_main" title="res2df.rft.rft_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rft_main</span></code></a>(args) → None</p></td>
 <td><p>Entry-point for module, for command line utility</p></td>
 </tr>
 </tbody>

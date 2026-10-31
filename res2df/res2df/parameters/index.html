@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.parameters &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.parameters &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -128,16 +128,16 @@ related to simulator runs</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.parameters.find_parameter_files" title="res2df.parameters.find_parameter_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_parameter_files</span></code></a>(→ list[pathlib.Path])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.parameters.find_parameter_files" title="res2df.parameters.find_parameter_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_parameter_files</span></code></a>(deckpath[, filebase]) → list[pathlib.Path]</p></td>
 <td><p>Locate a default prioritized list of files to try to read as key-value</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.parameters.load_parameterstxt" title="res2df.parameters.load_parameterstxt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_parameterstxt</span></code></a>(→ dict[str, Any])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.parameters.load_parameterstxt" title="res2df.parameters.load_parameterstxt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_parameterstxt</span></code></a>(filename) → dict[str, Any]</p></td>
 <td><p>Read parameters.txt into a dictionary</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.parameters.load_all" title="res2df.parameters.load_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_all</span></code></a>(→ dict[str, Any])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.parameters.load_all" title="res2df.parameters.load_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_all</span></code></a>(filenames[, warnduplicates]) → dict[str, Any]</p></td>
 <td><p>Reads a list of parameter filenames</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.parameters.load" title="res2df.parameters.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(→ dict[str, Any])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.parameters.load" title="res2df.parameters.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename) → dict[str, Any]</p></td>
 <td><p>Read a parameter file as txt, yaml or json</p></td>
 </tr>
 </tbody>

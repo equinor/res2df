@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.grid &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.grid &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -132,37 +132,37 @@ file.</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.get_available_rst_dates" title="res2df.grid.get_available_rst_dates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_rst_dates</span></code></a>(→ list[datetime.date])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.get_available_rst_dates" title="res2df.grid.get_available_rst_dates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_rst_dates</span></code></a>(resdatafiles) → list[datetime.date]</p></td>
 <td><p>Return a list of datetime objects for the available dates in the RST file</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.dates2rstindices" title="res2df.grid.dates2rstindices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dates2rstindices</span></code></a>(→ tuple[list[int], ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.dates2rstindices" title="res2df.grid.dates2rstindices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dates2rstindices</span></code></a>(resdatafiles, dates) → tuple[list[int], list[datetime.date], list[str]]</p></td>
 <td><p>Return the restart index/indices for a given datetime or list of datetimes</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.rst2df" title="res2df.grid.rst2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rst2df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.rst2df" title="res2df.grid.rst2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rst2df</span></code></a>(resdatafiles, date[, vectors, dateinheaders, ...]) → pandas.DataFrame</p></td>
 <td><p>Return a dataframe with dynamic data from the restart file</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.gridgeometry2df" title="res2df.grid.gridgeometry2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gridgeometry2df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.gridgeometry2df" title="res2df.grid.gridgeometry2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gridgeometry2df</span></code></a>(resdatafiles[, zonemap]) → pandas.DataFrame</p></td>
 <td><p>Produce a Pandas Dataframe with grid geometry</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.merge_initvectors" title="res2df.grid.merge_initvectors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_initvectors</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.merge_initvectors" title="res2df.grid.merge_initvectors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_initvectors</span></code></a>(resdatafiles, dframe, initvectors[, ...]) → pandas.DataFrame</p></td>
 <td><p>Merge in INIT vectors to a dataframe by I, J, K.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.init2df" title="res2df.grid.init2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init2df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.init2df" title="res2df.grid.init2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init2df</span></code></a>(resdatafiles[, vectors]) → pandas.DataFrame</p></td>
 <td><p>Extract information from INIT file with cell data</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.df" title="res2df.grid.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.df" title="res2df.grid.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(resdatafiles[, vectors, dropconstants, rstdates, ...]) → pandas.DataFrame</p></td>
 <td><p>Produce a dataframe with grid information</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.fill_parser" title="res2df.grid.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.fill_parser" title="res2df.grid.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Set up sys.argv parser.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.drop_constant_columns" title="res2df.grid.drop_constant_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">drop_constant_columns</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.drop_constant_columns" title="res2df.grid.drop_constant_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">drop_constant_columns</span></code></a>(dframe[, alwayskeep]) → pandas.DataFrame</p></td>
 <td><p>Drop/delete constant columns from a dataframe.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.df2res" title="res2df.grid.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.grid.df2res" title="res2df.grid.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(grid_df, keywords[, resdatafiles, dtype, ...]) → str</p></td>
 <td><p>Write a <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents with grid data keyword, like PERMX, PORO,</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.grid_main" title="res2df.grid.grid_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_main</span></code></a>(→ None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.grid.grid_main" title="res2df.grid.grid_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_main</span></code></a>(args) → None</p></td>
 <td><p>This is the command line API</p></td>
 </tr>
 </tbody>

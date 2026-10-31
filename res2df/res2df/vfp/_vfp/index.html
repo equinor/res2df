@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfp &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.vfp._vfp &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -131,46 +131,46 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table<
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.basic_data" title="res2df.vfp._vfp.basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data</span></code></a>(→ list[dict[str, Any]])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.basic_data" title="res2df.vfp._vfp.basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data</span></code></a>(deck[, keyword, vfpnumbers_str]) → list[dict[str, Any]]</p></td>
 <td><p>Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.basic_data2df" title="res2df.vfp._vfp.basic_data2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data2df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.basic_data2df" title="res2df.vfp._vfp.basic_data2df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data2df</span></code></a>(data) → pandas.DataFrame</p></td>
 <td><p>Convert basic_data representation of VFPPROD/VFPINF</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.basic_data2pyarrow" title="res2df.vfp._vfp.basic_data2pyarrow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data2pyarrow</span></code></a>(→ pyarrow.Table)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.basic_data2pyarrow" title="res2df.vfp._vfp.basic_data2pyarrow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_data2pyarrow</span></code></a>(data, /) → pyarrow.Table</p></td>
 <td><p>Convert basic_data representation of VFPPROD/VFPINF</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df2basic_data" title="res2df.vfp._vfp.df2basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2basic_data</span></code></a>(→ dict[str, Any] | None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df2basic_data" title="res2df.vfp._vfp.df2basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2basic_data</span></code></a>(dframe, /) → dict[str, Any] | None</p></td>
 <td><p>Produce a dictionary with basic data types for a VFPPROD/VFPINJ</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.pyarrow2basic_data" title="res2df.vfp._vfp.pyarrow2basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyarrow2basic_data</span></code></a>(→ dict[str, Any] | None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.pyarrow2basic_data" title="res2df.vfp._vfp.pyarrow2basic_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyarrow2basic_data</span></code></a>(pa_table) → dict[str, Any] | None</p></td>
 <td><p>Produce a dictionary with basic data types for a VFPPROD/VFPINJ</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.dfs" title="res2df.vfp._vfp.dfs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dfs</span></code></a>(→ list[pandas.DataFrame])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.dfs" title="res2df.vfp._vfp.dfs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dfs</span></code></a>(deck[, keyword, vfpnumbers_str]) → list[pandas.DataFrame]</p></td>
 <td><p>Produce a list of dataframes of vfp tables from a <a class="reference internal" href="../../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.pyarrow_tables" title="res2df.vfp._vfp.pyarrow_tables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyarrow_tables</span></code></a>(→ list[pyarrow.Table])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.pyarrow_tables" title="res2df.vfp._vfp.pyarrow_tables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyarrow_tables</span></code></a>(deck[, keyword, vfpnumbers_str]) → list[pyarrow.Table]</p></td>
 <td><p>Produce a list of pyarrow.Table of vfp tables from a <a class="reference internal" href="../../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df2ress" title="res2df.vfp._vfp.df2ress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2ress</span></code></a>(→ list[str])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df2ress" title="res2df.vfp._vfp.df2ress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2ress</span></code></a>(dframe[, keyword, comments]) → list[str]</p></td>
 <td><p>Produce a list of strings defining VFPPROD/VFPINJ Eclipse</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df2res" title="res2df.vfp._vfp.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df2res" title="res2df.vfp._vfp.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(dframe[, keyword, comments, filename]) → str</p></td>
 <td><p>Create a string defining all VFPPROD/VFPINJ Eclipse</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df" title="res2df.vfp._vfp.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.df" title="res2df.vfp._vfp.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(deck[, keyword, vfpnumbers_str]) → pandas.DataFrame</p></td>
 <td><p>Produce a dataframes of all vfp tables from a deck</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.fill_parser" title="res2df.vfp._vfp.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.fill_parser" title="res2df.vfp._vfp.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Set up sys.argv parsers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.fill_reverse_parser" title="res2df.vfp._vfp.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.fill_reverse_parser" title="res2df.vfp._vfp.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Fill a parser for the operation dataframe -&gt; resdata <a class="reference internal" href="../../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.vfp_main" title="res2df.vfp._vfp.vfp_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vfp_main</span></code></a>(→ None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.vfp._vfp.vfp_main" title="res2df.vfp._vfp.vfp_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vfp_main</span></code></a>(args) → None</p></td>
 <td><p>Entry-point for module, for command line utility.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.vfp_reverse_main" title="res2df.vfp._vfp.vfp_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vfp_reverse_main</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.vfp._vfp.vfp_reverse_main" title="res2df.vfp._vfp.vfp_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vfp_reverse_main</span></code></a>(args) → None</p></td>
 <td><p>Entry-point for module, for command line utility for CSV to Eclipse</p></td>
 </tr>
 </tbody>

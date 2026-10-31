@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.pvt &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.pvt &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -128,64 +128,64 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvtw_fromdeck" title="res2df.pvt.pvtw_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvtw_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvtw_fromdeck" title="res2df.pvt.pvtw_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvtw_fromdeck</span></code></a>(deck[, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract PVTW from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.density_fromdeck" title="res2df.pvt.density_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">density_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.density_fromdeck" title="res2df.pvt.density_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">density_fromdeck</span></code></a>(deck[, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract DENSITY from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.rock_fromdeck" title="res2df.pvt.rock_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rock_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.rock_fromdeck" title="res2df.pvt.rock_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rock_fromdeck</span></code></a>(deck[, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract ROCK from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.pvto_fromdeck" title="res2df.pvt.pvto_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvto_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.pvto_fromdeck" title="res2df.pvt.pvto_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvto_fromdeck</span></code></a>(deck[, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract PVTO from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvdo_fromdeck" title="res2df.pvt.pvdo_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvdo_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvdo_fromdeck" title="res2df.pvt.pvdo_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvdo_fromdeck</span></code></a>(deck[, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract PVDO from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.pvdg_fromdeck" title="res2df.pvt.pvdg_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvdg_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.pvdg_fromdeck" title="res2df.pvt.pvdg_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvdg_fromdeck</span></code></a>(deck[, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract PVDG from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvtg_fromdeck" title="res2df.pvt.pvtg_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvtg_fromdeck</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvtg_fromdeck" title="res2df.pvt.pvtg_fromdeck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvtg_fromdeck</span></code></a>(deck[, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract PVTG from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df" title="res2df.pvt.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df" title="res2df.pvt.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(deck[, keywords, ntpvt]) → pandas.DataFrame</p></td>
 <td><p>Extract all (most) PVT data from a <a class="reference internal" href="../../../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.fill_parser" title="res2df.pvt.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.fill_parser" title="res2df.pvt.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Set up sys.argv parsers for parsing <a class="reference internal" href="../../../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.fill_reverse_parser" title="res2df.pvt.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.fill_reverse_parser" title="res2df.pvt.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Set up sys.argv parsers for writing <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a> from</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvt_main" title="res2df.pvt.pvt_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvt_main</span></code></a>(→ None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.pvt_main" title="res2df.pvt.pvt_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvt_main</span></code></a>(args) → None</p></td>
 <td><p>Entry-point for module, for command line utility for Eclipse to CSV</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.pvt_reverse_main" title="res2df.pvt.pvt_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvt_reverse_main</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.pvt_reverse_main" title="res2df.pvt.pvt_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pvt_reverse_main</span></code></a>(args) → None</p></td>
 <td><p>Entry-point for module, for command line utility for CSV to simulator</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res" title="res2df.pvt.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res" title="res2df.pvt.df2res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res</span></code></a>(pvt_df[, keywords, comments, filename]) → str</p></td>
 <td><p>Generate resdata <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content from PVT dataframes</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_rock" title="res2df.pvt.df2res_rock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_rock</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_rock" title="res2df.pvt.df2res_rock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_rock</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for ROCK keyword</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res_density" title="res2df.pvt.df2res_density"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_density</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res_density" title="res2df.pvt.df2res_density"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_density</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for DENSITY keyword</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvtw" title="res2df.pvt.df2res_pvtw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvtw</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvtw" title="res2df.pvt.df2res_pvtw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvtw</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PVTW keyword</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvtg" title="res2df.pvt.df2res_pvtg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvtg</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvtg" title="res2df.pvt.df2res_pvtg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvtg</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PVTG keyword</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvdg" title="res2df.pvt.df2res_pvdg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvdg</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvdg" title="res2df.pvt.df2res_pvdg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvdg</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PVDG keyword</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvdo" title="res2df.pvt.df2res_pvdo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvdo</span></code></a>(→ str)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvdo" title="res2df.pvt.df2res_pvdo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvdo</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PVDO keyword</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvto" title="res2df.pvt.df2res_pvto"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvto</span></code></a>(→ str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.pvt.df2res_pvto" title="res2df.pvt.df2res_pvto"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2res_pvto</span></code></a>(dframe[, comment]) → str</p></td>
 <td><p>Create string with <a class="reference internal" href="../../../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PVTO-data from a dataframe</p></td>
 </tr>
 </tbody>

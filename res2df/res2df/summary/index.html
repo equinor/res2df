@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.3.18.dev1+g9a980960e documentation</title>
+  <title>res2df.summary &mdash; res2df 1.3.18.dev2+gf138f3763 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=75c6dacb"></script>
+      <script src="../../../_static/documentation_options.js?v=44711560"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -127,31 +127,31 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.date_range" title="res2df.summary.date_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date_range</span></code></a>(→ collections.abc.Iterable[datetime.datetime])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.date_range" title="res2df.summary.date_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date_range</span></code></a>(start_date, end_date, freq) → collections.abc.Iterable[datetime.datetime]</p></td>
 <td><p>Wrapper for pandas.date_range to allow for extra res2df specific mnemonics</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.resample_smry_dates" title="res2df.summary.resample_smry_dates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resample_smry_dates</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.resample_smry_dates" title="res2df.summary.resample_smry_dates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resample_smry_dates</span></code></a>(summarydates[, freq, normalize, ...]) → list[datetime.date] | list[datetime.datetime]</p></td>
 <td><p>Resample (optionally) a list of date(time)s to a new datelist according to options.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.df" title="res2df.summary.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(→ pandas.DataFrame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.df" title="res2df.summary.df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df</span></code></a>(resdatafiles[, time_index, column_keys, ...]) → pandas.DataFrame</p></td>
 <td><p>Extract data from UNSMRY as Pandas dataframes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.smry_meta" title="res2df.summary.smry_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smry_meta</span></code></a>(→ dict[str, dict[str, Any]])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.smry_meta" title="res2df.summary.smry_meta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smry_meta</span></code></a>(resdatafiles) → dict[str, dict[str, Any]]</p></td>
 <td><p>Provide metadata for summary data vectors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.df2ressum" title="res2df.summary.df2ressum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2ressum</span></code></a>(→ resdata.summary.Summary | None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.df2ressum" title="res2df.summary.df2ressum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df2ressum</span></code></a>(dframe[, casename]) → resdata.summary.Summary | None</p></td>
 <td><p>Convert a dataframe to a Summary object</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.fill_parser" title="res2df.summary.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.fill_parser" title="res2df.summary.fill_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Set up sys.argv parsers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.fill_reverse_parser" title="res2df.summary.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.fill_reverse_parser" title="res2df.summary.fill_reverse_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_reverse_parser</span></code></a>(parser) → argparse.ArgumentParser</p></td>
 <td><p>Fill a parser for the operation:  dataframe -&gt; summary files</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.summary_main" title="res2df.summary.summary_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary_main</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#res2df.summary.summary_main" title="res2df.summary.summary_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary_main</span></code></a>(args) → None</p></td>
 <td><p>Read summary data from disk and write CSV back to disk</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.summary_reverse_main" title="res2df.summary.summary_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary_reverse_main</span></code></a>(→ None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#res2df.summary.summary_reverse_main" title="res2df.summary.summary_reverse_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary_reverse_main</span></code></a>(args) → None</p></td>
 <td><p>Entry point for usage with &quot;csv2res summary&quot; on the command line</p></td>
 </tr>
 </tbody>

@@ -201,9 +201,12 @@ def test_df2res():
     tworows["PRESSURE"] = [3456, 1234]
     with pytest.raises(ValueError):
         common.df2res(tworows, supported=["EQUIL"], consecutive="EQLNUM")
+
     # This would be a bug if client code did this, because the wrong
     # consecutive column is set:
-    assert "3456" in common.df2res(tworows, supported=["EQUIL"], consecutive="PVTNUM")
+    # Only look after the keyword, as the header contains a timestamp:
+    string = common.df2res(tworows, supported=["EQUIL"], consecutive="PVTNUM")
+    assert "3456" in string.split("EQUIL", maxsplit=1)[1]
     tworows["EQLNUM"] = [1, 3]
     with pytest.raises(ValueError):
         common.df2res(tworows, supported=["EQUIL"], consecutive="EQLNUM")
@@ -211,7 +214,8 @@ def test_df2res():
     # Passes because the frame is sorted on EQLNUM:
     string = common.df2res(tworows, supported=["EQUIL"], consecutive="EQLNUM")
     assert "EQUIL" in string
-    assert string.find("3456") > string.find("1234")
+    after_keyword = string.split("EQUIL", maxsplit=1)[1]
+    assert after_keyword.find("3456") > after_keyword.find("1234")
 
 
 @pytest.mark.parametrize(

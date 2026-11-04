@@ -5,13 +5,12 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from itertools import pairwise
 from pathlib import Path
-from typing import Self
+from typing import Any, Self
 
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
 from natsort import natsorted
-from resdata.summary import Summary
 from resfo_utilities import (
     InvalidSummaryError,
     InvalidSummaryKeyError,
@@ -28,13 +27,36 @@ _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
 _DUMMY_NAME = ":+:+:+:+"
 _WELL = SummaryKeyType.WELL
 _GROUP = SummaryKeyType.GROUP
+_TOTAL_ROOTS = (
+    "OPT", "OIT", "OVPT", "OVIT", "OMT", "GPT", "GIT", "GVPT", "GVIT", "GMT",
+    "WGPT", "WGIT", "WPT", "WIT", "WVPT", "WVIT", "WMT", "LPT", "VPT", "VIT",
+    "RGT", "EGT", "EXGT", "SGT", "GST", "FGT", "GIMT", "GCT", "NPT", "NIT",
+    "CPT", "CIT", "SIT", "SPT", "TIT", "TPT", "GMIT",
+)  # fmt: skip
+_SEGMENT_TOTAL_ROOTS = ("OFT", "GFT", "WFT")
+_LGR_TYPES = {
+    SummaryKeyType.LOCAL_WELL,
+    SummaryKeyType.LOCAL_BLOCK,
+    SummaryKeyType.LOCAL_COMPLETION,
+}
+_WGNAME_TYPES = {
+    SummaryKeyType.WELL,
+    SummaryKeyType.GROUP,
+    SummaryKeyType.COMPLETION,
+    SummaryKeyType.SEGMENT,
+    SummaryKeyType.LOCAL_WELL,
+    SummaryKeyType.LOCAL_COMPLETION,
+    SummaryKeyType.NETWORK,
+}
 
 
 def summary_pandas_frame(
-    summary: Summary | str | os.PathLike[str],
-    time_index: Sequence[datetime | date] | None = None,
+    case: str | os.PathLike[str],
+    time_index: str | date | Sequence[datetime | date] | None = None,
     column_keys: Sequence[str] | None = None,
     include_restart: bool = True,
+    start_date: str | date | None = None,
+    end_date: str | date | None = None,
 ) -> pd.DataFrame:
     """Create a pandas frame with summary data.
 
@@ -43,26 +65,30 @@ def summary_pandas_frame(
     (0 outside the simulated range) while other values are linearly
     interpolated (and constant outside the simulated range).
 
+    The metadata (see :func:`res2df.summary.smry_meta`) for the
+    columns is available as ``dframe.attrs["meta"]``.
+
     Args:
-        summary: Either a ``resdata.summary.Summary`` object, in which case
-            ``Summary.pandas_frame`` is used, or the name of a summary case.
-            The case can be the basename (``path/to/CASE``), a summary file
-            (``path/to/CASE.UNSMRY``), or a directory with exactly one
-            ``.DATA`` file (``path/to/``).
-        time_index: Times to interpolate to, default is the times in the summary.
+        case: The name of a summary case. The case can be the basename
+            (``path/to/CASE``), a summary file (``path/to/CASE.UNSMRY``),
+            or a directory with exactly one ``.DATA`` file (``path/to/``).
+        time_index: Times to interpolate to, or a resampling frequency
+            as accepted by :func:`res2df.summary.resample_smry_dates`.
+            Default is the times in the summary.
         column_keys: List of key patterns (wildcards ``*`` etc. allowed),
             default is all summary vectors.
         include_restart: Whether to include data from the case it was restarted
-            from. Ignored if ``summary`` is a ``Summary`` object, as that is
-            decided on construction.
+            from.
+        start_date: Passed on to :func:`res2df.summary.resample_smry_dates`
+            when ``time_index`` is a string.
+        end_date: Passed on to :func:`res2df.summary.resample_smry_dates`
+            when ``time_index`` is a string.
 
     Raises:
         FileNotFoundError: If no summary files were found for the given case.
         InvalidSummaryError: If the summary files have invalid contents.
     """
-    if isinstance(summary, Summary):
-        return summary.pandas_frame(time_index, column_keys)
-    cases = _read_restart_chain(os.fspath(summary), include_restart)
+    cases = _read_restart_chain(os.fspath(case), include_restart)
     main = cases[0]
     chosen = _select_columns(main, column_keys)
     columns = [name for name, _ in chosen]
@@ -71,29 +97,156 @@ def summary_pandas_frame(
     times, values = _merge(
         [_read_block(case, main, selected) for case in cases], len(selected)
     )
-    if time_index is None:
-        return pd.DataFrame(
-            index=pd.DatetimeIndex(times.astype("datetime64[s]")).as_unit("us"),
-            columns=columns,
-            data=values,
-            copy=False,
-        )
-    requested = np.array([_naive_seconds(t) for t in time_index], dtype=np.int64)
-    index_values = list(time_index)
     index: pd.Index
+    if time_index is None or _is_unmodified_raw(
+        times, time_index, start_date, end_date
+    ):
+        index = _seconds_index(times)
+    else:
+        index, requested = _requested(times, time_index, start_date, end_date)
+        values = _interpolate(times, values, rates, requested)
+    dframe = pd.DataFrame(index=index, columns=columns, data=values, copy=False)
+    dframe.attrs["meta"] = {
+        name: _meta(main.keywords[i]) for name, i in chosen if name != "TIME"
+    }
+    return dframe
+
+
+def _is_unmodified_raw(
+    times: npt.NDArray[np.int64],
+    time_index: str | date | Sequence[datetime | date],
+    start_date: str | date | None,
+    end_date: str | date | None,
+) -> bool:
+    """Whether interpolating to the "raw" time index would give the same times."""
+    return (
+        isinstance(time_index, str)
+        and time_index == "raw"
+        and start_date is None
+        and end_date is None
+        and bool(np.all(times[1:] >= times[:-1]))
+    )
+
+
+def _seconds_index(times: npt.NDArray[np.int64]) -> pd.DatetimeIndex:
+    return pd.DatetimeIndex(times.astype("datetime64[s]")).as_unit("us")
+
+
+def _requested(
+    times: npt.NDArray[np.int64],
+    time_index: str | date | Sequence[datetime | date],
+    start_date: str | date | None,
+    end_date: str | date | None,
+) -> tuple[pd.Index, npt.NDArray[np.int64]]:
+    """The index of the frame and the corresponding seconds to interpolate to."""
+    index_values: Sequence[datetime | date]
+    if isinstance(time_index, str) and time_index == "raw":
+        requested = _crop_times(times, start_date, end_date)
+        return _seconds_index(requested), requested
+    if isinstance(time_index, (str, date)):
+        # Imported here as summary imports this module
+        from .summary import resample_smry_dates  # noqa: PLC0415
+
+        if len(times) == 0:
+            return pd.Index([]), np.zeros(0, dtype=np.int64)
+        # Resampling only depends on the first and last time
+        index_values = resample_smry_dates(
+            [_to_datetime(times.min()), _to_datetime(times.max())],
+            time_index,  # type: ignore[arg-type]
+            True,
+            start_date,
+            end_date,
+        )
+    else:
+        index_values = list(time_index)
+    requested = np.array([_naive_seconds(t) for t in index_values], dtype=np.int64)
     if index_values and all(
         isinstance(t, datetime) and t.tzinfo is None for t in index_values
     ):
         # pandas 2 would infer nanoseconds, which overflows after year 2262
-        index = pd.DatetimeIndex(np.array(index_values, dtype="datetime64[us]"))
-    else:
-        index = pd.Index(index_values)
-    return pd.DataFrame(
-        index=index,
-        columns=columns,
-        data=_interpolate(times, values, rates, requested),
-        copy=False,
-    )
+        return pd.DatetimeIndex(
+            np.array(index_values, dtype="datetime64[us]")
+        ), requested
+    return pd.Index(index_values), requested
+
+
+def _crop_times(
+    times: npt.NDArray[np.int64],
+    start_date: str | date | None,
+    end_date: str | date | None,
+) -> npt.NDArray[np.int64]:
+    """Specialization of resample_smry_dates(dates, "raw", ...) for seconds."""
+    from .summary import _ensure_date_or_none  # noqa: PLC0415
+
+    times = np.sort(times)
+    start = _ensure_date_or_none(start_date)
+    end = _ensure_date_or_none(end_date)
+    if start:
+        start_time = _naive_seconds(start)
+        times = np.concatenate(([start_time], times[times > start_time]))
+    if end:
+        end_time = _naive_seconds(end)
+        times = np.concatenate((times[times < end_time], [end_time]))
+    return times.astype(np.int64)
+
+
+def _to_datetime(seconds: np.int64) -> datetime:
+    return _EPOCH + timedelta(seconds=int(seconds))
+
+
+def _meta(kw: SummaryKeyword) -> dict[str, Any]:
+    """Metadata for a summary vector, as given by resdata.summary.Summary"""
+    variable = kw.summary_variable
+    key_type = SummaryKeyType.from_variable(variable)
+    meta: dict[str, Any] = {
+        "unit": kw.unit,
+        "is_total": _is_total(variable, key_type),
+        "is_rate": is_rate(variable),
+        "is_historical": variable.endswith("H")
+        and key_type in (_WELL, _GROUP, SummaryKeyType.FIELD),
+        "keyword": variable,
+        "wgname": kw.name
+        if key_type in _WGNAME_TYPES and kw.name and kw.name != _DUMMY_NAME
+        else None,
+    }
+    if key_type in _LGR_TYPES:
+        meta["get_num"] = 0  # resdata does not use NUMS for LGR variables
+    elif kw.number is not None:
+        meta["get_num"] = int(kw.number)
+    return meta
+
+
+def _is_total(variable: str, key_type: SummaryKeyType) -> bool:
+    match key_type:
+        case (
+            SummaryKeyType.WELL
+            | SummaryKeyType.GROUP
+            | SummaryKeyType.FIELD
+            | SummaryKeyType.REGION
+            | SummaryKeyType.COMPLETION
+        ):
+            return variable[1:].startswith(_TOTAL_ROOTS)
+        case SummaryKeyType.LOCAL_WELL | SummaryKeyType.LOCAL_COMPLETION:
+            return variable[2:].startswith(_TOTAL_ROOTS)
+        case SummaryKeyType.SEGMENT:
+            return variable[1:].startswith(_SEGMENT_TOTAL_ROOTS)
+        case SummaryKeyType.INTER_REGION:
+            return variable[2:4] == "FT" or variable[3:5] == "FT"
+        case _:
+            return False
+
+
+def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
+    """Metadata for all the summary vectors of the case.
+
+    See :func:`res2df.summary.smry_meta` for the content.
+    """
+    main = _Case.read(_open_reader(os.fspath(case)))
+    return {
+        key: _meta(main.keywords[i])
+        for key, i in _pattern_index(main).items()
+        if key != "TIME"
+    }
 
 
 def _naive_seconds(time: datetime | date) -> int:
@@ -350,19 +503,27 @@ def _interpolate(
     after = np.searchsorted(times, requested, side="left")
     lower = np.maximum(after - 1, 0)
     upper = np.minimum(after, len(times) - 1)
-    diff = (times[upper] - times[lower]).astype(np.float64)[:, None]
+    diff = (times[upper] - times[lower]).astype(np.float64)
     with np.errstate(divide="ignore", invalid="ignore"):
-        weight_lower = -(requested - times[upper]).astype(np.float64)[:, None] / diff
-        weight_upper = (requested - times[lower]).astype(np.float64)[:, None] / diff
-        interpolated = np.where(
-            (after == 0)[:, None],
-            values[0],
-            values[lower] * weight_lower + values[upper] * weight_upper,
-        )
-    inside = np.where(rates, values[upper], interpolated)
-    below = (requested < times[0])[:, None]
-    outside = np.where(rates, 0.0, np.where(below, values[0], values[-1]))
-    return np.where(below | (requested > times[-1])[:, None], outside, inside)
+        # Weights computed as in resdata to get the same rounding
+        weight_lower = (times[upper] - requested) / diff
+        weight_upper = (requested - times[lower]) / diff
+    first = after == 0
+    weight_lower[first] = 1.0
+    weight_upper[first] = 0.0
+    # Operate in place as the result can be large
+    result = values[lower]
+    result *= weight_lower[:, None]
+    result += values[upper] * weight_upper[:, None]
+    if rates.any():
+        result[:, rates] = values[upper][:, rates]
+    below = requested < times[0]
+    above = requested > times[-1]
+    if below.any():
+        result[below] = np.where(rates, 0.0, values[0])
+    if above.any():
+        result[above] = np.where(rates, 0.0, values[-1])
+    return result
 
 
 def _open_reader(case: str) -> SummaryReader:

@@ -1,4 +1,5 @@
 import dataclasses
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -21,7 +22,9 @@ from resfo_utilities.testing import (
     summaries,
 )
 
+from res2df import ResdataFiles
 from res2df._summary_pandas_frame import summary_pandas_frame
+from res2df.summary import df
 
 pytestmark = pytest.mark.filterwarnings("ignore")
 
@@ -56,30 +59,47 @@ def load_summary(case: str, **kwargs) -> Summary:
     return Summary(case, lazy_load=False, **kwargs)
 
 
-# In the following we, just say "equivalent" to mean
-# that summary_pandas_frame returns the same value as the
-# reference summary.pandas_frame(), except that summary.pandas_frame
-# may return datetime64[us] while summary_pandas_frame() uses
-# datetime64[ms]
+# In the following we, just say "equivalent" to mean that summary.df
+# returns the same value when given a ResdataFiles (using
+# summary_pandas_frame) as when given the reference resdata Summary
+# object (using Summary.pandas_frame)
 
 
 def reference(case: str, time_index=None, column_keys=None, include_restart=True):
     summary = load_summary(case, include_restart=include_restart)
-    frame = summary.pandas_frame(time_index, column_keys)
-    if isinstance(frame.index, pd.DatetimeIndex):
-        # pandas 2 gives nanosecond resolution, which cannot represent
-        # dates after 2262, while pandas 3 gives microseconds
-        frame.index = frame.index.as_unit("us")
-    return frame
+    return df(summary, time_index, column_keys)
+
+
+def actual(case: str, time_index=None, column_keys=None, include_restart=True):
+    return df(
+        ResdataFiles(case), time_index, column_keys, include_restart=include_restart
+    )
+
+
+def _comparable_attrs(attrs: dict) -> dict:
+    # resdata <= 6.3.x reports the LGR name as wgname for local block vectors
+    # (LB*), while resdata >= 7.0.0-b3 (resdata commit 14c576fce) reports None.
+    meta = {
+        key: {**value, "wgname": None} if key.startswith("LB") else value
+        for key, value in attrs.get("meta", {}).items()
+    }
+    return {**attrs, "meta": meta}
 
 
 def assert_equivalent(
     case: str, time_index=None, column_keys=None, include_restart=True
-) -> pd.DataFrame:
-    expected = reference(case, time_index, column_keys, include_restart)
-    actual = summary_pandas_frame(case, time_index, column_keys, include_restart)
-    pd.testing.assert_frame_equal(actual, expected, check_exact=True)
-    return actual
+) -> pd.DataFrame | None:
+    try:
+        expected = reference(case, time_index, column_keys, include_restart)
+    except ValueError as err:
+        # Duplicate timestamps without a TIMESTEP vector
+        with pytest.raises(ValueError, match=re.escape(str(err))):
+            actual(case, time_index, column_keys, include_restart)
+        return None
+    frame = actual(case, time_index, column_keys, include_restart)
+    pd.testing.assert_frame_equal(frame, expected, check_exact=True)
+    assert _comparable_attrs(frame.attrs) == _comparable_attrs(expected.attrs)
+    return frame
 
 
 def time_indices(smry: Summary) -> list[list[datetime]]:
@@ -159,13 +179,11 @@ def test_that_summary_files_can_be_given_by_extension(
         ]
     for candidate in candidates:
         try:
-            expected = reference(str(candidate))
+            load_summary(str(candidate))
         except OSError:
             # SummaryReader is more lenient than resdata about extensions
             continue
-        pd.testing.assert_frame_equal(
-            summary_pandas_frame(str(candidate)), expected, check_exact=True
-        )
+        assert_equivalent(str(candidate))
 
 
 @fast_settings
@@ -179,14 +197,12 @@ def test_that_lower_case_files_are_equivalent(make_dir, generated, formatted):
     for name in ("case", "case.smspec", "case.fsmspec", "case.unsmry"):
         case = str(directory / name)
         try:
-            expected = reference(case)
+            load_summary(case)
         except OSError:
             with pytest.raises(OSError):
                 summary_pandas_frame(case)
         else:
-            pd.testing.assert_frame_equal(
-                summary_pandas_frame(case), expected, check_exact=True
-            )
+            assert_equivalent(case)
 
 
 @fast_settings
@@ -205,14 +221,12 @@ def test_that_directory_with_data_file_is_guessed(make_dir, generated):
 
 def assert_equivalent_or_error(case: str) -> None:
     try:
-        expected = reference(case)
+        load_summary(case)
     except OSError:
         with pytest.raises(FileNotFoundError):
             summary_pandas_frame(case)
     else:
-        pd.testing.assert_frame_equal(
-            summary_pandas_frame(case), expected, check_exact=True
-        )
+        assert_equivalent(case)
 
 
 @fast_settings
@@ -349,8 +363,9 @@ def test_that_key_types_are_equivalent(tmp_path, keys, use_days):
     )
     write_case(tmp_path, "CASE", smspec, Unsmry(steps))
     case = str(tmp_path / "CASE")
-    actual = assert_equivalent(case)
-    assert len(actual.columns) > 0
+    frame = assert_equivalent(case)
+    assert frame is not None
+    assert len(frame.columns) > 0
     smry = load_summary(case)
     for time_index in time_indices(smry):
         assert_equivalent(case, time_index)
@@ -388,13 +403,6 @@ def test_that_duplicate_keys_are_equivalent(tmp_path):
     case = str(tmp_path / "CASE")
     assert_equivalent(case)
     assert_equivalent(case, None, ["FOPR"])
-
-
-def test_that_summary_object_is_delegated(tmp_path):
-    smspec, unsmry = summaries().example()
-    write_case(tmp_path, "CASE", smspec, unsmry)
-    smry = load_summary(str(tmp_path / "CASE"))
-    pd.testing.assert_frame_equal(summary_pandas_frame(smry), smry.pandas_frame())
 
 
 def test_that_missing_case_raises_file_not_found(tmp_path):

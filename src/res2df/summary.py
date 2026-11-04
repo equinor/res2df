@@ -15,9 +15,9 @@ import numpy as np
 import pandas as pd
 import pyarrow as pa
 from resdata.summary import Summary
+from resfo_utilities import InvalidSummaryError
 
 from ._summary_pandas_frame import (
-    InvalidSummaryError,
     summary_meta,
     summary_pandas_frame,
 )

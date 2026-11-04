@@ -16,7 +16,11 @@ import pandas as pd
 import pyarrow as pa
 from resdata.summary import Summary
 
-from ._summary_pandas_frame import summary_pandas_frame
+from ._summary_pandas_frame import (
+    InvalidSummaryError,
+    summary_meta,
+    summary_pandas_frame,
+)
 from .common import write_dframe_stdout_file
 from .parameters import find_parameter_files, load, load_all
 from .res2csvlogger import getLogger_res2csv
@@ -292,7 +296,7 @@ def resample_smry_dates(
 
 
 def df(
-    resdatafiles: ResdataFiles,
+    resdatafiles: ResdataFiles | Summary,
     time_index: str | None = None,
     column_keys: list[str] | str | None = None,
     start_date: str | dt.date | None = None,
@@ -343,42 +347,14 @@ def df(
     if isinstance(column_keys, str):
         column_keys = [column_keys]
 
-    if isinstance(resdatafiles, Summary):
-        summary = resdatafiles
-    else:
-        try:
-            summary = resdatafiles.get_summary(include_restart=include_restart)
-        except OSError:
-            logger.warning("Error reading summary instance, returning empty dataframe")
-            return pd.DataFrame()
-
-    time_index_arg: list[dt.date] | list[dt.datetime] | None
-    if isinstance(time_index, str) and time_index == "raw":
-        time_index_arg = resample_smry_dates(
-            summary.dates,
-            "raw",
-            False,
-            start_date,
-            end_date,
-        )
-    elif isinstance(time_index, str):
-        time_index_arg = resample_smry_dates(
-            summary.dates,
-            time_index,
-            True,
-            start_date,
-            end_date,
-        )
-    else:
-        time_index_arg = time_index
-
-    if time_index_arg is None:
+    if time_index is None:
         time_index_str = ""
-    elif isinstance(time_index_arg, (list, np.ndarray)):
-        if len(time_index_arg) < 6:
-            time_index_str = str(time_index_arg)
-        else:
-            time_index_str = f"{time_index_arg[0:3]} … {time_index_arg[-3:]}"
+    elif isinstance(time_index, str):
+        time_index_str = time_index
+    elif len(time_index) < 6:
+        time_index_str = str(time_index)
+    else:
+        time_index_str = f"{time_index[0:3]} … {time_index[-3:]}"
 
     if not column_keys or not column_keys[0]:
         column_keys_str = "*"
@@ -390,12 +366,47 @@ def df(
         time_index_str or "raw",
     )
 
-    dframe = summary_pandas_frame(
-        summary if isinstance(resdatafiles, Summary) else resdatafiles._eclbase,
-        time_index_arg,
-        column_keys,
-        include_restart,
-    )
+    if isinstance(resdatafiles, Summary):
+        time_index_arg: list[dt.date] | list[dt.datetime] | None
+        if isinstance(time_index, str) and time_index == "raw":
+            time_index_arg = resample_smry_dates(
+                resdatafiles.dates,
+                "raw",
+                False,
+                start_date,
+                end_date,
+            )
+        elif isinstance(time_index, str):
+            time_index_arg = resample_smry_dates(
+                resdatafiles.dates,
+                time_index,
+                True,
+                start_date,
+                end_date,
+            )
+        else:
+            time_index_arg = time_index
+        # resdata also accepts dates, contrary to its type hints
+        dframe = resdatafiles.pandas_frame(time_index_arg, column_keys)  # type: ignore[arg-type]
+        if isinstance(dframe.index, pd.DatetimeIndex):
+            # pandas 2 gives nanosecond resolution, which cannot represent
+            # dates after 2262, while pandas 3 gives microseconds
+            dframe.index = dframe.index.as_unit("us")
+        meta = smry_meta(resdatafiles)
+    else:
+        try:
+            dframe = summary_pandas_frame(
+                resdatafiles._eclbase,
+                time_index,
+                column_keys,
+                include_restart,
+                start_date,
+                end_date,
+            )
+        except (OSError, InvalidSummaryError):
+            logger.warning("Error reading summary instance, returning empty dataframe")
+            return pd.DataFrame()
+        meta = dframe.attrs["meta"]
 
     logger.info(
         "Dataframe with smry data ready, %d columns and %d rows",
@@ -407,7 +418,6 @@ def df(
         dframe = _merge_params(dframe, paramfile, resdatafiles)
 
     # Add metadata as an attribute the dataframe, using experimental Pandas features:
-    meta = smry_meta(summary)
     # Slice meta to dataframe columns:
     dframe.attrs["meta"] = {
         column_key: meta[column_key] for column_key in dframe if column_key in meta
@@ -582,10 +592,9 @@ def smry_meta(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
     * keyword (str)
     * wgname (str or None)
     """
-    if isinstance(resdatafiles, Summary):
-        summary = resdatafiles
-    else:
-        summary = resdatafiles.get_summary()
+    if not isinstance(resdatafiles, Summary):
+        return summary_meta(resdatafiles._eclbase)
+    summary = resdatafiles
 
     meta: dict[str, dict[str, Any]] = {}
     for col in summary:

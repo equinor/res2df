@@ -1105,6 +1105,8 @@ def test_df2ressum(dframe):
         dframe.sort_index(axis=1),
         dframe_roundtrip.sort_index(axis=1),
         check_dtype=False,
+        # The roundtrip index is datetime64[us], while pandas 2 gives [ns] input
+        check_index_type=PANDAS_MAJOR_VERSION >= 3,
     )
 
 

@@ -65,14 +65,18 @@ def load_summary(case: str, **kwargs) -> Summary:
 # object (using Summary.pandas_frame)
 
 
-def reference(case: str, time_index=None, column_keys=None, include_restart=True):
+def reference(case: str, time_index=None, column_keys=None, include_restart=True, **kw):
     summary = load_summary(case, include_restart=include_restart)
-    return df(summary, time_index, column_keys)
+    return df(summary, time_index, column_keys, **kw)
 
 
-def actual(case: str, time_index=None, column_keys=None, include_restart=True):
+def actual(case: str, time_index=None, column_keys=None, include_restart=True, **kw):
     return df(
-        ResdataFiles(case), time_index, column_keys, include_restart=include_restart
+        ResdataFiles(case),
+        time_index,
+        column_keys,
+        include_restart=include_restart,
+        **kw,
     )
 
 
@@ -87,16 +91,16 @@ def _comparable_attrs(attrs: dict) -> dict:
 
 
 def assert_equivalent(
-    case: str, time_index=None, column_keys=None, include_restart=True
+    case: str, time_index=None, column_keys=None, include_restart=True, **kw
 ) -> pd.DataFrame | None:
     try:
-        expected = reference(case, time_index, column_keys, include_restart)
+        expected = reference(case, time_index, column_keys, include_restart, **kw)
     except ValueError as err:
         # Duplicate timestamps without a TIMESTEP vector
         with pytest.raises(ValueError, match=re.escape(str(err))):
-            actual(case, time_index, column_keys, include_restart)
+            actual(case, time_index, column_keys, include_restart, **kw)
         return None
-    frame = actual(case, time_index, column_keys, include_restart)
+    frame = actual(case, time_index, column_keys, include_restart, **kw)
     pd.testing.assert_frame_equal(frame, expected, check_exact=True)
     assert _comparable_attrs(frame.attrs) == _comparable_attrs(expected.attrs)
     return frame
@@ -449,6 +453,29 @@ def test_that_arbitrary_time_indices_are_equivalent(
         time_index = [t.date() for t in time_index]
     assert_equivalent(case, time_index)
     assert_equivalent(case, time_index, ["F*", "W*"])
+
+
+@fast_settings
+@given(
+    generated=overlapping,
+    time_index=st.sampled_from(["raw", "daily", "monthly", "yearly"]),
+    start_date=st.one_of(st.none(), close_dates),
+    end_date=st.one_of(st.none(), close_dates),
+    small_chunks=st.booleans(),
+)
+def test_that_resampling_with_date_range_is_equivalent(
+    make_dir, generated, time_index, start_date, end_date, small_chunks, monkeypatch
+):
+    smspec, unsmry = generated
+    directory = make_dir()
+    write_case(directory, "CASE", smspec, unsmry)
+    case = str(directory / "CASE")
+    assume(len(load_summary(case).dates) > 1)
+    if small_chunks:  # Exercise the chunked interpolation
+        monkeypatch.setattr("res2df._summary_pandas_frame._CHUNK_BYTES", 16)
+    assert_equivalent(case, time_index, start_date=start_date, end_date=end_date)
+    if end_date is not None:
+        assert_equivalent(case, time_index, end_date=end_date.date())
 
 
 @fast_settings

@@ -25,6 +25,7 @@ _EPOCH = datetime(1970, 1, 1)
 _DEFAULT_VALUE = -99.0
 _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
 _DUMMY_NAME = ":+:+:+:+"
+_CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL
 _GROUP = SummaryKeyType.GROUP
 _TOTAL_ROOTS = (
@@ -98,9 +99,10 @@ def summary_pandas_frame(
         [_read_block(case, main, selected) for case in cases], len(selected)
     )
     index: pd.Index
-    if time_index is None or _is_unmodified_raw(
-        times, time_index, start_date, end_date
-    ):
+    if time_index is None:
+        index = _seconds_index(times)
+    elif isinstance(time_index, str) and time_index == "raw":
+        times, values = _crop(times, values, rates, start_date, end_date)
         index = _seconds_index(times)
     else:
         index, requested = _requested(times, time_index, start_date, end_date)
@@ -110,22 +112,6 @@ def summary_pandas_frame(
         name: _meta(main.keywords[i]) for name, i in chosen if name != "TIME"
     }
     return dframe
-
-
-def _is_unmodified_raw(
-    times: npt.NDArray[np.int64],
-    time_index: str | date | Sequence[datetime | date],
-    start_date: str | date | None,
-    end_date: str | date | None,
-) -> bool:
-    """Whether interpolating to the "raw" time index would give the same times."""
-    return (
-        isinstance(time_index, str)
-        and time_index == "raw"
-        and start_date is None
-        and end_date is None
-        and bool(np.all(times[1:] >= times[:-1]))
-    )
 
 
 def _seconds_index(times: npt.NDArray[np.int64]) -> pd.DatetimeIndex:
@@ -140,9 +126,6 @@ def _requested(
 ) -> tuple[pd.Index, npt.NDArray[np.int64]]:
     """The index of the frame and the corresponding seconds to interpolate to."""
     index_values: Sequence[datetime | date]
-    if isinstance(time_index, str) and time_index == "raw":
-        requested = _crop_times(times, start_date, end_date)
-        return _seconds_index(requested), requested
     if isinstance(time_index, (str, date)):
         # Imported here as summary imports this module
         from .summary import resample_smry_dates  # noqa: PLC0415
@@ -170,24 +153,50 @@ def _requested(
     return pd.Index(index_values), requested
 
 
-def _crop_times(
+def _crop(
     times: npt.NDArray[np.int64],
+    values: npt.NDArray[np.float64],
+    rates: npt.NDArray[np.bool_],
     start_date: str | date | None,
     end_date: str | date | None,
-) -> npt.NDArray[np.int64]:
-    """Specialization of resample_smry_dates(dates, "raw", ...) for seconds."""
+) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
+    """The times and values at resample_smry_dates(dates, "raw", ...).
+
+    Equivalent to interpolating to those times, but the rows within the range
+    are taken as is, and only the rows at start_date and end_date are
+    interpolated.
+    """
     from .summary import _ensure_date_or_none  # noqa: PLC0415
 
-    times = np.sort(times)
+    if not np.all(times[1:] >= times[:-1]):
+        order = np.argsort(times, kind="stable")
+        times, values = times[order], values[order]
     start = _ensure_date_or_none(start_date)
     end = _ensure_date_or_none(end_date)
+    if not start and not end:
+        return times, values
+    first, last = 0, len(times)
+    head: list[int] = []
+    tail: list[int] = []
     if start:
-        start_time = _naive_seconds(start)
-        times = np.concatenate(([start_time], times[times > start_time]))
+        head = [_naive_seconds(start)]
+        first = int(np.searchsorted(times, head[0], "right"))
     if end:
-        end_time = _naive_seconds(end)
-        times = np.concatenate((times[times < end_time], [end_time]))
-    return times.astype(np.int64)
+        tail = [_naive_seconds(end)]
+        last = int(np.searchsorted(times, tail[0], "left"))
+    if head and tail and head[0] >= tail[0]:
+        head = []  # The start is also cropped by the end
+    edge_times = np.array(head + tail, dtype=np.int64)
+    edge_values = _interpolate(times, values, rates, edge_times)
+    inside = slice(first, max(first, last))
+    return (
+        np.concatenate(
+            (edge_times[: len(head)], times[inside], edge_times[len(head) :])
+        ),
+        np.concatenate(
+            (edge_values[: len(head)], values[inside], edge_values[len(head) :])
+        ),
+    )
 
 
 def _to_datetime(seconds: np.int64) -> datetime:
@@ -500,6 +509,22 @@ def _interpolate(
     """
     if len(times) == 0:
         return np.zeros((len(requested), values.shape[1]))
+    result = np.empty((len(requested), values.shape[1]))
+    # Interpolate in chunks to bound the size of the temporaries
+    rows = max(1, _CHUNK_BYTES // max(1, values.shape[1] * values.itemsize))
+    for start in range(0, len(requested), rows):
+        chunk = slice(start, start + rows)
+        _interpolate_into(times, values, rates, requested[chunk], result[chunk])
+    return result
+
+
+def _interpolate_into(
+    times: npt.NDArray[np.int64],
+    values: npt.NDArray[np.float64],
+    rates: npt.NDArray[np.bool_],
+    requested: npt.NDArray[np.int64],
+    result: npt.NDArray[np.float64],
+) -> None:
     after = np.searchsorted(times, requested, side="left")
     lower = np.maximum(after - 1, 0)
     upper = np.minimum(after, len(times) - 1)
@@ -511,8 +536,7 @@ def _interpolate(
     first = after == 0
     weight_lower[first] = 1.0
     weight_upper[first] = 0.0
-    # Operate in place as the result can be large
-    result = values[lower]
+    np.take(values, lower, axis=0, out=result)
     result *= weight_lower[:, None]
     result += values[upper] * weight_upper[:, None]
     if rates.any():
@@ -523,7 +547,6 @@ def _interpolate(
         result[below] = np.where(rates, 0.0, values[0])
     if above.any():
         result[above] = np.where(rates, 0.0, values[-1])
-    return result
 
 
 def _open_reader(case: str) -> SummaryReader:

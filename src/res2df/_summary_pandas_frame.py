@@ -279,6 +279,7 @@ class _Case:
         reader: Reader for the summary files of the case.
         keys: The summary key for each parameter, None if invalid.
         by_key: The last parameter index for each key.
+        keywords: The keyword (variable, name, number, ...) of each parameter.
         rates: Whether each parameter is a rate.
         time_param: The index of the TIME parameter.
         time_unit: The number of seconds per unit of TIME.

@@ -1,5 +1,6 @@
 import fnmatch
 import os
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
@@ -465,17 +466,32 @@ def _select_columns(
     """
     if column_keys is None:
         return [(k, first.by_key[k]) for k in first.keys if k and k != "TIME"]
+    if not column_keys:
+        return []
     by_pattern = {k: i for i, k in enumerate(first.keys) if k is not None}
-    return [
-        (key, by_pattern[key])
-        for pattern in column_keys
-        for key in natsorted(
-            k
-            for k in by_pattern
-            if fnmatch.fnmatchcase(k, pattern)
-            and not (k == "TIME" and pattern in ("*", ""))
-        )
-    ]
+    wildcards = [p for p in column_keys if _is_wildcard(p)]
+    # One pass with all patterns combined (as in resdata's view_summary),
+    # the per-pattern matching then only visits the candidates.
+    candidates: list[str] = []
+    if wildcards:
+        any_match = re.compile("|".join(map(fnmatch.translate, wildcards))).match
+        candidates = [k for k in by_pattern if any_match(k)]
+    chosen = []
+    for pattern in column_keys:
+        if not _is_wildcard(pattern):
+            if pattern in by_pattern:
+                chosen.append((pattern, by_pattern[pattern]))
+            continue
+        match = re.compile(fnmatch.translate(pattern)).match
+        keys = [k for k in candidates if match(k)]
+        if pattern == "*" and "TIME" in by_pattern:
+            keys.remove("TIME")
+        chosen.extend((key, by_pattern[key]) for key in natsorted(keys))
+    return chosen
+
+
+def _is_wildcard(pattern: str) -> bool:
+    return any(c in pattern for c in "*?[")
 
 
 def _interpolate(

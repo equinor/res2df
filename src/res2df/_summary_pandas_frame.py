@@ -252,9 +252,7 @@ def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
     """
     main = _Case.read(_open_reader(os.fspath(case)))
     return {
-        key: _meta(main.keywords[i])
-        for key, i in _pattern_index(main).items()
-        if key != "TIME"
+        key: _meta(main.keywords[i]) for key, i in main.by_key.items() if key != "TIME"
     }
 
 
@@ -455,23 +453,6 @@ def _read_restart_chain(case_path: str, include_restart: bool) -> list[_Case]:
     return files
 
 
-def _pattern_index(case: _Case) -> dict[str, int]:
-    """The last parameter index for each key that can be matched by a pattern."""
-    by_pattern: dict[str, int] = {}
-    for i, (key, kw) in enumerate(zip(case.keys, case.keywords, strict=True)):
-        if key is None:
-            continue
-        by_pattern[key] = i
-        # Also match on the alternate "key2" used by resdata
-        if kw.number is not None:
-            match SummaryKeyType.from_variable(kw.summary_variable):
-                case SummaryKeyType.BLOCK | SummaryKeyType.INTER_REGION:
-                    by_pattern[f"{kw.summary_variable}:{kw.number}"] = i
-                case SummaryKeyType.COMPLETION if kw.name:
-                    by_pattern[f"{kw.summary_variable}:{kw.name}:{kw.number}"] = i
-    return by_pattern
-
-
 def _select_columns(
     first: _Case, column_keys: Sequence[str] | None
 ) -> list[tuple[str, int]]:
@@ -484,7 +465,7 @@ def _select_columns(
     """
     if column_keys is None:
         return [(k, first.by_key[k]) for k in first.keys if k and k != "TIME"]
-    by_pattern = _pattern_index(first)
+    by_pattern = {k: i for i, k in enumerate(first.keys) if k is not None}
     return [
         (key, by_pattern[key])
         for pattern in column_keys

@@ -9,7 +9,7 @@ import resfo
 from hypothesis import HealthCheck, assume, given, settings
 from hypothesis import strategies as st
 from resdata.summary import Summary
-from resfo_utilities import history_key
+from resfo_utilities import SummaryKeyType, history_key
 from resfo_utilities.testing import (
     Date,
     Simulator,
@@ -23,7 +23,11 @@ from resfo_utilities.testing import (
 )
 
 from res2df import ResdataFiles
-from res2df._summary_pandas_frame import summary_pandas_frame
+from res2df._summary_pandas_frame import (
+    _Case,
+    _read_restart_chain,
+    summary_pandas_frame,
+)
 from res2df.summary import df
 
 pytestmark = pytest.mark.filterwarnings("ignore")
@@ -65,9 +69,45 @@ def load_summary(case: str, **kwargs) -> Summary:
 # object (using Summary.pandas_frame)
 
 
+def _pattern_index(case: _Case) -> dict[str, int]:
+    """The last parameter index for each key that can be matched by a pattern."""
+    by_pattern: dict[str, int] = {}
+    for i, (key, kw) in enumerate(zip(case.keys, case.keywords, strict=True)):
+        if key is None:
+            continue
+        by_pattern[key] = i
+        # Also match on the alternate "key2" used by resdata
+        if kw.number is not None:
+            match SummaryKeyType.from_variable(kw.summary_variable):
+                case SummaryKeyType.BLOCK | SummaryKeyType.INTER_REGION:
+                    by_pattern[f"{kw.summary_variable}:{kw.number}"] = i
+                case SummaryKeyType.COMPLETION if kw.name:
+                    by_pattern[f"{kw.summary_variable}:{kw.name}:{kw.number}"] = i
+    return by_pattern
+
+
+def _drop_key2_columns(
+    expected: pd.DataFrame, case: str, include_restart: bool
+) -> pd.DataFrame:
+    """Drop columns only available through the alternate "key2" used by resdata."""
+    key2s: set[str] = set()
+    real: set[str] = set()
+    for c in _read_restart_chain(case, include_restart):
+        real.update(k for k in c.keys if k is not None)
+        key2s.update(_pattern_index(c))
+    drop = key2s - real
+    meta = expected.attrs.get("meta")
+    expected = expected.drop(columns=[c for c in expected.columns if c in drop])
+    if meta is not None:
+        expected.attrs["meta"] = {k: v for k, v in meta.items() if k not in drop}
+    return expected
+
+
 def reference(case: str, time_index=None, column_keys=None, include_restart=True, **kw):
     summary = load_summary(case, include_restart=include_restart)
-    return df(summary, time_index, column_keys, **kw)
+    return _drop_key2_columns(
+        df(summary, time_index, column_keys, **kw), case, include_restart
+    )
 
 
 def actual(case: str, time_index=None, column_keys=None, include_restart=True, **kw):

@@ -412,7 +412,7 @@ def test_extrapolation():
     )["FOPT"].to_numpy()[0]
     answer = pd.DataFrame(
         # This is the maximal date for datetime64[ns]
-        index=[pd.to_datetime("2262-04-11")],
+        index=pd.DatetimeIndex([pd.to_datetime("2262-04-11")]).as_unit("us"),
         columns=["FOPT", "FOPR"],
         data=[[lastfopt, 0.0]],
     ).rename_axis("DATE")
@@ -1105,6 +1105,8 @@ def test_df2ressum(dframe):
         dframe.sort_index(axis=1),
         dframe_roundtrip.sort_index(axis=1),
         check_dtype=False,
+        # The roundtrip index is datetime64[us], while pandas 2 gives [ns] input
+        check_index_type=PANDAS_MAJOR_VERSION >= 3,
     )
 
 

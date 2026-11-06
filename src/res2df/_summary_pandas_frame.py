@@ -72,8 +72,7 @@ def summary_pandas_frame(
 
     Args:
         case: The name of a summary case. The case can be the basename
-            (``path/to/CASE``), a summary file (``path/to/CASE.UNSMRY``),
-            or a directory with exactly one ``.DATA`` file (``path/to/``).
+            (``path/to/CASE``), a summary file (``path/to/CASE.UNSMRY``).
         time_index: Times to interpolate to, or a resampling frequency
             as accepted by :func:`res2df.summary.resample_smry_dates`.
             Default is the times in the summary.
@@ -251,7 +250,7 @@ def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
 
     See :func:`res2df.summary.smry_meta` for the content.
     """
-    main = _Case.read(_open_reader(os.fspath(case)))
+    main = _Case.read(SummaryReader(case_path=os.fspath(case)))
     return {
         key: _meta(main.keywords[i]) for key, i in main.by_key.items() if key != "TIME"
     }
@@ -442,7 +441,7 @@ def _read_restart_chain(case_path: str, include_restart: bool) -> list[_Case]:
     current: str | None = case_path
     while current and Path(current).resolve() not in visited:
         try:
-            reader = _open_reader(current)
+            reader = SummaryReader(case_path=current)
         except FileNotFoundError:
             if not files:  # No files found
                 raise
@@ -545,26 +544,3 @@ def _interpolate_into(
         result[below] = np.where(rates, 0.0, values[0])
     if above.any():
         result[above] = np.where(rates, 0.0, values[-1])
-
-
-def _open_reader(case: str) -> SummaryReader:
-    """Open a SummaryReader for the given case.
-
-    If the case is a directory (ends with a path separator) the base is the
-    single ``.DATA`` file in the directory, otherwise file selection is
-    left to SummaryReader.
-
-    Raises:
-        FileNotFoundError: If no matching summary files were found.
-    """
-    path, filename = os.path.split(case)
-    if not filename:
-        data_files = [
-            f
-            for f in Path(path or ".").iterdir()
-            if f.is_file() and f.suffix in {".data", ".DATA"}
-        ]
-        if len(data_files) != 1:
-            raise FileNotFoundError(f"Could not find any summary files matching {case}")
-        case = str(Path(path) / data_files[0].stem)
-    return SummaryReader(case_path=case)

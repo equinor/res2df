@@ -250,30 +250,6 @@ def test_that_lower_case_files_are_equivalent(make_dir, generated, formatted):
 
 
 @fast_settings
-@given(summaries())
-def test_that_directory_with_data_file_is_guessed(make_dir, generated):
-    smspec, unsmry = generated
-    directory = make_dir()
-    write_case(directory, "MYCASE", smspec, unsmry)
-    # No data file
-    assert_equivalent_or_error(str(directory) + "/")
-    (directory / "MYCASE.DATA").write_text("RUNSPEC\n")
-    assert_equivalent_or_error(str(directory) + "/")
-    (directory / "OTHER.DATA").write_text("RUNSPEC\n")
-    assert_equivalent_or_error(str(directory) + "/")
-
-
-def assert_equivalent_or_error(case: str) -> None:
-    try:
-        load_summary(case)
-    except OSError:
-        with pytest.raises(FileNotFoundError):
-            summary_pandas_frame(case)
-    else:
-        assert_equivalent(case)
-
-
-@fast_settings
 @given(
     first=summaries(),
     second=summaries(),

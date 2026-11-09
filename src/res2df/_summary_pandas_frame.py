@@ -4,6 +4,7 @@ import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
+from functools import cached_property
 from itertools import pairwise
 from pathlib import Path
 from typing import Any, Self
@@ -94,10 +95,10 @@ def summary_pandas_frame(
     chosen = _select_columns(main, column_keys)
     columns = [name for name, _ in chosen]
     selected = [i for _, i in chosen]
-    rates = np.array([main.rates[i] for i in selected], dtype=bool)
-    times, values = _merge(
-        [_read_block(case, main, selected) for case in cases], len(selected)
+    rates = np.array(
+        [is_rate(main.keywords[i].summary_variable) for i in selected], dtype=bool
     )
+    times, values = _merge([_read_block(c, chosen) for c in cases], len(selected))
     index: pd.Index
     if time_index is None:
         index = _seconds_index(times)
@@ -250,7 +251,7 @@ def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
 
     See :func:`res2df.summary.smry_meta` for the content.
     """
-    main = _Case.read(SummaryReader(case_path=os.fspath(case)))
+    main = _KeyedReader.read(SummaryReader(case_path=os.fspath(case)))
     return {
         key: _meta(main.keywords[i]) for key, i in main.by_key.items() if key != "TIME"
     }
@@ -269,42 +270,33 @@ def _naive_seconds(time: datetime | date) -> int:
     return (naive - _EPOCH) // timedelta(seconds=1)
 
 
-@dataclass
-class _Case:
-    """The layout of one summary and the reader.
+@dataclass(frozen=True)
+class _KeyedReader:
+    """The layout of one summary (its keys) and the reader.
 
     Attributes:
         reader: Reader for the summary files of the case.
-        keys: The summary key for each parameter, None if invalid.
-        by_key: The last parameter index for each key.
         keywords: The keyword (variable, name, number, ...) of each parameter.
-        rates: Whether each parameter is a rate.
+        dimensions: The first two values of DIMENS in the summary spec.
         time_param: The index of the TIME parameter.
         time_unit: The number of seconds per unit of TIME.
         restart: Path of the case this case was restarted from.
+        keys: The summary key for each parameter, None if invalid.
+        by_key: The last parameter index for each key.
     """
 
     reader: SummaryReader
-    keys: list[str | None]
-    by_key: dict[str, int]
-    keywords: list[SummaryKeyword]
-    rates: list[bool]
+    keywords: tuple[SummaryKeyword, ...]
+    dimensions: tuple[int, int]
     time_param: int
     time_unit: int
     restart: str | None
 
-    @classmethod
-    def read(cls, reader: SummaryReader) -> Self:
-        dims = reader.dimensions
-        if dims is None:
-            raise InvalidSummaryError("Keyword DIMENS missing in summary spec")
-
+    @cached_property
+    def keys(self) -> list[str | None]:
         keys: list[str | None] = []
-        by_key: dict[str, int] = {}
-        rates: list[bool] = []
-        keywords = list(reader.summary_keywords)
         key_types: dict[str, SummaryKeyType] = {}
-        for i, kw in enumerate(keywords):
+        for kw in self.keywords:
             variable = kw.summary_variable
             key_type = key_types.get(variable)
             if key_type is None:
@@ -315,26 +307,35 @@ class _Case:
                 not kw.name or kw.name == _DUMMY_NAME
             ):
                 keys.append(None)
-                rates.append(False)
                 continue
             try:
-                key: str | None = make_summary_key(
-                    variable,
-                    kw.number,
-                    kw.name,
-                    dims[0],
-                    dims[1],
-                    kw.lgr_name,
-                    kw.li,
-                    kw.lj,
-                    kw.lk,
+                keys.append(
+                    make_summary_key(
+                        variable,
+                        kw.number,
+                        kw.name,
+                        self.dimensions[0],
+                        self.dimensions[1],
+                        kw.lgr_name,
+                        kw.li,
+                        kw.lj,
+                        kw.lk,
+                    )
                 )
             except InvalidSummaryKeyError:
-                key = None
-            keys.append(key)
-            rates.append(key is not None and is_rate(variable))
-            if key is not None:
-                by_key[key] = i
+                keys.append(None)
+        return keys
+
+    @cached_property
+    def by_key(self) -> dict[str, int]:
+        return {key: i for i, key in enumerate(self.keys) if key is not None}
+
+    @classmethod
+    def read(cls, reader: SummaryReader) -> Self:
+        dims = reader.dimensions
+        if dims is None:
+            raise InvalidSummaryError("Keyword DIMENS missing in summary spec")
+        keywords = tuple(reader.summary_keywords)
 
         time_params = [
             i for i, kw in enumerate(keywords) if kw.summary_variable == "TIME"
@@ -348,10 +349,8 @@ class _Case:
 
         return cls(
             reader,
-            keys,
-            by_key,
             keywords,
-            rates,
+            (dims[0], dims[1]),
             time_param,
             _SECONDS_PER_UNIT[unit],
             reader.restart,
@@ -359,37 +358,34 @@ class _Case:
 
 
 def _read_block(
-    case: _Case, main: _Case, selected: list[int]
+    case: _KeyedReader, chosen: list[tuple[str, int]]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
-    """The times and values for the selected parameters of the main case.
+    """The times and values for the chosen columns, found by key in the case.
 
     Only the needed parameters are kept while reading. Parameters
     not present in the case gets the default value.
     """
-    source = [
-        param if case is main else case.by_key.get(main.keys[param] or "")
-        for param in selected
-    ]
+    source = [case.by_key.get(name) for name, _ in chosen]
     found = [i for i, src in enumerate(source) if src is not None]
     times, values = _read_values(case, [src for src in source if src is not None])
-    if len(found) == len(selected):
+    if len(found) == len(chosen):
         return times, values
-    block = np.full((len(times), len(selected)), _DEFAULT_VALUE)
+    block = np.full((len(times), len(chosen)), _DEFAULT_VALUE)
     block[:, found] = values
     return times, block
 
 
 def _read_values(
-    case: _Case, params: list[int]
+    case: _KeyedReader, params: list[int]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """The time (in seconds since epoch) and values for each step."""
     columns = np.array([case.time_param, *params], dtype=np.intp)
     data = np.empty((256, len(columns)), dtype=np.float32)
     steps = 0
     for row in case.reader.values(report_step_only=False):
-        if len(row) != len(case.keys):
+        if len(row) != len(case.keywords):
             raise InvalidSummaryError(
-                f"Expected {len(case.keys)} parameters in each step, got {len(row)}"
+                f"Expected {len(case.keywords)} parameters in each step, got {len(row)}"
             )
         if steps == len(data):
             data.resize((2 * steps, len(columns)), refcheck=False)
@@ -435,8 +431,8 @@ def _merge(
     return np.concatenate([t for t, _ in parts]), np.concatenate([v for _, v in parts])
 
 
-def _read_restart_chain(case_path: str, include_restart: bool) -> list[_Case]:
-    files: list[_Case] = []
+def _read_restart_chain(case_path: str, include_restart: bool) -> list[_KeyedReader]:
+    files: list[_KeyedReader] = []
     visited: set[Path] = set()
     current: str | None = case_path
     while current and Path(current).resolve() not in visited:
@@ -447,14 +443,14 @@ def _read_restart_chain(case_path: str, include_restart: bool) -> list[_Case]:
                 raise
             else:
                 break  # Did not find a restart
-        files.append(_Case.read(reader))
+        files.append(_KeyedReader.read(reader))
         visited.add(Path(current).resolve())
         current = files[-1].restart if include_restart else None
     return files
 
 
 def _select_columns(
-    first: _Case, column_keys: Sequence[str] | None
+    first: _KeyedReader, column_keys: Sequence[str] | None
 ) -> list[tuple[str, int]]:
     """The names and parameter indices of the columns to include in the frame.
 
@@ -467,7 +463,7 @@ def _select_columns(
         return [(k, first.by_key[k]) for k in first.keys if k and k != "TIME"]
     if not column_keys:
         return []
-    by_pattern = {k: i for i, k in enumerate(first.keys) if k is not None}
+    by_pattern = first.by_key
     wildcards = [p for p in column_keys if _is_wildcard(p)]
     # One pass with all patterns combined (as in resdata's view_summary),
     # the per-pattern matching then only visits the candidates.

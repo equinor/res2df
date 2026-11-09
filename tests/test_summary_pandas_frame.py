@@ -70,7 +70,7 @@ def load_summary(case: str, **kwargs) -> Summary:
 
 
 def _pattern_index(case: _KeyedReader) -> dict[str, int]:
-    """The last parameter index for each key that can be matched by a pattern."""
+    """The last keyword index for each key that can be matched by a pattern."""
     by_pattern: dict[str, int] = {}
     for i, (key, kw) in enumerate(zip(case.keys, case.keywords, strict=True)):
         if key is None:

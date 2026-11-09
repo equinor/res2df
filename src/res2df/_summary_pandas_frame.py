@@ -1,3 +1,10 @@
+"""Read summary files into a pandas frame.
+
+A "keyword index" is the index of a keyword in the ``KEYWORDS`` array of the
+summary spec, which is also the index of its value in the ``PARAMS`` array of
+each step in the summary data file.
+"""
+
 import fnmatch
 import os
 import re
@@ -276,19 +283,19 @@ class _KeyedReader:
 
     Attributes:
         reader: Reader for the summary files of the case.
-        keywords: The keyword (variable, name, number, ...) of each parameter.
+        keywords: The keyword (variable, name, number, ...) at each keyword index.
         dimensions: The first two values of DIMENS in the summary spec.
-        time_param: The index of the TIME parameter.
+        time_keyword_index: The keyword index of TIME.
         time_unit: The number of seconds per unit of TIME.
         restart: Path of the case this case was restarted from.
-        keys: The summary key for each parameter, None if invalid.
-        by_key: The last parameter index for each key.
+        keys: The summary key at each keyword index, None if invalid.
+        by_key: The last keyword index for each key.
     """
 
     reader: SummaryReader
     keywords: tuple[SummaryKeyword, ...]
     dimensions: tuple[int, int]
-    time_param: int
+    time_keyword_index: int
     time_unit: int
     restart: str | None
 
@@ -301,7 +308,7 @@ class _KeyedReader:
             key_type = key_types.get(variable)
             if key_type is None:
                 key_type = key_types[variable] = SummaryKeyType.from_variable(variable)
-            # Most parameters are typically unused well/group slots, which
+            # Most keyword indices are typically unused well/group slots, which
             # are skipped up front as raising for each of them is expensive
             if (key_type is _WELL or key_type is _GROUP) and (
                 not kw.name or kw.name == _DUMMY_NAME
@@ -337,13 +344,13 @@ class _KeyedReader:
             raise InvalidSummaryError("Keyword DIMENS missing in summary spec")
         keywords = tuple(reader.summary_keywords)
 
-        time_params = [
+        time_keyword_indices = [
             i for i, kw in enumerate(keywords) if kw.summary_variable == "TIME"
         ]
-        if not time_params:
+        if not time_keyword_indices:
             raise InvalidSummaryError("KEYWORDS did not contain TIME in summary spec")
-        time_param = time_params[-1]
-        unit = keywords[time_param].unit
+        time_keyword_index = time_keyword_indices[-1]
+        unit = keywords[time_keyword_index].unit
         if unit not in _SECONDS_PER_UNIT:
             raise InvalidSummaryError(f"Unknown date unit in summary spec: {unit}")
 
@@ -351,7 +358,7 @@ class _KeyedReader:
             reader,
             keywords,
             (dims[0], dims[1]),
-            time_param,
+            time_keyword_index,
             _SECONDS_PER_UNIT[unit],
             reader.restart,
         )
@@ -362,7 +369,7 @@ def _read_block(
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """The times and values for the chosen columns, found by key in the case.
 
-    Only the needed parameters are kept while reading. Parameters
+    Only the needed keyword indices are kept while reading. Columns
     not present in the case gets the default value.
     """
     source = [case.by_key.get(name) for name, _ in chosen]
@@ -376,16 +383,16 @@ def _read_block(
 
 
 def _read_values(
-    case: _KeyedReader, params: list[int]
+    case: _KeyedReader, keyword_indices: list[int]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """The time (in seconds since epoch) and values for each step."""
-    columns = np.array([case.time_param, *params], dtype=np.intp)
+    columns = np.array([case.time_keyword_index, *keyword_indices], dtype=np.intp)
     data = np.empty((256, len(columns)), dtype=np.float32)
     steps = 0
     for row in case.reader.values(report_step_only=False):
         if len(row) != len(case.keywords):
             raise InvalidSummaryError(
-                f"Expected {len(case.keywords)} parameters in each step, got {len(row)}"
+                f"Expected {len(case.keywords)} values in each step, got {len(row)}"
             )
         if steps == len(data):
             data.resize((2 * steps, len(columns)), refcheck=False)
@@ -452,11 +459,11 @@ def _read_restart_chain(case_path: str, include_restart: bool) -> list[_KeyedRea
 def _select_columns(
     first: _KeyedReader, column_keys: Sequence[str] | None
 ) -> list[tuple[str, int]]:
-    """The names and parameter indices of the columns to include in the frame.
+    """The names and keyword indices of the columns to include in the frame.
 
     No column keys means all, in the order of the file, otherwise
     each pattern gives the matching keys in natural sorted order.
-    The last parameter with a given key is the one that is used, so
+    The last keyword index with a given key is the one that is used, so
     duplicated keys give several columns with the same values.
     """
     if column_keys is None:

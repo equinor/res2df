@@ -349,6 +349,9 @@ class _KeyedReader:
         ]
         if not time_keyword_indices:
             raise InvalidSummaryError("KEYWORDS did not contain TIME in summary spec")
+        # There should only be one time index, and likely the first one (0)
+        # and that is the one we expect to use, but we ensure backwards compatability
+        # with resdata by selecting the last one
         time_keyword_index = time_keyword_indices[-1]
         unit = keywords[time_keyword_index].unit
         if unit not in _SECONDS_PER_UNIT:

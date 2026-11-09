@@ -398,7 +398,7 @@ def _read_values(
                 f"Expected {len(case.keywords)} values in each step, got {len(row)}"
             )
         if steps == len(data):
-            data.resize((2 * steps, len(columns)), refcheck=False)
+            data = np.resize(data, (2 * steps, len(columns)))
         data[steps] = row[columns]
         steps += 1
     data = data[:steps]

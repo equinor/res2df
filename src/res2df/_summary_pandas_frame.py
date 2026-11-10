@@ -33,7 +33,7 @@ from resfo_utilities import (
 _EPOCH = datetime(1970, 1, 1)
 _DEFAULT_VALUE = -99.0
 _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
-_DUMMY_NAME = ":+:+:+:+"
+_SENTINEL_NAME = ":+:+:+:+"
 _CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL
 _GROUP = SummaryKeyType.GROUP
@@ -223,7 +223,7 @@ def _meta(kw: SummaryKeyword) -> dict[str, Any]:
         and key_type in (_WELL, _GROUP, SummaryKeyType.FIELD),
         "keyword": variable,
         "wgname": kw.name
-        if key_type in _WGNAME_TYPES and kw.name and kw.name != _DUMMY_NAME
+        if key_type in _WGNAME_TYPES and kw.name and kw.name != _SENTINEL_NAME
         else None,
     }
     if key_type in _LGR_TYPES:
@@ -311,7 +311,7 @@ class _KeyedReader:
             # Most keyword indices are typically unused well/group slots, which
             # are skipped up front as raising for each of them is expensive
             if (key_type is _WELL or key_type is _GROUP) and (
-                not kw.name or kw.name == _DUMMY_NAME
+                not kw.name or kw.name == _SENTINEL_NAME
             ):
                 keys.append(None)
                 continue

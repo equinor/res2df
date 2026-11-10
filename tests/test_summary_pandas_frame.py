@@ -63,7 +63,7 @@ def load_summary(case: str, **kwargs) -> Summary:
     return Summary(case, lazy_load=False, **kwargs)
 
 
-# In the following we, just say "equivalent" to mean that summary.df
+# In the following we just say "equivalent" to mean that summary.df
 # returns the same value when given a ResdataFiles (using
 # summary_pandas_frame) as when given the reference resdata Summary
 # object (using Summary.pandas_frame)

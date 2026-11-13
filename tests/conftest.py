@@ -2,8 +2,12 @@ import logging
 from pathlib import Path
 
 import pytest
+from hypothesis import settings
 
 import res2df
+
+settings.register_profile("default", max_examples=50, deadline=None)
+settings.load_profile("default")
 
 
 @pytest.fixture

@@ -861,13 +861,26 @@ def test_that_an_esmry_file_gives_the_same_frame_as_the_smspec_and_unsmry(genera
 @given(
     summaries(),
     st.sampled_from(["*", "F*", "W*:*"]),
-    st.sampled_from(["raw", "YE"]),
+    st.sampled_from(
+        [
+            "raw",
+            "YE",
+            "daily",
+            # Dates before, within and after the simulated range
+            [date(1900, 1, 1), datetime(2000, 1, 1, 12), date(2200, 1, 1)],
+        ]
+    ),
+    st.sampled_from([None, date(1950, 1, 1), date(2000, 1, 1)]),
 )
 def test_that_an_esmry_file_gives_the_same_selected_and_resampled_frame(
-    generated, pattern, time_index
+    generated, pattern, time_index, start_date
 ):
     smspec, unsmry = generated
-    kwargs = {"column_keys": [pattern, "TIME"], "time_index": time_index}
+    kwargs = {
+        "column_keys": [pattern, "TIME"],
+        "time_index": time_index,
+        "start_date": start_date,
+    }
     pd.testing.assert_frame_equal(
         esmry_chain(smspec, unsmry).frame("CASE", **kwargs),
         frame_of(smspec, unsmry, **kwargs),

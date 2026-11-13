@@ -947,6 +947,32 @@ def test_that_esmry_files_are_read_from_disk_by_default(tmp_path, name):
     )
 
 
+@pytest.mark.parametrize(
+    "directory, name",
+    [
+        ("run.esmry", "CASE"),
+        ("run.esmry", "CASE.esmry"),
+        ("run.v2", "CASE.V2"),
+        ("run.v2", "CASE.V2.ESMRY"),
+        ("run.s0001", "CASE.S0001"),
+    ],
+)
+def test_that_only_the_suffix_of_the_file_name_is_stripped_to_find_the_esmry_file(
+    tmp_path, directory, name
+):
+    smspec, unsmry = summaries().example()
+    (tmp_path / directory).mkdir()
+    stem = (
+        name.rsplit(".", 1)[0] if name.lower().endswith((".esmry", ".s0001")) else name
+    )
+    Esmry.from_summary(smspec, unsmry).to_file(tmp_path / directory / f"{stem}.ESMRY")
+    pd.testing.assert_frame_equal(
+        summary_pandas_frame(tmp_path / directory / name),
+        frame_of(smspec, unsmry),
+        check_exact=True,
+    )
+
+
 def test_that_an_invalid_esmry_file_is_an_error_even_if_there_is_an_smspec(tmp_path):
     smspec, unsmry = summaries().example()
     smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)

@@ -7,6 +7,7 @@ test by replacing ``SummaryReader`` in ``res2df._summary_pandas_frame``.
 
 import dataclasses
 import fnmatch
+import os
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from pathlib import Path
@@ -76,8 +77,8 @@ class SummaryChain:
         """
         return mock.patch("res2df._summary_pandas_frame.SummaryReader", self)
 
-    def __call__(self, *, case_path: str) -> SummaryReader:
-        name = str(case_path)
+    def __call__(self, *, case_path: str | os.PathLike[str]) -> SummaryReader:
+        name = os.fspath(case_path)
         self.opened.append(name)
         if name not in self._cases:
             raise FileNotFoundError(name)

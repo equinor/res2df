@@ -617,7 +617,7 @@ def _read_restart_chain(
 def _open_keyed_reader(case_path: str | os.PathLike[str]) -> _KeyedReader:
     """The ESMRY file of the case if it exists, otherwise the SMSPEC and UNSMRY."""
     try:
-        esmry = EsmryReader(case_path=os.fspath(_without_summary_suffix(case_path)))
+        esmry = EsmryReader(case_path=_without_summary_suffix(case_path))
     except FileNotFoundError:
         return _KeyedSmry.read(SummaryReader(case_path=case_path))
     return _KeyedEsmry.read(esmry)

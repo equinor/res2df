@@ -270,7 +270,7 @@ def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
 
     See :func:`res2df.summary.smry_meta` for the content.
     """
-    main = _open_case(case)
+    main = _open_keyed_reader(case)
     return {key: main.meta(i) for key, i in main.by_key.items() if key != "TIME"}
 
 
@@ -287,7 +287,7 @@ def _naive_seconds(time: datetime | date) -> int:
     return (naive - _EPOCH) // timedelta(seconds=1)
 
 
-class _Case(Protocol):
+class _KeyedReader(Protocol):
     """A summary case, with its keys identified by their keyword index."""
 
     @property
@@ -309,7 +309,7 @@ class _Case(Protocol):
 
 
 @dataclass(frozen=True)
-class _EsmryCase:
+class _KeyedEsmry:
     """The layout of an ESMRY file, and the reader.
 
     Attributes:
@@ -404,7 +404,7 @@ class _EsmryCase:
         time_keyword_indices = [i for i, key in enumerate(keys) if key == "TIME"]
         if not time_keyword_indices:
             raise InvalidSummaryError("KEYCHECK did not contain TIME in summary")
-        # See _KeyedReader.read for why the last TIME is used
+        # See _KeyedSmry.read for why the last TIME is used
         time_keyword_index = time_keyword_indices[-1]
         unit = reader.units[time_keyword_index]
         if unit not in _SECONDS_PER_UNIT:
@@ -420,7 +420,7 @@ class _EsmryCase:
 
 
 @dataclass(frozen=True)
-class _KeyedReader:
+class _KeyedSmry:
     """The layout of one summary (its keys) and the reader.
 
     Attributes:
@@ -534,7 +534,7 @@ class _KeyedReader:
 
 
 def _read_block(
-    case: _Case, chosen: list[tuple[str, int]]
+    case: _KeyedReader, chosen: list[tuple[str, int]]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """The times and values for the chosen columns, found by key in the case.
 
@@ -596,13 +596,13 @@ def _merge(
 
 def _read_restart_chain(
     case_path: str | os.PathLike[str], include_restart: bool
-) -> list[_Case]:
-    files: list[_Case] = []
+) -> list[_KeyedReader]:
+    files: list[_KeyedReader] = []
     visited: set[Path] = set()
     current: str | os.PathLike[str] | None = case_path
     while current and Path(current).resolve() not in visited:
         try:
-            case = _open_case(current)
+            case = _open_keyed_reader(current)
         except FileNotFoundError:
             if not files:  # No files found
                 raise
@@ -614,17 +614,17 @@ def _read_restart_chain(
     return files
 
 
-def _open_case(case_path: str | os.PathLike[str]) -> _Case:
+def _open_keyed_reader(case_path: str | os.PathLike[str]) -> _KeyedReader:
     """The ESMRY file of the case if it exists, otherwise the SMSPEC and UNSMRY."""
     try:
         esmry = EsmryReader(case_path=_SUMMARY_EXTENSION.sub("", os.fspath(case_path)))
     except FileNotFoundError:
-        return _KeyedReader.read(SummaryReader(case_path=case_path))
-    return _EsmryCase.read(esmry)
+        return _KeyedSmry.read(SummaryReader(case_path=case_path))
+    return _KeyedEsmry.read(esmry)
 
 
 def _select_columns(
-    first: _Case, column_keys: Sequence[str] | None
+    first: _KeyedReader, column_keys: Sequence[str] | None
 ) -> list[tuple[str, int]]:
     """The names and keyword indices of the columns to include in the frame.
 

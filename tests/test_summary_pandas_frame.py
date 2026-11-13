@@ -8,6 +8,7 @@ test by replacing ``SummaryReader`` in ``res2df._summary_pandas_frame``.
 import dataclasses
 import fnmatch
 import os
+from contextlib import ExitStack
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from pathlib import Path
@@ -21,8 +22,9 @@ import resfo
 from hypothesis import assume, given
 from hypothesis import strategies as st
 from natsort import natsorted
-from resfo_utilities import InvalidSummaryError, SummaryReader, is_rate
+from resfo_utilities import EsmryReader, InvalidSummaryError, SummaryReader, is_rate
 from resfo_utilities.testing import (
+    Esmry,
     Smspec,
     SummaryMiniStep,
     SummaryStep,
@@ -38,7 +40,9 @@ from res2df.summary import resample_smry_dates
 class SummaryChain:
     def __init__(self) -> None:
         self.opened: list[str] = []
+        self.opened_esmry: list[str] = []
         self._cases: dict[str, tuple[bytes, bytes]] = {}
+        self._esmrys: dict[str, bytes] = {}
 
     def add(
         self,
@@ -62,6 +66,12 @@ class SummaryChain:
         self._cases[name] = (contents[0], contents[1])
         return self
 
+    def add_esmry(self, name: str, esmry: Esmry) -> "SummaryChain":
+        buffer = BytesIO()
+        esmry.to_file(buffer)
+        self._esmrys[name] = buffer.getvalue()
+        return self
+
     def frame(self, case: str, **kwargs: Any) -> pd.DataFrame:
         with self._patched():
             return summary_pandas_frame(case, **kwargs)
@@ -71,11 +81,26 @@ class SummaryChain:
             return summary_meta(case)
 
     def _patched(self) -> Any:
-        """We patch SummaryReader constructor so that we can
-        inject the bytes contents in self._cases and avoid
+        """We patch the reader constructors so that we can
+        inject the bytes contents in self._cases and self._esmrys and avoid
         writing to file in the unit tests
         """
-        return mock.patch("res2df._summary_pandas_frame.SummaryReader", self)
+        stack = ExitStack()
+        stack.enter_context(
+            mock.patch("res2df._summary_pandas_frame.SummaryReader", self)
+        )
+        stack.enter_context(
+            mock.patch("res2df._summary_pandas_frame.EsmryReader", self.esmry_reader)
+        )
+        return stack
+
+    def esmry_reader(self, *, case_path: str) -> EsmryReader:
+        name = str(case_path)
+        if name not in self._esmrys:
+            raise FileNotFoundError(name)
+        self.opened_esmry.append(name)
+        contents = self._esmrys[name]
+        return EsmryReader(esmry=lambda: BytesIO(contents))
 
     def __call__(self, *, case_path: str | os.PathLike[str]) -> SummaryReader:
         name = os.fspath(case_path)
@@ -817,3 +842,114 @@ def test_that_steps_with_the_wrong_number_of_values_are_invalid(generated):
     ]
     with pytest.raises(InvalidSummaryError):
         frame_of(smspec, Unsmry(steps))
+
+
+def esmry_chain(smspec: Smspec, unsmry: Unsmry) -> SummaryChain:
+    return SummaryChain().add_esmry("CASE", Esmry.from_summary(smspec, unsmry))
+
+
+@given(summaries())
+def test_that_an_esmry_file_gives_the_same_frame_as_the_smspec_and_unsmry(generated):
+    smspec, unsmry = generated
+    pd.testing.assert_frame_equal(
+        esmry_chain(smspec, unsmry).frame("CASE"),
+        frame_of(smspec, unsmry),
+        check_exact=True,
+    )
+
+
+@given(
+    summaries(),
+    st.sampled_from(["*", "F*", "W*:*"]),
+    st.sampled_from(["raw", "YE"]),
+)
+def test_that_an_esmry_file_gives_the_same_selected_and_resampled_frame(
+    generated, pattern, time_index
+):
+    smspec, unsmry = generated
+    kwargs = {"column_keys": [pattern, "TIME"], "time_index": time_index}
+    pd.testing.assert_frame_equal(
+        esmry_chain(smspec, unsmry).frame("CASE", **kwargs),
+        frame_of(smspec, unsmry, **kwargs),
+        check_exact=True,
+    )
+
+
+@given(smspecs(sum_keys=st.just(meta_keys)))
+def test_that_the_metadata_of_an_esmry_file_describes_each_column(smspec):
+    assume(len(set(smspec.summary_keys())) == len(smspec.keywords))
+    unsmry = Unsmry(
+        [SummaryStep(0, [SummaryMiniStep(0, [0.0] * len(smspec.keywords))])]
+    )
+    expected = frame_of(smspec, unsmry).attrs["meta"]
+    meta = esmry_chain(smspec, unsmry).frame("CASE").attrs["meta"]
+    assert esmry_chain(smspec, unsmry).meta("CASE") == meta
+    # The number of other vectors than LGR ones is not found in the ESMRY file
+    without_num = {k: {**v, "get_num": 0} for k, v in expected.items()}
+    assert {k: {**v, "get_num": 0} for k, v in meta.items()} == without_num
+    assert meta[next(k for k in meta if k.startswith("LWOPR"))]["get_num"] == 0
+    assert all("get_num" not in v for k, v in meta.items() if k[0] in "FWGB")
+
+
+@given(summaries())
+def test_that_the_esmry_file_is_read_in_preference_to_the_smspec_and_unsmry(generated):
+    smspec, unsmry = generated
+    smspec = with_restart(smspec, "")
+    cases = esmry_chain(smspec, unsmry).add("CASE", smspec, unsmry)
+    cases.frame("CASE")
+    assert cases.opened_esmry == ["CASE"]
+    assert cases.opened == []
+
+
+@given(summaries())
+def test_that_the_case_is_read_from_the_smspec_if_there_is_no_esmry_file(generated):
+    smspec, unsmry = generated
+    smspec = with_restart(smspec, "")
+    cases = SummaryChain().add("CASE", smspec, unsmry)
+    pd.testing.assert_frame_equal(
+        cases.frame("CASE"), frame_of(smspec, unsmry), check_exact=True
+    )
+    assert cases.opened == ["CASE"]
+
+
+@given(parent_summaries, child_summaries)
+def test_that_restarts_can_be_followed_between_esmry_and_smspec_cases(parent, child):
+    child_smspec = with_restart(child[0], "PARENT")
+    parent = (with_restart(parent[0], ""), parent[1])
+    expected = (
+        SummaryChain().add("PARENT", *parent).add("CHILD", child_smspec, child[1])
+    ).frame("CHILD")
+    mixed = SummaryChain().add("PARENT", *parent)
+    mixed.add_esmry("CHILD", Esmry.from_summary(child_smspec, child[1]))
+    pd.testing.assert_frame_equal(mixed.frame("CHILD"), expected, check_exact=True)
+    assert mixed.opened_esmry == ["CHILD"]
+    assert mixed.opened == ["PARENT"]
+    mixed = SummaryChain().add("CHILD", child_smspec, child[1])
+    mixed.add_esmry("PARENT", Esmry.from_summary(*parent))
+    pd.testing.assert_frame_equal(mixed.frame("CHILD"), expected, check_exact=True)
+    assert mixed.opened_esmry == ["PARENT"]
+    assert mixed.opened == ["CHILD"]
+
+
+@pytest.mark.parametrize("name", ["CASE", "CASE.UNSMRY", "CASE.ESMRY"])
+def test_that_esmry_files_are_read_from_disk_by_default(tmp_path, name):
+    smspec, unsmry = summaries().example()
+    Esmry.from_summary(smspec, unsmry).to_file(tmp_path / "CASE.ESMRY")
+    pd.testing.assert_frame_equal(
+        summary_pandas_frame(tmp_path / name),
+        frame_of(smspec, unsmry),
+        check_exact=True,
+    )
+    assert (
+        summary_meta(tmp_path / name).keys()
+        == frame_of(smspec, unsmry).attrs["meta"].keys()
+    )
+
+
+def test_that_an_invalid_esmry_file_is_an_error_even_if_there_is_an_smspec(tmp_path):
+    smspec, unsmry = summaries().example()
+    smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)
+    unsmry.to_file(tmp_path / "CASE.UNSMRY", resfo.Format.UNFORMATTED)
+    resfo.write(tmp_path / "CASE.ESMRY", [("TSTEP   ", np.array([1], dtype=np.int32))])
+    with pytest.raises(InvalidSummaryError):
+        summary_pandas_frame(tmp_path / "CASE")

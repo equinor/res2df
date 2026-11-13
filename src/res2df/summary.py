@@ -591,6 +591,10 @@ def smry_meta(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
     * get_num (int) (only provided if not None)
     * keyword (str)
     * wgname (str or None)
+
+    When the summary is read from an ESMRY file, ``get_num`` is 0 for block
+    and completion vectors (their number depends on the grid dimensions,
+    which are not in the ESMRY file) and ``unit`` is as written to the file.
     """
     if not isinstance(resdatafiles, Summary):
         return summary_meta(resdatafiles._eclbase)

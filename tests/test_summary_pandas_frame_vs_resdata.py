@@ -24,7 +24,7 @@ from resfo_utilities.testing import (
 
 from res2df import ResdataFiles
 from res2df._summary_pandas_frame import (
-    _KeyedReader,
+    _KeyedSmry,
     _read_restart_chain,
     summary_pandas_frame,
 )
@@ -63,7 +63,7 @@ def load_summary(case: str, **kwargs) -> Summary:
 # object (using Summary.pandas_frame)
 
 
-def _pattern_index(case: _KeyedReader) -> dict[str, int]:
+def _pattern_index(case: _KeyedSmry) -> dict[str, int]:
     """The last keyword index for each key that can be matched by a pattern."""
     by_pattern: dict[str, int] = {}
     for i, (key, kw) in enumerate(zip(case.keys, case.keywords, strict=True)):

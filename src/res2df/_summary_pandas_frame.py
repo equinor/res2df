@@ -564,7 +564,7 @@ def _read_block(
 
 
 def _to_seconds(
-    start_date: datetime, time_unit: int, data: npt.NDArray[np.float32]
+    start_date: datetime, time_unit: int, data: npt.NDArray[np.float32 | np.float64]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """Split data with TIME as first column into seconds since epoch and values."""
     # resdata ignores the time of day in STARTDAT

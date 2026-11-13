@@ -350,14 +350,15 @@ class _KeyedEsmry:
         variable, *qualifiers = self.key_names[index].split(":")
         key_type = SummaryKeyType.from_variable(variable)
         meta: dict[str, Any] = {
-            "unit": self.units[index],
+            # flow leaves the unit of YEARS blank in the ESMRY file
+            "unit": "YEARS" if variable == "YEARS" else self.units[index],
             "is_total": _is_total(variable, key_type),
             "is_rate": is_rate(variable),
             "is_historical": variable.endswith("H")
             and key_type in (_WELL, _GROUP, SummaryKeyType.FIELD),
             "keyword": variable,
             "wgname": None,
-            "get_num": 0,
+            "get_num": _YEARS_NUMS if variable == "YEARS" else 0,
         }
         if key_type in _WGNAME_TYPES and qualifiers:
             # Local keys are assumed to be LWOPR:<lgr>:<well> as in resdata. This

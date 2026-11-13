@@ -993,3 +993,24 @@ def test_that_an_invalid_esmry_file_is_an_error_even_if_there_is_an_smspec(tmp_p
     resfo.write(tmp_path / "CASE.ESMRY", [("TSTEP   ", np.array([1], dtype=np.int32))])
     with pytest.raises(InvalidSummaryError):
         summary_pandas_frame(tmp_path / "CASE")
+
+
+@given(smspecs(sum_keys=st.just(["YEARS"])))
+def test_that_the_metadata_of_years_in_an_esmry_file_is_as_in_resdata(smspec):
+    unsmry = Unsmry([SummaryStep(0, [SummaryMiniStep(0, [0.0, 0.0])])])
+    esmry = Esmry.from_summary(smspec, unsmry)
+    esmry.units[1] = "        "  # flow leaves the unit of YEARS blank
+    meta = SummaryChain().add_esmry("CASE", esmry).frame("CASE").attrs["meta"]
+    assert meta["YEARS"]["unit"] == "YEARS"
+    assert meta["YEARS"]["get_num"] == -32676
+
+
+@given(smspecs(sum_keys=st.just(["BPR", "CPR"])))
+def test_that_block_and_completion_vectors_of_an_esmry_file_have_get_num_zero(smspec):
+    assume(len(set(smspec.summary_keys())) == len(smspec.keywords))
+    unsmry = Unsmry(
+        [SummaryStep(0, [SummaryMiniStep(0, [0.0] * len(smspec.keywords))])]
+    )
+    meta = esmry_chain(smspec, unsmry).frame("CASE").attrs["meta"]
+    assert meta
+    assert all(v["get_num"] == 0 for v in meta.values())

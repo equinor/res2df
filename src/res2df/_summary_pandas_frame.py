@@ -99,7 +99,7 @@ def summary_pandas_frame(
         FileNotFoundError: If no summary files were found for the given case.
         InvalidSummaryError: If the summary files have invalid contents.
     """
-    cases = _read_restart_chain(os.fspath(case), include_restart)
+    cases = _read_restart_chain(case, include_restart)
     main = cases[0]
     chosen = _select_columns(main, column_keys)
     columns = [name for name, _ in chosen]
@@ -262,7 +262,7 @@ def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
 
     See :func:`res2df.summary.smry_meta` for the content.
     """
-    main = _KeyedReader.read(SummaryReader(case_path=os.fspath(case)))
+    main = _KeyedReader.read(SummaryReader(case_path=case))
     return {
         key: _meta(main.keywords[i]) for key, i in main.by_key.items() if key != "TIME"
     }
@@ -445,10 +445,12 @@ def _merge(
     return np.concatenate([t for t, _ in parts]), np.concatenate([v for _, v in parts])
 
 
-def _read_restart_chain(case_path: str, include_restart: bool) -> list[_KeyedReader]:
+def _read_restart_chain(
+    case_path: str | os.PathLike[str], include_restart: bool
+) -> list[_KeyedReader]:
     files: list[_KeyedReader] = []
     visited: set[Path] = set()
-    current: str | None = case_path
+    current: str | os.PathLike[str] | None = case_path
     while current and Path(current).resolve() not in visited:
         try:
             reader = SummaryReader(case_path=current)

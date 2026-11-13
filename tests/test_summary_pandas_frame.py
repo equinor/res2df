@@ -884,11 +884,12 @@ def test_that_the_metadata_of_an_esmry_file_describes_each_column(smspec):
     expected = frame_of(smspec, unsmry).attrs["meta"]
     meta = esmry_chain(smspec, unsmry).frame("CASE").attrs["meta"]
     assert esmry_chain(smspec, unsmry).meta("CASE") == meta
-    # The number of other vectors than LGR ones is not found in the ESMRY file
+    # The NUMS of block and completion vectors are not in the ESMRY file, and
+    # flow writes 0 for field, well and group vectors
     without_num = {k: {**v, "get_num": 0} for k, v in expected.items()}
     assert {k: {**v, "get_num": 0} for k, v in meta.items()} == without_num
     assert meta[next(k for k in meta if k.startswith("LWOPR"))]["get_num"] == 0
-    assert all("get_num" not in v for k, v in meta.items() if k[0] in "FWGB")
+    assert all(v["get_num"] == 0 for k, v in meta.items() if k[0] in "FWGBC")
 
 
 @given(summaries())

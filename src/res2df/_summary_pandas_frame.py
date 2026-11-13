@@ -2,7 +2,12 @@
 
 A "keyword index" is the index of a keyword in the ``KEYWORDS`` array of the
 summary spec, which is also the index of its value in the ``PARAMS`` array of
-each step in the summary data file.
+each step in the summary data file. For an ``ESMRY`` file (written by OPM
+flow) it is the index of the key in ``KEYCHECK``, which is also the number of
+the ``V<n>`` vector holding its values.
+
+If the case has an ``ESMRY`` file, that is read in preference to the
+``SMSPEC`` and ``UNSMRY`` files, as only the requested vectors need be read.
 """
 
 import fnmatch
@@ -14,13 +19,14 @@ from datetime import date, datetime, timedelta
 from functools import cached_property
 from itertools import pairwise
 from pathlib import Path
-from typing import Any, Self
+from typing import Any, Protocol, Self
 
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
 from natsort import natsorted
 from resfo_utilities import (
+    EsmryReader,
     InvalidSummaryError,
     InvalidSummaryKeyError,
     SummaryKeyType,
@@ -36,6 +42,9 @@ _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
 _SENTINEL_NAME = ":+:+:+:+"
 # resdata ignores the NUMS of YEARS and always reports this get_num
 _YEARS_NUMS = -32676
+_SUMMARY_EXTENSION = re.compile(
+    r"\.(unsmry|funsmry|smspec|fsmspec|esmry|[fa]?s\d{4})$", re.IGNORECASE
+)
 _CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL
 _GROUP = SummaryKeyType.GROUP
@@ -105,7 +114,8 @@ def summary_pandas_frame(
     columns = [name for name, _ in chosen]
     selected = [i for _, i in chosen]
     rates = np.array(
-        [is_rate(main.keywords[i].summary_variable) for i in selected], dtype=bool
+        [is_rate(main.variable(i)) for i in selected],
+        dtype=bool,
     )
     times, values = _merge([_read_block(c, chosen) for c in cases], len(selected))
     index: pd.Index
@@ -118,9 +128,7 @@ def summary_pandas_frame(
         index, requested = _requested(times, time_index, start_date, end_date)
         values = _interpolate(times, values, rates, requested)
     dframe = pd.DataFrame(index=index, columns=columns, data=values, copy=False)
-    dframe.attrs["meta"] = {
-        name: _meta(main.keywords[i]) for name, i in chosen if name != "TIME"
-    }
+    dframe.attrs["meta"] = {name: main.meta(i) for name, i in chosen if name != "TIME"}
     return dframe
 
 
@@ -262,10 +270,8 @@ def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
 
     See :func:`res2df.summary.smry_meta` for the content.
     """
-    main = _KeyedReader.read(SummaryReader(case_path=case))
-    return {
-        key: _meta(main.keywords[i]) for key, i in main.by_key.items() if key != "TIME"
-    }
+    main = _open_case(case)
+    return {key: main.meta(i) for key, i in main.by_key.items() if key != "TIME"}
 
 
 def _naive_seconds(time: datetime | date) -> int:
@@ -279,6 +285,138 @@ def _naive_seconds(time: datetime | date) -> int:
         getattr(time, "second", 0),
     )
     return (naive - _EPOCH) // timedelta(seconds=1)
+
+
+class _Case(Protocol):
+    """A summary case, with its keys identified by their keyword index."""
+
+    @property
+    def restart(self) -> str | None: ...
+
+    @property
+    def keys(self) -> list[str | None]: ...
+
+    @property
+    def by_key(self) -> dict[str, int]: ...
+
+    def variable(self, index: int) -> str: ...
+
+    def meta(self, index: int) -> dict[str, Any]: ...
+
+    def read_values(
+        self, keyword_indices: list[int]
+    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]: ...
+
+
+@dataclass(frozen=True)
+class _EsmryCase:
+    """The layout of an ESMRY file, and the reader.
+
+    Attributes:
+        reader: Reader for the ESMRY file of the case.
+        key_names: The summary key at each keyword index.
+        units: The unit at each keyword index.
+        time_keyword_index: The keyword index of TIME.
+        time_unit: The number of seconds per unit of TIME.
+        restart: Path of the case this case was restarted from.
+        by_key: The last keyword index for each key.
+    """
+
+    reader: EsmryReader
+    key_names: list[str]
+    units: list[str]
+    time_keyword_index: int
+    time_unit: int
+    restart: str | None
+
+    @property
+    def keys(self) -> list[str | None]:
+        return list(self.key_names)
+
+    @cached_property
+    def by_key(self) -> dict[str, int]:
+        return {key: i for i, key in enumerate(self.key_names)}
+
+    def variable(self, index: int) -> str:
+        return self.key_names[index].split(":")[0]
+
+    def meta(self, index: int) -> dict[str, Any]:
+        """Metadata derived from the key as the ESMRY file has no summary spec.
+
+        The ``get_num`` of block and completion vectors is not given as it
+        depends on the grid dimensions which are not in the ESMRY file.
+        """
+        variable, *qualifiers = self.key_names[index].split(":")
+        key_type = SummaryKeyType.from_variable(variable)
+        meta: dict[str, Any] = {
+            "unit": self.units[index],
+            "is_total": _is_total(variable, key_type),
+            "is_rate": is_rate(variable),
+            "is_historical": variable.endswith("H")
+            and key_type in (_WELL, _GROUP, SummaryKeyType.FIELD),
+            "keyword": variable,
+            "wgname": None,
+        }
+        if key_type in _WGNAME_TYPES and qualifiers:
+            lgr = key_type in (
+                SummaryKeyType.LOCAL_WELL,
+                SummaryKeyType.LOCAL_COMPLETION,
+            )
+            meta["wgname"] = qualifiers[1] if lgr else qualifiers[0]
+        if key_type in _LGR_TYPES:
+            meta["get_num"] = 0  # resdata does not use NUMS for LGR variables
+        elif key_type in (
+            SummaryKeyType.REGION,
+            SummaryKeyType.AQUIFER,
+            SummaryKeyType.SEGMENT,
+        ):
+            if qualifiers and qualifiers[-1].isdecimal():
+                meta["get_num"] = int(qualifiers[-1])
+        elif key_type is SummaryKeyType.INTER_REGION:
+            regions = qualifiers and re.fullmatch(r"(\d+)-(-?\d+)", qualifiers[0])
+            if regions:
+                meta["get_num"] = int(regions[1]) + 32768 * (int(regions[2]) + 10)
+        return meta
+
+    def read_values(
+        self, keyword_indices: list[int]
+    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
+        """The time (in seconds since epoch) and values for each step."""
+        columns = [self.time_keyword_index, *keyword_indices]
+        wanted = sorted(set(columns))
+        # The vectors are given in the order of the file
+        vectors = dict(
+            zip(
+                wanted,
+                self.reader.values(
+                    report_step_only=False,
+                    keys=[self.key_names[i] for i in wanted],
+                ),
+                strict=True,
+            )
+        )
+        data = np.stack([vectors[i] for i in columns], axis=1)
+        return _to_seconds(self.reader.start_date, self.time_unit, data)
+
+    @classmethod
+    def read(cls, reader: EsmryReader) -> Self:
+        keys = reader.summary_keys
+        time_keyword_indices = [i for i, key in enumerate(keys) if key == "TIME"]
+        if not time_keyword_indices:
+            raise InvalidSummaryError("KEYCHECK did not contain TIME in summary")
+        # See _KeyedReader.read for why the last TIME is used
+        time_keyword_index = time_keyword_indices[-1]
+        unit = reader.units[time_keyword_index]
+        if unit not in _SECONDS_PER_UNIT:
+            raise InvalidSummaryError(f"Unknown date unit in summary: {unit}")
+        return cls(
+            reader,
+            keys,
+            reader.units,
+            time_keyword_index,
+            _SECONDS_PER_UNIT[unit],
+            reader.restart,
+        )
 
 
 @dataclass(frozen=True)
@@ -341,6 +479,30 @@ class _KeyedReader:
     def by_key(self) -> dict[str, int]:
         return {key: i for i, key in enumerate(self.keys) if key is not None}
 
+    def variable(self, index: int) -> str:
+        return self.keywords[index].summary_variable
+
+    def meta(self, index: int) -> dict[str, Any]:
+        return _meta(self.keywords[index])
+
+    def read_values(
+        self, keyword_indices: list[int]
+    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
+        """The time (in seconds since epoch) and values for each step."""
+        columns = np.array([self.time_keyword_index, *keyword_indices], dtype=np.intp)
+        data = np.empty((256, len(columns)), dtype=np.float32)
+        steps = 0
+        for row in self.reader.values(report_step_only=False):
+            if len(row) != len(self.keywords):
+                raise InvalidSummaryError(
+                    f"Expected {len(self.keywords)} values in each step, got {len(row)}"
+                )
+            if steps == len(data):
+                data = np.resize(data, (2 * steps, len(columns)))
+            data[steps] = row[columns]
+            steps += 1
+        return _to_seconds(self.reader.start_date, self.time_unit, data[:steps])
+
     @classmethod
     def read(cls, reader: SummaryReader) -> Self:
         dims = reader.dimensions
@@ -372,7 +534,7 @@ class _KeyedReader:
 
 
 def _read_block(
-    case: _KeyedReader, chosen: list[tuple[str, int]]
+    case: _Case, chosen: list[tuple[str, int]]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """The times and values for the chosen columns, found by key in the case.
 
@@ -381,7 +543,7 @@ def _read_block(
     """
     source = [case.by_key.get(name) for name, _ in chosen]
     found = [i for i, src in enumerate(source) if src is not None]
-    times, values = _read_values(case, [src for src in source if src is not None])
+    times, values = case.read_values([src for src in source if src is not None])
     if len(found) == len(chosen):
         return times, values
     block = np.full((len(times), len(chosen)), _DEFAULT_VALUE)
@@ -389,28 +551,15 @@ def _read_block(
     return times, block
 
 
-def _read_values(
-    case: _KeyedReader, keyword_indices: list[int]
+def _to_seconds(
+    start_date: datetime, time_unit: int, data: npt.NDArray[np.float32]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
-    """The time (in seconds since epoch) and values for each step."""
-    columns = np.array([case.time_keyword_index, *keyword_indices], dtype=np.intp)
-    data = np.empty((256, len(columns)), dtype=np.float32)
-    steps = 0
-    for row in case.reader.values(report_step_only=False):
-        if len(row) != len(case.keywords):
-            raise InvalidSummaryError(
-                f"Expected {len(case.keywords)} values in each step, got {len(row)}"
-            )
-        if steps == len(data):
-            data = np.resize(data, (2 * steps, len(columns)))
-        data[steps] = row[columns]
-        steps += 1
-    data = data[:steps]
+    """Split data with TIME as first column into seconds since epoch and values."""
     # resdata ignores the time of day in STARTDAT
     # one can avoid this by dropping .date()
     # kept for backwards compatability
-    start_time = _naive_seconds(case.reader.start_date.date())
-    times = np.trunc(start_time + data[:, 0].astype(np.float64) * case.time_unit)
+    start_time = _naive_seconds(start_date.date())
+    times = np.trunc(start_time + data[:, 0].astype(np.float64) * time_unit)
     return times.astype(np.int64), data[:, 1:].astype(np.float64)
 
 
@@ -447,26 +596,35 @@ def _merge(
 
 def _read_restart_chain(
     case_path: str | os.PathLike[str], include_restart: bool
-) -> list[_KeyedReader]:
-    files: list[_KeyedReader] = []
+) -> list[_Case]:
+    files: list[_Case] = []
     visited: set[Path] = set()
     current: str | os.PathLike[str] | None = case_path
     while current and Path(current).resolve() not in visited:
         try:
-            reader = SummaryReader(case_path=current)
+            case = _open_case(current)
         except FileNotFoundError:
             if not files:  # No files found
                 raise
             else:
                 break  # Did not find a restart
-        files.append(_KeyedReader.read(reader))
+        files.append(case)
         visited.add(Path(current).resolve())
-        current = files[-1].restart if include_restart else None
+        current = case.restart if include_restart else None
     return files
 
 
+def _open_case(case_path: str | os.PathLike[str]) -> _Case:
+    """The ESMRY file of the case if it exists, otherwise the SMSPEC and UNSMRY."""
+    try:
+        esmry = EsmryReader(case_path=_SUMMARY_EXTENSION.sub("", os.fspath(case_path)))
+    except FileNotFoundError:
+        return _KeyedReader.read(SummaryReader(case_path=case_path))
+    return _EsmryCase.read(esmry)
+
+
 def _select_columns(
-    first: _KeyedReader, column_keys: Sequence[str] | None
+    first: _Case, column_keys: Sequence[str] | None
 ) -> list[tuple[str, int]]:
     """The names and keyword indices of the columns to include in the frame.
 

@@ -42,8 +42,8 @@ _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
 _SENTINEL_NAME = ":+:+:+:+"
 # resdata ignores the NUMS of YEARS and always reports this get_num
 _YEARS_NUMS = -32676
-_SUMMARY_EXTENSION = re.compile(
-    r"\.(unsmry|funsmry|smspec|fsmspec|esmry|[fa]?s\d{4})$", re.IGNORECASE
+_SUMMARY_SUFFIX = re.compile(
+    r"\.(unsmry|funsmry|smspec|fsmspec|esmry|[fa]?s\d{4})", re.IGNORECASE
 )
 _CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL
@@ -617,10 +617,17 @@ def _read_restart_chain(
 def _open_keyed_reader(case_path: str | os.PathLike[str]) -> _KeyedReader:
     """The ESMRY file of the case if it exists, otherwise the SMSPEC and UNSMRY."""
     try:
-        esmry = EsmryReader(case_path=_SUMMARY_EXTENSION.sub("", os.fspath(case_path)))
+        esmry = EsmryReader(case_path=os.fspath(_without_summary_suffix(case_path)))
     except FileNotFoundError:
         return _KeyedSmry.read(SummaryReader(case_path=case_path))
     return _KeyedEsmry.read(esmry)
+
+
+def _without_summary_suffix(case_path: str | os.PathLike[str]) -> Path:
+    path = Path(case_path)
+    if _SUMMARY_SUFFIX.fullmatch(path.suffix):
+        return path.parent / path.stem
+    return path
 
 
 def _select_columns(

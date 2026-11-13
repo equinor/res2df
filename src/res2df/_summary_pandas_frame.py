@@ -385,20 +385,29 @@ class _KeyedEsmry:
     ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
         """The time (in seconds since epoch) and values for each step."""
         columns = [self.time_keyword_index, *keyword_indices]
-        wanted = sorted(set(columns))
-        # The vectors are given in the order of the file
-        vectors = dict(
-            zip(
-                wanted,
-                self.reader.values(
-                    report_step_only=False,
-                    keys=[self.key_names[i] for i in wanted],
-                ),
-                strict=True,
-            )
+        # The same key may be selected for several columns
+        positions: dict[int, list[int]] = {}
+        for position, index in enumerate(columns):
+            positions.setdefault(index, []).append(position)
+        wanted = sorted(positions)
+        # The vectors are given in the order of the file. Each is written to
+        # its rows of a (columns, steps) matrix as it is read, so the cast to
+        # float64 happens in the same pass and the vectors are not kept.
+        # Transposed, the matrix is Fortran ordered, which is also how pandas
+        # stores the frame, so no further copies are needed.
+        data: npt.NDArray[np.float64] | None = None
+        vectors = self.reader.values(
+            report_step_only=False,
+            keys=[self.key_names[i] for i in wanted],
         )
-        data = np.stack([vectors[i] for i in columns], axis=1)
-        return _to_seconds(self.reader.start_date, self.time_unit, data)
+        for index, vector in zip(wanted, vectors, strict=True):
+            if data is None:
+                data = np.empty((len(columns), len(vector)))
+            for position in positions[index]:
+                data[position] = vector
+        if data is None:
+            data = np.empty((len(columns), 0))
+        return _to_seconds(self.reader.start_date, self.time_unit, data.T)
 
     @classmethod
     def read(cls, reader: EsmryReader) -> Self:
@@ -562,7 +571,7 @@ def _to_seconds(
     # kept for backwards compatability
     start_time = _naive_seconds(start_date.date())
     times = np.trunc(start_time + data[:, 0].astype(np.float64) * time_unit)
-    return times.astype(np.int64), data[:, 1:].astype(np.float64)
+    return times.astype(np.int64), data[:, 1:].astype(np.float64, copy=False)
 
 
 def _merge(
@@ -685,22 +694,55 @@ def _interpolate(
     """
     if len(times) == 0:
         return np.zeros((len(requested), values.shape[1]))
-    result = np.empty((len(requested), values.shape[1]))
     # Interpolate in chunks to bound the size of the temporaries
+    if values.flags.f_contiguous and not values.flags.c_contiguous:
+        # Column-wise storage (as read from ESMRY files): gathering steps from
+        # it is very slow, so the transposed matrix is interpolated instead, one
+        # chunk of columns at a time. The result is then also column-wise, which
+        # is how pandas stores it anyway.
+        transposed = values.T
+        weights = _interpolation_weights(times, requested)
+        result = np.empty((values.shape[1], len(requested)))
+        columns = max(1, _CHUNK_BYTES // max(1, len(requested) * values.itemsize))
+        for start in range(0, len(transposed), columns):
+            chunk = slice(start, start + columns)
+            _interpolate_columns_into(
+                transposed[chunk], rates[chunk], weights, result[chunk]
+            )
+        return result.T
+    result = np.empty((len(requested), values.shape[1]))
     rows = max(1, _CHUNK_BYTES // max(1, values.shape[1] * values.itemsize))
     for start in range(0, len(requested), rows):
         chunk = slice(start, start + rows)
-        _interpolate_into(times, values, rates, requested[chunk], result[chunk])
+        weights = _interpolation_weights(times, requested[chunk])
+        _interpolate_into(values, rates, weights, result[chunk])
     return result
 
 
-def _interpolate_into(
-    times: npt.NDArray[np.int64],
-    values: npt.NDArray[np.float64],
-    rates: npt.NDArray[np.bool_],
-    requested: npt.NDArray[np.int64],
-    result: npt.NDArray[np.float64],
-) -> None:
+@dataclass(frozen=True)
+class _Weights:
+    """Where and how to interpolate for each requested time.
+
+    Attributes:
+        lower: The index of the step at or before each requested time.
+        upper: The index of the step after each requested time.
+        weight_lower: The weight of the value at lower.
+        weight_upper: The weight of the value at upper.
+        below: Whether each requested time is before the first step.
+        above: Whether each requested time is after the last step.
+    """
+
+    lower: npt.NDArray[np.intp]
+    upper: npt.NDArray[np.intp]
+    weight_lower: npt.NDArray[np.float64]
+    weight_upper: npt.NDArray[np.float64]
+    below: npt.NDArray[np.bool_]
+    above: npt.NDArray[np.bool_]
+
+
+def _interpolation_weights(
+    times: npt.NDArray[np.int64], requested: npt.NDArray[np.int64]
+) -> _Weights:
     after = np.searchsorted(times, requested, side="left")
     lower = np.maximum(after - 1, 0)
     upper = np.minimum(after, len(times) - 1)
@@ -712,14 +754,48 @@ def _interpolate_into(
     first = after == 0
     weight_lower[first] = 1.0
     weight_upper[first] = 0.0
-    np.take(values, lower, axis=0, out=result)
-    result *= weight_lower[:, None]
-    result += values[upper] * weight_upper[:, None]
+    return _Weights(
+        lower,
+        upper,
+        weight_lower,
+        weight_upper,
+        requested < times[0],
+        requested > times[-1],
+    )
+
+
+def _interpolate_into(
+    values: npt.NDArray[np.float64],
+    rates: npt.NDArray[np.bool_],
+    weights: _Weights,
+    result: npt.NDArray[np.float64],
+) -> None:
+    """Interpolate row-wise values (one row per step) into result."""
+    np.take(values, weights.lower, axis=0, out=result)
+    result *= weights.weight_lower[:, None]
+    result += values[weights.upper] * weights.weight_upper[:, None]
     if rates.any():
-        result[:, rates] = values[upper][:, rates]
-    below = requested < times[0]
-    above = requested > times[-1]
-    if below.any():
-        result[below] = np.where(rates, 0.0, values[0])
-    if above.any():
-        result[above] = np.where(rates, 0.0, values[-1])
+        result[:, rates] = values[weights.upper][:, rates]
+    if weights.below.any():
+        result[weights.below] = np.where(rates, 0.0, values[0])
+    if weights.above.any():
+        result[weights.above] = np.where(rates, 0.0, values[-1])
+
+
+def _interpolate_columns_into(
+    transposed: npt.NDArray[np.float64],
+    rates: npt.NDArray[np.bool_],
+    weights: _Weights,
+    result: npt.NDArray[np.float64],
+) -> None:
+    """Interpolate column-wise values (one row per key) into result."""
+    np.take(transposed, weights.lower, axis=1, out=result)
+    result *= weights.weight_lower
+    upper = transposed[:, weights.upper]
+    result += upper * weights.weight_upper
+    if rates.any():
+        result[rates] = upper[rates]
+    if weights.below.any():
+        result[:, weights.below] = np.where(rates, 0.0, transposed[:, 0])[:, None]
+    if weights.above.any():
+        result[:, weights.above] = np.where(rates, 0.0, transposed[:, -1])[:, None]

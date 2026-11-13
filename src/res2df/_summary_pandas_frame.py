@@ -360,6 +360,8 @@ class _KeyedEsmry:
             "get_num": 0,
         }
         if key_type in _WGNAME_TYPES and qualifiers:
+            # Local keys are assumed to be LWOPR:<lgr>:<well> as in resdata. This
+            # is untested against flow output as flow does not support LGR.
             lgr = key_type in (
                 SummaryKeyType.LOCAL_WELL,
                 SummaryKeyType.LOCAL_COMPLETION,

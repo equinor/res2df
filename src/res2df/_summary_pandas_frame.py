@@ -343,8 +343,9 @@ class _EsmryCase:
     def meta(self, index: int) -> dict[str, Any]:
         """Metadata derived from the key as the ESMRY file has no summary spec.
 
-        The ``get_num`` of block and completion vectors is not given as it
-        depends on the grid dimensions which are not in the ESMRY file.
+        The ``get_num`` of block and completion vectors depends on the grid
+        dimensions which are not in the ESMRY file, so they get 0, as do
+        field, well and group vectors (which is what flow writes to NUMS).
         """
         variable, *qualifiers = self.key_names[index].split(":")
         key_type = SummaryKeyType.from_variable(variable)
@@ -356,6 +357,7 @@ class _EsmryCase:
             and key_type in (_WELL, _GROUP, SummaryKeyType.FIELD),
             "keyword": variable,
             "wgname": None,
+            "get_num": 0,
         }
         if key_type in _WGNAME_TYPES and qualifiers:
             lgr = key_type in (
@@ -363,9 +365,7 @@ class _EsmryCase:
                 SummaryKeyType.LOCAL_COMPLETION,
             )
             meta["wgname"] = qualifiers[1] if lgr else qualifiers[0]
-        if key_type in _LGR_TYPES:
-            meta["get_num"] = 0  # resdata does not use NUMS for LGR variables
-        elif key_type in (
+        if key_type in (
             SummaryKeyType.REGION,
             SummaryKeyType.AQUIFER,
             SummaryKeyType.SEGMENT,

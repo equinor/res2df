@@ -34,6 +34,8 @@ _EPOCH = datetime(1970, 1, 1)
 _DEFAULT_VALUE = -99.0
 _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
 _SENTINEL_NAME = ":+:+:+:+"
+# resdata ignores the NUMS of YEARS and always reports this get_num
+_YEARS_NUMS = -32676
 _CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL
 _GROUP = SummaryKeyType.GROUP
@@ -226,7 +228,9 @@ def _meta(kw: SummaryKeyword) -> dict[str, Any]:
         if key_type in _WGNAME_TYPES and kw.name and kw.name != _SENTINEL_NAME
         else None,
     }
-    if key_type in _LGR_TYPES:
+    if variable == "YEARS":
+        meta["get_num"] = _YEARS_NUMS
+    elif key_type in _LGR_TYPES:
         meta["get_num"] = 0  # resdata does not use NUMS for LGR variables
     elif kw.number is not None:
         meta["get_num"] = int(kw.number)

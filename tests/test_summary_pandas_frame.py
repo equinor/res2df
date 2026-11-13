@@ -410,6 +410,12 @@ def test_that_the_metadata_describes_each_column(smspec):
             assert entry["get_num"] == 0
 
 
+@given(smspecs(sum_keys=st.just(["YEARS"])))
+def test_that_the_metadata_of_years_has_the_get_num_resdata_gives_it(smspec):
+    unsmry = Unsmry([SummaryStep(0, [SummaryMiniStep(0, [0.0, 0.0])])])
+    assert frame_of(smspec, unsmry).attrs["meta"]["YEARS"]["get_num"] == -32676
+
+
 @given(summaries())
 def test_that_summary_meta_gives_the_metadata_of_the_frame(generated):
     smspec, unsmry = generated

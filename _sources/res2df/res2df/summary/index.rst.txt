@@ -73,18 +73,14 @@ Module Contents
                     normalized dates. Overridden if freq is 'last'.
 
 
-.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles, time_index: str | None = None, column_keys: list[str] | str | None = None, start_date: str | datetime.date | None = None, end_date: str | datetime.date | None = None, include_restart: bool = False, params: bool = False, paramfile: str | None = None, datetime: bool = False) -> pandas.DataFrame
+.. py:function:: df(resdatafiles: res2df.resdatafiles.ResdataFiles | resdata.summary.Summary, time_index: str | None = None, column_keys: list[str] | str | None = None, start_date: str | datetime.date | None = None, end_date: str | datetime.date | None = None, include_restart: bool = False, params: bool = False, paramfile: str | None = None, datetime: bool = False) -> pandas.DataFrame
 
    Extract data from UNSMRY as Pandas dataframes.
 
-   This is a thin wrapper for Summary.pandas_frame, by adding
-   support for string mnenomics for the time index.
-
-   The dataframe is always indexed by DATE, and the datatype for the
-   index will usually be datetime64[ns] as long as all dates are
-   before year 2262. If a longer time range is detected, the index.dtype
-   will be object, and consisting of datetime.datetime() objects. The index
-   is always named "DATE".
+   The dataframe is always indexed by DATE. By default, the index datatype is
+   datetime64[us]. For the resampling frequencies 'yearly', 'monthly' and
+   'daily' the index consists of datetime.date objects (object dtype), unless
+   datetime=True.
 
    :param resdatafiles: ResdataFiles object representing a
                         :term:`.DATA file`. Alternatively a Summary object.

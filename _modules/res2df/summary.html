@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.3.18.dev3+g79085b2c3 documentation</title>
+  <title>res2df.summary &mdash; res2df 1.3.18.dev5+g964ef09f8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b1d8b779"></script>
+      <script src="../../_static/documentation_options.js?v=6b1aeccf"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -98,7 +98,12 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">resdata.summary</span><span class="w"> </span><span class="kn">import</span> <span class="n">Summary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">resfo_utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidSummaryError</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">._summary_pandas_frame</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">summary_meta</span><span class="p">,</span>
+    <span class="n">summary_pandas_frame</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_parameter_files</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">load_all</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.res2csvlogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger_res2csv</span>
@@ -382,7 +387,7 @@
 <div class="viewcode-block" id="df">
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.df">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
-    <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span>
+    <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span> <span class="o">|</span> <span class="n">Summary</span><span class="p">,</span>
     <span class="n">time_index</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">column_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">start_date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -392,17 +397,12 @@
     <span class="n">paramfile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">datetime</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># A very poor choice of argument name [pylint]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Extract data from UNSMRY as Pandas dataframes.</span>
+<span class="w">    </span><span class="sd">"""Extract data from UNSMRY as Pandas dataframes.</span>
 
-<span class="sd">    This is a thin wrapper for Summary.pandas_frame, by adding</span>
-<span class="sd">    support for string mnenomics for the time index.</span>
-
-<span class="sd">    The dataframe is always indexed by DATE, and the datatype for the</span>
-<span class="sd">    index will usually be datetime64[ns] as long as all dates are</span>
-<span class="sd">    before year 2262. If a longer time range is detected, the index.dtype</span>
-<span class="sd">    will be object, and consisting of datetime.datetime() objects. The index</span>
-<span class="sd">    is always named "DATE".</span>
+<span class="sd">    The dataframe is always indexed by DATE. By default, the index datatype is</span>
+<span class="sd">    datetime64[us]. For the resampling frequencies 'yearly', 'monthly' and</span>
+<span class="sd">    'daily' the index consists of datetime.date objects (object dtype), unless</span>
+<span class="sd">    datetime=True.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        resdatafiles: ResdataFiles object representing a</span>
@@ -438,42 +438,14 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column_keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">column_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_keys</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
-        <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_summary</span><span class="p">(</span><span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Error reading summary instance, returning empty dataframe"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-
-    <span class="n">time_index_arg</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">time_index</span> <span class="o">==</span> <span class="s2">"raw"</span><span class="p">:</span>
-        <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">resample_smry_dates</span><span class="p">(</span>
-            <span class="n">summary</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span>
-            <span class="s2">"raw"</span><span class="p">,</span>
-            <span class="kc">False</span><span class="p">,</span>
-            <span class="n">start_date</span><span class="p">,</span>
-            <span class="n">end_date</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">resample_smry_dates</span><span class="p">(</span>
-            <span class="n">summary</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span>
-            <span class="n">time_index</span><span class="p">,</span>
-            <span class="kc">True</span><span class="p">,</span>
-            <span class="n">start_date</span><span class="p">,</span>
-            <span class="n">end_date</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">time_index</span>
-
-    <span class="k">if</span> <span class="n">time_index_arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">time_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">time_index_str</span> <span class="o">=</span> <span class="s2">""</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
-            <span class="n">time_index_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">time_index_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> … </span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">time_index_str</span> <span class="o">=</span> <span class="n">time_index</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_index</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="n">time_index_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time_index</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">time_index_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">time_index</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> … </span><span class="si">{</span><span class="n">time_index</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">column_keys</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">column_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">"*"</span>
@@ -485,7 +457,47 @@
         <span class="n">time_index_str</span> <span class="ow">or</span> <span class="s2">"raw"</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">dframe</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">pandas_frame</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
+        <span class="n">time_index_arg</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">time_index</span> <span class="o">==</span> <span class="s2">"raw"</span><span class="p">:</span>
+            <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">resample_smry_dates</span><span class="p">(</span>
+                <span class="n">resdatafiles</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span>
+                <span class="s2">"raw"</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="n">start_date</span><span class="p">,</span>
+                <span class="n">end_date</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">resample_smry_dates</span><span class="p">(</span>
+                <span class="n">resdatafiles</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span>
+                <span class="n">time_index</span><span class="p">,</span>
+                <span class="kc">True</span><span class="p">,</span>
+                <span class="n">start_date</span><span class="p">,</span>
+                <span class="n">end_date</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">time_index</span>
+        <span class="c1"># resdata also accepts dates, contrary to its type hints</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">pandas_frame</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">):</span>
+            <span class="c1"># pandas 2 gives nanosecond resolution, which cannot represent</span>
+            <span class="c1"># dates after 2262, while pandas 3 gives microseconds</span>
+            <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">as_unit</span><span class="p">(</span><span class="s2">"us"</span><span class="p">)</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">smry_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dframe</span> <span class="o">=</span> <span class="n">summary_pandas_frame</span><span class="p">(</span>
+                <span class="n">resdatafiles</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">,</span>
+                <span class="n">time_index</span><span class="p">,</span>
+                <span class="n">column_keys</span><span class="p">,</span>
+                <span class="n">include_restart</span><span class="p">,</span>
+                <span class="n">start_date</span><span class="p">,</span>
+                <span class="n">end_date</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="n">InvalidSummaryError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Error reading summary instance, returning empty dataframe"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">]</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">"Dataframe with smry data ready, </span><span class="si">%d</span><span class="s2"> columns and </span><span class="si">%d</span><span class="s2"> rows"</span><span class="p">,</span>
@@ -497,7 +509,6 @@
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">_merge_params</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">paramfile</span><span class="p">,</span> <span class="n">resdatafiles</span><span class="p">)</span>
 
     <span class="c1"># Add metadata as an attribute the dataframe, using experimental Pandas features:</span>
-    <span class="n">meta</span> <span class="o">=</span> <span class="n">smry_meta</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
     <span class="c1"># Slice meta to dataframe columns:</span>
     <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">column_key</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="n">column_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">if</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">meta</span>
@@ -675,10 +686,9 @@
 <span class="sd">    * keyword (str)</span>
 <span class="sd">    * wgname (str or None)</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
-        <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_summary</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">summary_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">)</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span>
 
     <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">:</span>

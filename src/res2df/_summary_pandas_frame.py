@@ -407,22 +407,23 @@ class _KeyedEsmry:
             positions.setdefault(index, []).append(position)
         wanted = sorted(positions)
         # The vectors are given in the order of the file. Each is written to
-        # its rows of a (columns, steps) matrix as it is read, so the cast to
-        # float64 happens in the same pass and the vectors are not kept.
-        # Transposed, the matrix is Fortran ordered, which is also how pandas
-        # stores the frame, so no further copies are needed.
-        data: npt.NDArray[np.float64] | None = None
+        # its rows of a (columns, steps) matrix as it is read, so the vectors
+        # are not kept. As the values are float32 in the file, the matrix is
+        # too, and is cast in _to_seconds. The transposed matrix is Fortran
+        # ordered, which is also how pandas stores the frame, so the cast is
+        # the only copy.
+        data: npt.NDArray[np.float32] | None = None
         vectors = self.reader.values(
             report_step_only=False,
             keys=[self.key_names[i] for i in wanted],
         )
         for index, vector in zip(wanted, vectors, strict=True):
             if data is None:
-                data = np.empty((len(columns), len(vector)))
+                data = np.empty((len(columns), len(vector)), dtype=np.float32)
             for position in positions[index]:
                 data[position] = vector
         if data is None:
-            data = np.empty((len(columns), 0))
+            data = np.empty((len(columns), 0), dtype=np.float32)
         return _to_seconds(self.reader.start_date, self.time_unit, data.T)
 
     @classmethod

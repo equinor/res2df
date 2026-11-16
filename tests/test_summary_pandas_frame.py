@@ -918,7 +918,13 @@ def test_that_an_esmry_file_gives_the_same_selected_and_resampled_frame(
     )
 
 
-@given(smspecs(sum_keys=st.just(meta_keys)))
+@given(
+    smspecs(
+        sum_keys=st.just(meta_keys),
+        # flow writes the full names to ESMRY, which can contain ":"
+        well_names=st.text(alphabet="AB1:-_", min_size=1, max_size=8),
+    )
+)
 def test_that_the_metadata_of_an_esmry_file_describes_each_column(smspec):
     assume(len(set(smspec.summary_keys())) == len(smspec.keywords))
     unsmry = Unsmry(

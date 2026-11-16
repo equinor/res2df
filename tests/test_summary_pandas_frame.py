@@ -24,6 +24,7 @@ from hypothesis import strategies as st
 from natsort import natsorted
 from resfo_utilities import EsmryReader, InvalidSummaryError, SummaryReader, is_rate
 from resfo_utilities.testing import (
+    Date,
     Esmry,
     Smspec,
     SummaryMiniStep,
@@ -846,6 +847,35 @@ def test_that_steps_with_the_wrong_number_of_values_are_invalid(generated):
 
 def esmry_chain(smspec: Smspec, unsmry: Unsmry) -> SummaryChain:
     return SummaryChain().add_esmry("CASE", Esmry.from_summary(smspec, unsmry))
+
+
+@pytest.mark.parametrize(
+    ("key", "wgname"),
+    [
+        ("WOPR:OP1", "OP1"),
+        ("WOPR:LONGWELLNAME_ONE", "LONGWELLNAME_ONE"),
+        ("WOPR:WELL:COLON-1", "WELL:COLON-1"),
+        ("GOPR:GRP:A:B", "GRP:A:B"),
+        ("COPR:OP1:1,1,1", "OP1"),
+        ("COPR:WELL:COLON-1:1,2,3", "WELL:COLON-1"),
+        ("SOFR:OP1:2", "OP1"),
+        ("SOFR:WELL:COLON-1:2", "WELL:COLON-1"),
+    ],
+)
+def test_that_the_wgname_of_an_esmry_key_is_the_whole_well_or_group_name(key, wgname):
+    # flow writes the full name (names can be longer than 8 characters and
+    # contain ":") to ESMRY, unlike the SMSPEC which truncates to 8 characters.
+    keys = ["TIME", key]
+    esmry = Esmry(
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+        keys=keys,
+        units=["DAYS", "SM3"],
+        report_steps=[1],
+        ministeps=[0],
+        vectors=[[0.0], [1.0]],
+    )
+    frame = SummaryChain().add_esmry("CASE", esmry).frame("CASE")
+    assert frame.attrs["meta"][key]["wgname"] == wgname
 
 
 @given(summaries())

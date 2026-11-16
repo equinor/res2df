@@ -245,6 +245,27 @@ def _meta(kw: SummaryKeyword) -> dict[str, Any]:
     return meta
 
 
+def _esmry_wgname(key_type: SummaryKeyType, qualifiers: list[str]) -> str:
+    """The well or group name of an ESMRY key, split on ``:`` into qualifiers.
+
+    The name itself can contain ``:``. It is what is between the lgr name (for
+    local keys) and the trailing connection or segment (for completion and
+    segment keys).
+    """
+    if key_type in (SummaryKeyType.LOCAL_WELL, SummaryKeyType.LOCAL_COMPLETION):
+        # Local keys are assumed to be LWOPR:<lgr>:<well> as in resdata. This
+        # is untested against flow output as flow does not support LGR.
+        qualifiers = qualifiers[1:]
+    has_trailing_part = key_type in (
+        SummaryKeyType.COMPLETION,
+        SummaryKeyType.LOCAL_COMPLETION,
+        SummaryKeyType.SEGMENT,
+    )
+    if has_trailing_part and len(qualifiers) > 1:
+        qualifiers = qualifiers[:-1]
+    return ":".join(qualifiers)
+
+
 def _is_total(variable: str, key_type: SummaryKeyType) -> bool:
     match key_type:
         case (
@@ -361,13 +382,7 @@ class _KeyedEsmry:
             "get_num": _YEARS_NUMS if variable == "YEARS" else 0,
         }
         if key_type in _WGNAME_TYPES and qualifiers:
-            # Local keys are assumed to be LWOPR:<lgr>:<well> as in resdata. This
-            # is untested against flow output as flow does not support LGR.
-            lgr = key_type in (
-                SummaryKeyType.LOCAL_WELL,
-                SummaryKeyType.LOCAL_COMPLETION,
-            )
-            meta["wgname"] = qualifiers[1] if lgr else qualifiers[0]
+            meta["wgname"] = _esmry_wgname(key_type, qualifiers)
         if key_type in (
             SummaryKeyType.REGION,
             SummaryKeyType.AQUIFER,

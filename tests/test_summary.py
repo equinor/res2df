@@ -852,6 +852,8 @@ def test_df2eclsum(dframe):
         dframe.sort_index(axis=1),
         dframe_roundtrip.sort_index(axis=1),
         check_dtype=False,
+        # The roundtrip index is datetime64[us], while pandas 2 gives [ns] input
+        check_index_type=int(pd.__version__.split(".")[0]) >= 3,
     )
 
 

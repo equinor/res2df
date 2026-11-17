@@ -37,7 +37,7 @@ dynamic = ["version"]
 dependencies= [
 "resdata>=5",
 "resfo",
-"resfo-utilities",
+"resfo-utilities>=1.3",
 "natsort",
 "networkx",
 "numpy",

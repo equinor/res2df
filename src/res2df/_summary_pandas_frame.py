@@ -42,8 +42,9 @@ _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
 _SENTINEL_NAME = ":+:+:+:+"
 # resdata ignores the NUMS of YEARS and always reports this get_num
 _YEARS_NUMS = -32676
+# Snnnn and Annnn are the unformatted and formatted split (non-unified) files
 _SUMMARY_SUFFIX = re.compile(
-    r"\.(unsmry|funsmry|smspec|fsmspec|esmry|[fa]?s\d{4})", re.IGNORECASE
+    r"\.(unsmry|funsmry|smspec|fsmspec|esmry|[sa]\d{4}|data)", re.IGNORECASE
 )
 _CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL

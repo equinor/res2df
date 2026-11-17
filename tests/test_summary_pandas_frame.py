@@ -997,23 +997,23 @@ def test_that_esmry_files_are_read_from_disk_by_default(tmp_path, name):
 
 
 @pytest.mark.parametrize(
-    "directory, name",
+    "directory, name, stem",
     [
-        ("run.esmry", "CASE"),
-        ("run.esmry", "CASE.esmry"),
-        ("run.v2", "CASE.V2"),
-        ("run.v2", "CASE.V2.ESMRY"),
-        ("run.s0001", "CASE.S0001"),
+        ("run.esmry", "CASE", "CASE"),
+        ("run.esmry", "CASE.esmry", "CASE"),
+        ("run.v2", "CASE.V2", "CASE.V2"),
+        ("run.v2", "CASE.V2.ESMRY", "CASE.V2"),
+        ("run.s0001", "CASE.S0001", "CASE"),
+        ("run.a0001", "CASE.A0001", "CASE"),
+        ("run.data", "CASE.DATA", "CASE"),
+        ("run.data", "CASE.data", "CASE"),
     ],
 )
 def test_that_only_the_suffix_of_the_file_name_is_stripped_to_find_the_esmry_file(
-    tmp_path, directory, name
+    tmp_path, directory, name, stem
 ):
     smspec, unsmry = summaries().example()
     (tmp_path / directory).mkdir()
-    stem = (
-        name.rsplit(".", 1)[0] if name.lower().endswith((".esmry", ".s0001")) else name
-    )
     Esmry.from_summary(smspec, unsmry).to_file(tmp_path / directory / f"{stem}.ESMRY")
     pd.testing.assert_frame_equal(
         summary_pandas_frame(tmp_path / directory / name),

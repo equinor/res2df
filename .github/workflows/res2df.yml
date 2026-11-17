@@ -21,13 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.12", "3.13", "3.14"]
         pandas-version: [""]
         include:
           # For one of the Python versions we
           # install the extra dependency ert
           # (in order to not double the job matrix)
-          - python-version: "3.11"
+          - python-version: "3.12"
             install-ert: true
           - python-version: "3.13"
             pandas-version: ">=2,<3"
@@ -92,7 +92,7 @@ jobs:
           sphinx-build -W -b html docs build/sphinx/html
 
       - name: Update GitHub pages
-        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.11'
+        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.12'
         run: |
           cp -R ./build/sphinx/html ../html
 

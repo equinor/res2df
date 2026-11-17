@@ -1031,6 +1031,38 @@ def test_that_an_invalid_esmry_file_is_an_error_even_if_there_is_an_smspec(tmp_p
         summary_pandas_frame(tmp_path / "CASE")
 
 
+@pytest.mark.parametrize(
+    ("keys", "units", "message"),
+    [
+        (["FOPT"], ["SM3"], "did not contain TIME"),
+        (["TIME", "FOPT"], ["FURLONG", "SM3"], "Unknown date unit"),
+    ],
+)
+def test_that_an_esmry_file_without_a_valid_time_is_an_error(keys, units, message):
+    esmry = Esmry(
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+        keys=keys,
+        units=units,
+        report_steps=[1],
+        ministeps=[0],
+        vectors=[[0.0]] * len(keys),
+    )
+    with pytest.raises(InvalidSummaryError, match=message):
+        SummaryChain().add_esmry("CASE", esmry).frame("CASE")
+
+
+@pytest.mark.parametrize("name", ["CASE", "CASE.ESMRY", "CASE.A0001", "CASE.DATA"])
+def test_that_the_meta_of_an_esmry_file_can_be_read_by_any_summary_suffix(
+    tmp_path, name
+):
+    smspec, unsmry = summaries().example()
+    Esmry.from_summary(smspec, unsmry).to_file(tmp_path / "CASE.ESMRY")
+    assert (
+        summary_meta(tmp_path / name).keys()
+        == frame_of(smspec, unsmry).attrs["meta"].keys()
+    )
+
+
 @given(smspecs(sum_keys=st.just(["YEARS"])))
 def test_that_the_metadata_of_years_in_an_esmry_file_is_as_in_resdata(smspec):
     unsmry = Unsmry([SummaryStep(0, [SummaryMiniStep(0, [0.0, 0.0])])])

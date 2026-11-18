@@ -45,6 +45,9 @@ Module Contents
    :param fipname: The name of the regport regions, FIPNUM, FIPZON or whatever
                    Max length of the string is 8, the first three characters must be FIP,
                    and the next 3 characters must be unique for a given :term:`.DATA file`.
+   :param resv: If True, extract reservoir pore volumes from the report. RPTSOL or
+                RPTSCHED must be called with FIP=2 (or 3) for these data to be output to
+                the print file.
 
 
 .. py:function:: fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser

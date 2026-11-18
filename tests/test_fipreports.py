@@ -773,6 +773,8 @@ def test_report_block_lineparser():
 def test_cmdline(tmp_path, mocker, monkeypatch):
     """Test command line interface"""
     monkeypatch.chdir(tmp_path)
+
+    # Without porv
     tmpcsvfile = tmp_path / "TMP-fipreports.csv"
     mocker.patch(
         "sys.argv",
@@ -801,7 +803,7 @@ def test_cmdline(tmp_path, mocker, monkeypatch):
     res2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("debugmode.csv"), disk_df)
 
-    # Directly on PRT file:
+    # Directly on PRT file (without porv):
     mocker.patch(
         "sys.argv",
         [
@@ -814,3 +816,41 @@ def test_cmdline(tmp_path, mocker, monkeypatch):
     )
     res2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("fromprtfile.csv"), disk_df)
+
+    # With porv
+    tmpcsvfile_porv = tmp_path / "TMP-fipreports-porv.csv"
+    mocker.patch(
+        "sys.argv",
+        [
+            "res2csv",
+            "fipreports",
+            "-v",
+            DATAFILE,
+            "--porv",
+            "--output",
+            str(tmpcsvfile_porv),
+        ],
+    )
+    res2csv.main()
+
+    # Directly on PRT file (with porv):
+    assert Path(tmpcsvfile_porv).is_file()
+    disk_df_porv = pd.read_csv(tmpcsvfile_porv)
+    assert "FIPNAME" in disk_df_porv
+    assert "STOIIP_OIL" in disk_df_porv
+    assert "HCPV_OIL" in disk_df_porv
+    assert not disk_df_porv.empty
+
+    mocker.patch(
+        "sys.argv",
+        [
+            "res2csv",
+            "fipreports",
+            DATAFILE.replace("DATA", "PRT"),
+            "--porv",
+            "--output",
+            "fromprtfile-porv.csv",
+        ],
+    )
+    res2csv.main()
+    pd.testing.assert_frame_equal(pd.read_csv("fromprtfile-porv.csv"), disk_df_porv)

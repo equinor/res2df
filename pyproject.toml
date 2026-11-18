@@ -200,7 +200,6 @@ ignore = [
 "src/res2df/__init__.py" = ["PLC0414"]
 "tests/*" = ["RUF005", "ANN", "FURB113", "PERF", "ARG", "RUF069"]
 "docs/*" = ["ANN", "ARG", "INP"]
-"docs/usage/*.txt" = ["ALL"]
 
 [tool.ruff.lint.pylint]
 max-args = 20

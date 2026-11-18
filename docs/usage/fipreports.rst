@@ -19,4 +19,14 @@ This table found in a PRT file will be parsed to the following dataframe:
 In this particular example, ``FIPZON`` was selected explicitly, either using the command line client or the Python API
 through an option to the :func:`res2df.fipreports.df` function.
 
+Reservoir pore volumes can also be extracted from the PRT output file:
+
+.. literalinclude:: fipreports-porv-example.txt
+
+These tables are parsed to the following dataframe:
+
+.. csv-table:: FIPZON table from PRT file including reservoir pore volumes
+  :file: fipreports-porv-example.csv
+  :header-rows: 1
+
 Using this module is easiest through ``res2csv fipreports``.

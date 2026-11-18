@@ -128,6 +128,9 @@ def df(
         fipname: The name of the regport regions, FIPNUM, FIPZON or whatever
             Max length of the string is 8, the first three characters must be FIP,
             and the next 3 characters must be unique for a given :term:`.DATA file`.
+        resv: If True, extract reservoir pore volumes from the report. RPTSOL or
+            RPTSCHED must be called with FIP=2 (or 3) for these data to be output to
+            the print file.
     """
     if isinstance(prtfile, ResdataFiles):
         prtfile = prtfile.get_prtfilename()
@@ -293,6 +296,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         default="FIPNUM",
     )
     parser.add_argument(
+        "--porv",
+        action="store_true",
+        help="Extract reservoir pore volume from region report",
+    )
+    parser.add_argument(
         "-o", "--output", type=str, help="Output CSV filename", default="outflow.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
@@ -307,5 +315,5 @@ def fipreports_main(args: argparse.Namespace) -> None:
         prtfile = args.PRTFILE
     else:
         prtfile = ResdataFiles(args.PRTFILE).get_prtfilename()
-    dframe = df(prtfile, args.fipname)
+    dframe = df(prtfile, args.fipname, args.porv)
     write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)

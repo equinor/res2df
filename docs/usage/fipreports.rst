@@ -25,8 +25,8 @@ Reservoir pore volumes can also be extracted from the PRT output file:
 
 These tables are parsed to the following dataframe:
 
-  .. csv-table:: FIPZON table from PRT file including reservoir pore volumes
-   :file: fipreports-porv-example.csv
-   :header-rows: 1
+.. csv-table:: FIPZON table from PRT file including reservoir pore volumes
+  :file: fipreports-porv-example.csv
+  :header-rows: 1
 
 Using this module is easiest through ``res2csv fipreports``.

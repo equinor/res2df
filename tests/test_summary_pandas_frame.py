@@ -1082,3 +1082,110 @@ def test_that_block_and_completion_vectors_of_an_esmry_file_have_get_num_zero(sm
     meta = esmry_chain(smspec, unsmry).frame("CASE").attrs["meta"]
     assert meta
     assert all(v["get_num"] == 0 for v in meta.values())
+
+
+def long_name_smspec(template: Smspec, names: list[str], restart: str = "") -> Smspec:
+    """A SMSPEC with TIME and a group vector for each of the (cut) names."""
+    return dataclasses.replace(
+        template,
+        restart=restart,
+        num_keywords=len(names) + 1,
+        keywords=["TIME", *["GOPR"] * len(names)],
+        well_names=["        ", *[n.ljust(8) for n in names]],
+        region_numbers=[0] * (len(names) + 1),
+        units=["DAYS", *["SM3/DAY"] * len(names)],
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+    )
+
+
+def long_name_unsmry(times: list[float], base: float, width: int) -> Unsmry:
+    return Unsmry(
+        [
+            SummaryStep(
+                i, [SummaryMiniStep(i, [t, *[base + t + w for w in range(width)]])]
+            )
+            for i, t in enumerate(times)
+        ]
+    )
+
+
+def long_name_esmry(names: list[str], times: list[float], base: float) -> Esmry:
+    return Esmry(
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+        keys=["TIME", *[f"GOPR:{n}" for n in names]],
+        units=["DAYS", *["SM3/DAY"] * len(names)],
+        report_steps=[0] * (len(times) - 1) + [1],
+        ministeps=list(range(len(times))),
+        vectors=[times, *[[base + t + w for t in times] for w in range(len(names))]],
+        restart="PARENT",
+        restart_step=0,
+    )
+
+
+@pytest.mark.parametrize("child_is_esmry", [True, False])
+@given(summaries())
+def test_that_a_restart_in_the_other_format_matches_names_cut_to_8_characters(
+    child_is_esmry, template
+):
+    full = "GROUP_LONG"
+    cut = full[:8]
+    template = template[0]
+    parent_times, child_times = [0.0, 10.0], [20.0, 30.0]
+    cases = SummaryChain()
+    if child_is_esmry:
+        cases.add(
+            "PARENT",
+            long_name_smspec(template, [cut]),
+            long_name_unsmry(parent_times, 100.0, 1),
+        )
+        cases.add_esmry("CHILD", long_name_esmry([full], child_times, 200.0))
+    else:
+        cases.add_esmry("PARENT", long_name_esmry([full], parent_times, 100.0))
+        cases.add(
+            "CHILD",
+            long_name_smspec(template, [cut], restart="PARENT"),
+            long_name_unsmry(child_times, 200.0, 1),
+        )
+    frame = cases.frame("CHILD")
+    key = f"GOPR:{full if child_is_esmry else cut}"
+    assert list(frame.columns) == [key]
+    assert list(frame[key]) == [100.0, 110.0, 220.0, 230.0]
+
+
+@pytest.mark.parametrize("child_is_esmry", [True, False])
+@given(summaries())
+def test_that_names_which_are_the_same_when_cut_to_8_characters_are_not_matched(
+    child_is_esmry, template
+):
+    template = template[0]
+    parent_times, child_times = [0.0, 10.0], [20.0, 30.0]
+    cases = SummaryChain()
+    if child_is_esmry:
+        # Both child names are cut to the name in the parent
+        cases.add(
+            "PARENT",
+            long_name_smspec(template, ["GROUP_LO"]),
+            long_name_unsmry(parent_times, 100.0, 1),
+        )
+        cases.add_esmry(
+            "CHILD",
+            long_name_esmry(["GROUP_LONG1", "GROUP_LONG2"], child_times, 200.0),
+        )
+        keys = ["GOPR:GROUP_LONG1", "GOPR:GROUP_LONG2"]
+    else:
+        # Both parent names are cut to the name in the child
+        cases.add_esmry(
+            "PARENT",
+            long_name_esmry(["GROUP_LONG1", "GROUP_LONG2"], parent_times, 100.0),
+        )
+        cases.add(
+            "CHILD",
+            long_name_smspec(template, ["GROUP_LO"], restart="PARENT"),
+            long_name_unsmry(child_times, 200.0, 1),
+        )
+        keys = ["GOPR:GROUP_LO"]
+    frame = cases.frame("CHILD")
+    assert list(frame.columns) == keys
+    for key in keys:
+        assert list(frame[key][:2]) == [-99.0, -99.0]
+        assert (frame[key][2:] != -99.0).all()

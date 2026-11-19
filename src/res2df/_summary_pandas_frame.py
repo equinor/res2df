@@ -8,6 +8,12 @@ the ``V<n>`` vector holding its values.
 
 If the case has an ``ESMRY`` file, that is read in preference to the
 ``SMSPEC`` and ``UNSMRY`` files, as only the requested vectors need be read.
+
+``ESMRY`` keys have the full well and group names while ``SMSPEC`` keys have
+them cut to 8 characters. When a case and the case it restarts from are not
+of the same format, the keys are matched with the names cut to 8 characters.
+If different keys are cut to the same key, none of them are matched, and the
+column gets the default value (-99) for the rows of the restart case.
 """
 
 import fnmatch
@@ -118,7 +124,7 @@ def summary_pandas_frame(
         [is_rate(main.variable(i)) for i in selected],
         dtype=bool,
     )
-    times, values = _merge([_read_block(c, chosen) for c in cases], len(selected))
+    times, values = _merge([_read_block(c, chosen, main) for c in cases], len(selected))
     index: pd.Index
     if time_index is None:
         index = _seconds_index(times)
@@ -321,6 +327,9 @@ class _KeyedReader(Protocol):
     @property
     def by_key(self) -> dict[str, int]: ...
 
+    @property
+    def truncated_by_key(self) -> dict[str, int]: ...
+
     def variable(self, index: int) -> str: ...
 
     def meta(self, index: int) -> dict[str, Any]: ...
@@ -358,6 +367,22 @@ class _KeyedEsmry:
     @cached_property
     def by_key(self) -> dict[str, int]:
         return {key: i for i, key in enumerate(self.key_names)}
+
+    @cached_property
+    def truncated_by_key(self) -> dict[str, int]:
+        """The last keyword index for each key with names cut to 8 characters.
+
+        Different keys that are cut to the same key are ambiguous, and are
+        left out.
+        """
+        full_keys: dict[str, set[str]] = {}
+        for key in self.by_key:
+            full_keys.setdefault(_truncate_key(key), set()).add(key)
+        return {
+            cut: self.by_key[next(iter(keys))]
+            for cut, keys in full_keys.items()
+            if len(keys) == 1
+        }
 
     def variable(self, index: int) -> str:
         return self.key_names[index].split(":")[0]
@@ -508,6 +533,11 @@ class _KeyedSmry:
     def by_key(self) -> dict[str, int]:
         return {key: i for i, key in enumerate(self.keys) if key is not None}
 
+    @property
+    def truncated_by_key(self) -> dict[str, int]:
+        # The names in the SMSPEC are already cut to 8 characters
+        return self.by_key
+
     def variable(self, index: int) -> str:
         return self.keywords[index].summary_variable
 
@@ -562,15 +592,44 @@ class _KeyedSmry:
         )
 
 
+def _truncate_key(key: str) -> str:
+    """The key with the well or group name cut to 8 characters, as in SMSPEC."""
+    variable, *qualifiers = key.split(":")
+    key_type = SummaryKeyType.from_variable(variable)
+    if key_type not in _WGNAME_TYPES or not qualifiers:
+        return key
+    is_local = key_type in (
+        SummaryKeyType.LOCAL_WELL,
+        SummaryKeyType.LOCAL_COMPLETION,
+    )
+    leading = qualifiers[:1] if is_local else []
+    name = _esmry_wgname(key_type, qualifiers)
+    trailing = qualifiers[len(leading) + len(name.split(":")) :]
+    return ":".join([variable, *leading, name[:8], *trailing])
+
+
 def _read_block(
-    case: _KeyedReader, chosen: list[tuple[str, int]]
+    case: _KeyedReader,
+    chosen: list[tuple[str, int]],
+    main: _KeyedReader,
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """The times and values for the chosen columns, found by key in the case.
 
     Only the needed keyword indices are kept while reading. Columns
     not present in the case gets the default value.
+
+    If the case is not of the same format (ESMRY or SMSPEC) as the main
+    case, the keys are compared with well and group names cut to 8 characters.
+    Keys that are ambiguous when cut get the default value.
     """
-    source = [case.by_key.get(name) for name, _ in chosen]
+    if type(case) is type(main):
+        source = [case.by_key.get(name) for name, _ in chosen]
+    else:
+        cut = [_truncate_key(name) for name, _ in chosen]
+        source = [
+            case.truncated_by_key.get(c) if c in main.truncated_by_key else None
+            for c in cut
+        ]
     found = [i for i, src in enumerate(source) if src is not None]
     times, values = case.read_values([src for src in source if src is not None])
     if len(found) == len(chosen):

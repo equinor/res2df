@@ -981,7 +981,7 @@ def test_that_restarts_can_be_followed_between_esmry_and_smspec_cases(parent, ch
     assert mixed.opened == ["CHILD"]
 
 
-@pytest.mark.parametrize("name", ["CASE", "CASE.DATA", "CASE.ESMRY"])
+@pytest.mark.parametrize("name", ["CASE", "CASE.UNSMRY", "CASE.ESMRY"])
 def test_that_esmry_files_are_read_from_disk_by_default(tmp_path, name):
     smspec, unsmry = summaries().example()
     Esmry.from_summary(smspec, unsmry).to_file(tmp_path / "CASE.ESMRY")
@@ -1003,6 +1003,8 @@ def test_that_esmry_files_are_read_from_disk_by_default(tmp_path, name):
         ("run.esmry", "CASE.esmry", "CASE"),
         ("run.v2", "CASE.V2", "CASE.V2"),
         ("run.v2", "CASE.V2.ESMRY", "CASE.V2"),
+        ("run.s0001", "CASE.S0001", "CASE"),
+        ("run.a0001", "CASE.A0001", "CASE"),
         ("run.data", "CASE.DATA", "CASE"),
         ("run.data", "CASE.data", "CASE"),
     ],
@@ -1018,33 +1020,6 @@ def test_that_only_the_suffix_of_the_file_name_is_stripped_to_find_the_esmry_fil
         frame_of(smspec, unsmry),
         check_exact=True,
     )
-
-
-@pytest.mark.parametrize("name", ["CASE.SMSPEC", "CASE.UNSMRY"])
-def test_that_a_smspec_suffix_ignores_a_stale_esmry_file(tmp_path, name):
-    smspec, unsmry = summaries().example()
-    smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)
-    unsmry.to_file(tmp_path / "CASE.UNSMRY", resfo.Format.UNFORMATTED)
-    stale = Esmry.from_summary(smspec, unsmry)
-    stale.vectors = [stale.vectors[0]] + [
-        [v + 1.0 for v in vector] for vector in stale.vectors[1:]
-    ]
-    stale.to_file(tmp_path / "CASE.ESMRY")
-    expected = frame_of(smspec, unsmry)
-    pd.testing.assert_frame_equal(
-        summary_pandas_frame(tmp_path / name), expected, check_exact=True
-    )
-    assert summary_meta(tmp_path / name).keys() == expected.attrs["meta"].keys()
-    if len(expected.columns):
-        assert not summary_pandas_frame(tmp_path / "CASE").equals(expected)
-
-
-def test_that_an_esmry_suffix_without_an_esmry_file_is_an_error(tmp_path):
-    smspec, unsmry = summaries().example()
-    smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)
-    unsmry.to_file(tmp_path / "CASE.UNSMRY", resfo.Format.UNFORMATTED)
-    with pytest.raises(FileNotFoundError):
-        summary_pandas_frame(tmp_path / "CASE.ESMRY")
 
 
 def test_that_an_invalid_esmry_file_is_an_error_even_if_there_is_an_smspec(tmp_path):
@@ -1076,8 +1051,8 @@ def test_that_an_esmry_file_without_a_valid_time_is_an_error(keys, units, messag
         SummaryChain().add_esmry("CASE", esmry).frame("CASE")
 
 
-@pytest.mark.parametrize("name", ["CASE", "CASE.ESMRY", "CASE.DATA"])
-def test_that_the_meta_of_an_esmry_file_can_be_read_by_any_suffix_but_smspec(
+@pytest.mark.parametrize("name", ["CASE", "CASE.ESMRY", "CASE.A0001", "CASE.DATA"])
+def test_that_the_meta_of_an_esmry_file_can_be_read_by_any_summary_suffix(
     tmp_path, name
 ):
     smspec, unsmry = summaries().example()

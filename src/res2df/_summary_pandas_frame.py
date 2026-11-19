@@ -6,13 +6,8 @@ each step in the summary data file. For an ``ESMRY`` file (written by OPM
 flow) it is the index of the key in ``KEYCHECK``, which is also the number of
 the ``V<n>`` vector holding its values.
 
-If the case is given without the suffix of a summary file (or with ``.DATA``)
-and has an ``ESMRY`` file, that is read in preference to the ``SMSPEC`` and
-``UNSMRY`` files, as only the requested vectors need be read. A case given
-with a suffix such as ``.SMSPEC`` or ``.UNSMRY`` reads only those files, and
-with ``.ESMRY`` only the ``ESMRY`` file, so a stale file of the other format
-can be avoided by giving the suffix. The case a case was restarted from is
-found without a suffix.
+If the case has an ``ESMRY`` file, that is read in preference to the
+``SMSPEC`` and ``UNSMRY`` files, as only the requested vectors need be read.
 
 ``ESMRY`` keys have the full well and group names while ``SMSPEC`` keys have
 them cut to 8 characters. When a case and the case it restarts from are not
@@ -54,11 +49,9 @@ _SENTINEL_NAME = ":+:+:+:+"
 # resdata ignores the NUMS of YEARS and always reports this get_num
 _YEARS_NUMS = -32676
 # Snnnn and Annnn are the unformatted and formatted split (non-unified) files
-_SMSPEC_SUFFIX = re.compile(
-    r"\.(unsmry|funsmry|smspec|fsmspec|[sa]\d{4})", re.IGNORECASE
+_SUMMARY_SUFFIX = re.compile(
+    r"\.(unsmry|funsmry|smspec|fsmspec|esmry|[sa]\d{4}|data)", re.IGNORECASE
 )
-_ESMRY_SUFFIX = re.compile(r"\.esmry", re.IGNORECASE)
-_DATA_SUFFIX = re.compile(r"\.data", re.IGNORECASE)
 _CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL
 _GROUP = SummaryKeyType.GROUP
@@ -710,24 +703,19 @@ def _read_restart_chain(
 
 
 def _open_keyed_reader(case_path: str | os.PathLike[str]) -> _KeyedReader:
-    """The summary files of the case, in the format given by the suffix.
-
-    With the suffix of a SMSPEC or UNSMRY file only those are read, and with
-    the suffix of an ESMRY file only that is read, so a stale file of the
-    other format is ignored. Otherwise (no suffix, or .DATA) the ESMRY file is
-    read if it exists, and the SMSPEC and UNSMRY files if not.
-    """
-    path = Path(case_path)
-    if _SMSPEC_SUFFIX.fullmatch(path.suffix):
-        return _KeyedSmry.read(SummaryReader(case_path=case_path))
-    if _ESMRY_SUFFIX.fullmatch(path.suffix):
-        return _KeyedEsmry.read(EsmryReader(case_path=path.with_suffix("")))
-    base = path.with_suffix("") if _DATA_SUFFIX.fullmatch(path.suffix) else path
+    """The ESMRY file of the case if it exists, otherwise the SMSPEC and UNSMRY."""
     try:
-        esmry = EsmryReader(case_path=base)
+        esmry = EsmryReader(case_path=_without_summary_suffix(case_path))
     except FileNotFoundError:
         return _KeyedSmry.read(SummaryReader(case_path=case_path))
     return _KeyedEsmry.read(esmry)
+
+
+def _without_summary_suffix(case_path: str | os.PathLike[str]) -> Path:
+    path = Path(case_path)
+    if _SUMMARY_SUFFIX.fullmatch(path.suffix):
+        return path.parent / path.stem
+    return path
 
 
 def _select_columns(

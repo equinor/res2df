@@ -11,8 +11,8 @@ and has an ``ESMRY`` file, that is read in preference to the ``SMSPEC`` and
 ``UNSMRY`` files, as only the requested vectors need be read. A case given
 with a suffix such as ``.SMSPEC`` or ``.UNSMRY`` reads only those files, and
 with ``.ESMRY`` only the ``ESMRY`` file, so a stale file of the other format
-can be avoided by giving the suffix. The case a case was restarted from is
-found without a suffix.
+can be avoided by giving the suffix. The cases it was restarted from are
+read in the same format, otherwise they are found without a suffix.
 
 ``ESMRY`` keys have the full well and group names while ``SMSPEC`` keys have
 them cut to 8 characters. When a case and the case it restarts from are not
@@ -694,10 +694,12 @@ def _read_restart_chain(
 ) -> list[_KeyedReader]:
     files: list[_KeyedReader] = []
     visited: set[Path] = set()
+    # As in resdata, the restart cases are read in the format asked for
+    file_format = _format_of(case_path)
     current: str | os.PathLike[str] | None = case_path
     while current and Path(current).resolve() not in visited:
         try:
-            case = _open_keyed_reader(current)
+            case = _open_keyed_reader(current, file_format)
         except FileNotFoundError:
             if not files:  # No files found
                 raise
@@ -709,20 +711,38 @@ def _read_restart_chain(
     return files
 
 
-def _open_keyed_reader(case_path: str | os.PathLike[str]) -> _KeyedReader:
+def _format_of(case_path: str | os.PathLike[str]) -> str | None:
+    """ "smspec" or "esmry" if the suffix of the case gives the format."""
+    suffix = Path(case_path).suffix
+    if _SMSPEC_SUFFIX.fullmatch(suffix):
+        return "smspec"
+    if _ESMRY_SUFFIX.fullmatch(suffix):
+        return "esmry"
+    return None
+
+
+def _open_keyed_reader(
+    case_path: str | os.PathLike[str], file_format: str | None = None
+) -> _KeyedReader:
     """The summary files of the case, in the format given by the suffix.
 
     With the suffix of a SMSPEC or UNSMRY file only those are read, and with
     the suffix of an ESMRY file only that is read, so a stale file of the
     other format is ignored. Otherwise (no suffix, or .DATA) the ESMRY file is
     read if it exists, and the SMSPEC and UNSMRY files if not.
+
+    The ``file_format`` ("smspec" or "esmry") is used instead of the one given
+    by the suffix, which is how the restart cases get the format of the case.
     """
     path = Path(case_path)
-    if _SMSPEC_SUFFIX.fullmatch(path.suffix):
+    file_format = file_format or _format_of(path)
+    base = path
+    if _ESMRY_SUFFIX.fullmatch(path.suffix) or _DATA_SUFFIX.fullmatch(path.suffix):
+        base = path.with_suffix("")
+    if file_format == "smspec":
         return _KeyedSmry.read(SummaryReader(case_path=case_path))
-    if _ESMRY_SUFFIX.fullmatch(path.suffix):
-        return _KeyedEsmry.read(EsmryReader(case_path=path.with_suffix("")))
-    base = path.with_suffix("") if _DATA_SUFFIX.fullmatch(path.suffix) else path
+    if file_format == "esmry":
+        return _KeyedEsmry.read(EsmryReader(case_path=base))
     try:
         esmry = EsmryReader(case_path=base)
     except FileNotFoundError:

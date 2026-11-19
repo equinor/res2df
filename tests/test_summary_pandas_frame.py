@@ -1039,6 +1039,30 @@ def test_that_a_smspec_suffix_ignores_a_stale_esmry_file(tmp_path, name):
         assert not summary_pandas_frame(tmp_path / "CASE").equals(expected)
 
 
+@given(summaries())
+def test_that_the_format_given_by_the_suffix_is_used_for_the_restart_cases(
+    tmp_path_factory, template
+):
+    tmp_path = tmp_path_factory.mktemp("restart")
+    parent = long_name_smspec(template[0], ["GROUP_A"])
+    child = long_name_smspec(template[0], ["GROUP_A"], restart=str(tmp_path / "PARENT"))
+    for name, smspec, times, base in (
+        ("PARENT", parent, [0.0, 10.0], 100.0),
+        ("CHILD", child, [20.0, 30.0], 200.0),
+    ):
+        smspec.to_file(tmp_path / f"{name}.SMSPEC", resfo.Format.UNFORMATTED)
+        long_name_unsmry(times, base, 1).to_file(
+            tmp_path / f"{name}.UNSMRY", resfo.Format.UNFORMATTED
+        )
+    # The ESMRY of the restart case is stale
+    long_name_esmry(["GROUP_A"], [0.0, 10.0], 500.0).to_file(tmp_path / "PARENT.ESMRY")
+    for name in ("CHILD.SMSPEC", "CHILD.UNSMRY"):
+        frame = summary_pandas_frame(tmp_path / name)
+        assert list(frame["GOPR:GROUP_A"]) == [100.0, 110.0, 220.0, 230.0]
+    frame = summary_pandas_frame(tmp_path / "CHILD")
+    assert list(frame["GOPR:GROUP_A"]) == [500.0, 510.0, 220.0, 230.0]
+
+
 def test_that_an_esmry_suffix_without_an_esmry_file_is_an_error(tmp_path):
     smspec, unsmry = summaries().example()
     smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)

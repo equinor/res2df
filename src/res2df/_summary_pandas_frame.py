@@ -736,15 +736,18 @@ def _open_keyed_reader(
     """
     path = Path(case_path)
     file_format = file_format or _format_of(path)
-    base = path
-    if _ESMRY_SUFFIX.fullmatch(path.suffix) or _DATA_SUFFIX.fullmatch(path.suffix):
-        base = path.with_suffix("")
+    esmry_path = path
+    if _DATA_SUFFIX.fullmatch(path.suffix):
+        esmry_path = path.with_suffix("")
+        # Without the explicit suffix EsmryReader takes CASE.esmry as the file
+        if _ESMRY_SUFFIX.fullmatch(esmry_path.suffix):
+            esmry_path = esmry_path.with_name(esmry_path.name + ".ESMRY")
     if file_format == "smspec":
         return _KeyedSmry.read(SummaryReader(case_path=case_path))
     if file_format == "esmry":
-        return _KeyedEsmry.read(EsmryReader(case_path=base))
+        return _KeyedEsmry.read(EsmryReader(case_path=esmry_path))
     try:
-        esmry = EsmryReader(case_path=base)
+        esmry = EsmryReader(case_path=esmry_path)
     except FileNotFoundError:
         return _KeyedSmry.read(SummaryReader(case_path=case_path))
     return _KeyedEsmry.read(esmry)

@@ -1027,7 +1027,7 @@ def test_that_a_smspec_suffix_ignores_a_stale_esmry_file(tmp_path, name):
     unsmry.to_file(tmp_path / "CASE.UNSMRY", resfo.Format.UNFORMATTED)
     stale = Esmry.from_summary(smspec, unsmry)
     stale.vectors = [stale.vectors[0]] + [
-        [v + 1.0 for v in vector] for vector in stale.vectors[1:]
+        [12345.678] * len(vector) for vector in stale.vectors[1:]
     ]
     stale.to_file(tmp_path / "CASE.ESMRY")
     expected = frame_of(smspec, unsmry)
@@ -1061,6 +1061,14 @@ def test_that_the_format_given_by_the_suffix_is_used_for_the_restart_cases(
         assert list(frame["GOPR:GROUP_A"]) == [100.0, 110.0, 220.0, 230.0]
     frame = summary_pandas_frame(tmp_path / "CHILD")
     assert list(frame["GOPR:GROUP_A"]) == [500.0, 510.0, 220.0, 230.0]
+
+
+@pytest.mark.parametrize("name", ["CASE.esmry.ESMRY", "CASE.esmry.DATA"])
+def test_that_a_case_name_ending_in_esmry_finds_its_esmry_file(tmp_path, name):
+    long_name_esmry(["GROUP_A"], [0.0], 100.0).to_file(tmp_path / "CASE.esmry.ESMRY")
+    long_name_esmry(["GROUP_A"], [0.0], 200.0).to_file(tmp_path / "CASE.ESMRY")
+    frame = summary_pandas_frame(tmp_path / name)
+    assert list(frame["GOPR:GROUP_A"]) == [100.0]
 
 
 def test_that_an_esmry_suffix_without_an_esmry_file_is_an_error(tmp_path):

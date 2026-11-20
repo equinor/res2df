@@ -542,7 +542,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
 def _merge_params(
     dframe: pd.DataFrame,
     paramfile: str | Path | None = None,
-    resdatafiles: str | ResdataFiles | None = None,
+    resdatafiles: str | ResdataFiles | Summary | None = None,
 ) -> pd.DataFrame:
     """Locate parameters in a <key> <value> file and add to the dataframe.
 
@@ -577,7 +577,7 @@ def _merge_params(
     return dframe
 
 
-def smry_meta(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
+def smry_meta(resdatafiles: ResdataFiles | Summary) -> dict[str, dict[str, Any]]:
     """Provide metadata for summary data vectors.
 
     A dictionary indexed by summary vector name is returned, and each

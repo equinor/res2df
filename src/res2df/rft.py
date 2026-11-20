@@ -119,16 +119,12 @@ def rftrecords(rftfile: ResdataFile) -> Iterable[dict[str, Any]]:
         # All rows in nav_record_df represents  the data in the current
         # RFT record
         dateidx = int(headers.loc["DATE"]["recordidx"].item())
-        rftrecord["date"] = datetime.date(
-            rftfile[dateidx][2], rftfile[dateidx][1], rftfile[dateidx][0]
-        )
-        rftrecord["wellname"] = rftfile[
-            int(headers.loc["WELLETC"]["recordidx"].item())
-        ][1].strip()
+        date_kw: Any = rftfile[dateidx]
+        rftrecord["date"] = datetime.date(date_kw[2], date_kw[1], date_kw[0])
+        welletc: Any = rftfile[int(headers.loc["WELLETC"]["recordidx"].item())]
+        rftrecord["wellname"] = welletc[1].strip()
 
-        rftrecord["wellmodel"] = rftfile[
-            int(headers.loc["WELLETC"]["recordidx"].item())
-        ][6].strip()
+        rftrecord["wellmodel"] = welletc[6].strip()
         # wellmodel is either "STANDARD" or "MULTISEG"
 
         rftrecord["timeindex"] = timeindex

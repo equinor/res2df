@@ -61,14 +61,14 @@ class ResdataFiles:
         self._eclbase = eclbase
 
         # Set class variables to None
-        self._egridfile = None  # Should be ResdataFile
-        self._initfile = None  # Should be ResdataFile
-        self._summary = None  # Should be Summary
+        self._egridfile: ResdataFile | None = None
+        self._initfile: ResdataFile | None = None
+        self._summary: Summary | None = None
 
-        self._egrid = None  # Should be Grid
+        self._egrid: Grid | None = None
 
-        self._rstfile = None  # ResdataFile
-        self._rftfile = None  # ResdataFile
+        self._rstfile: ResdataFile | None = None
+        self._rftfile: ResdataFile | None = None
 
         self._deck = None
 

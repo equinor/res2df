@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import os
+import shutil
 from datetime import datetime as dt
 from pathlib import Path
 
@@ -298,6 +299,19 @@ def test_paramsupport(tmp_path, mocker):
         )
 
     parametersyml.unlink()
+
+
+def test_paramsupport_summary_object(tmp_path):
+    """Parameters are found when summary.df() is given a Summary object"""
+    for path in (TESTDIR / "data/eightcells").glob("EIGHTCELLS.*"):
+        shutil.copy(path, tmp_path / path.name)
+    (tmp_path / "parameters.txt").write_text("FOO 1\nBAR 3", encoding="utf-8")
+
+    smry = Summary(str(tmp_path / "EIGHTCELLS.UNSMRY"))
+    dframe = summary.df(smry, params=True)
+    assert "FOPT" in dframe
+    assert (dframe["FOO"] == "1").all()
+    assert (dframe["BAR"] == "3").all()
 
 
 def test_paramsupport_explicitfile(tmp_path, mocker, monkeypatch):

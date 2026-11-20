@@ -415,7 +415,11 @@ def df(
     )
     dframe.index.name = "DATE"
     if params or paramfile:
-        dframe = _merge_params(dframe, paramfile, resdatafiles)
+        dframe = _merge_params(
+            dframe,
+            paramfile,
+            resdatafiles.case if isinstance(resdatafiles, Summary) else resdatafiles,
+        )
 
     # Add metadata as an attribute the dataframe, using experimental Pandas features:
     # Slice meta to dataframe columns:
@@ -577,7 +581,7 @@ def _merge_params(
     return dframe
 
 
-def smry_meta(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
+def smry_meta(resdatafiles: ResdataFiles | Summary) -> dict[str, dict[str, Any]]:
     """Provide metadata for summary data vectors.
 
     A dictionary indexed by summary vector name is returned, and each

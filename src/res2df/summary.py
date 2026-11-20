@@ -415,7 +415,11 @@ def df(
     )
     dframe.index.name = "DATE"
     if params or paramfile:
-        dframe = _merge_params(dframe, paramfile, resdatafiles)
+        dframe = _merge_params(
+            dframe,
+            paramfile,
+            resdatafiles.case if isinstance(resdatafiles, Summary) else resdatafiles,
+        )
 
     # Add metadata as an attribute the dataframe, using experimental Pandas features:
     # Slice meta to dataframe columns:
@@ -542,7 +546,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
 def _merge_params(
     dframe: pd.DataFrame,
     paramfile: str | Path | None = None,
-    resdatafiles: str | ResdataFiles | Summary | None = None,
+    resdatafiles: str | ResdataFiles | None = None,
 ) -> pd.DataFrame:
     """Locate parameters in a <key> <value> file and add to the dataframe.
 

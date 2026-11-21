@@ -2,7 +2,23 @@
 
 A "keyword index" is the index of a keyword in the ``KEYWORDS`` array of the
 summary spec, which is also the index of its value in the ``PARAMS`` array of
-each step in the summary data file.
+each step in the summary data file. For an ``ESMRY`` file (written by OPM
+flow) it is the index of the key in ``KEYCHECK``, which is also the number of
+the ``V<n>`` vector holding its values.
+
+If the case is given without the suffix of a summary file (or with ``.DATA``)
+and has an ``ESMRY`` file, that is read in preference to the ``SMSPEC`` and
+``UNSMRY`` files, as only the requested vectors need be read. A case given
+with a suffix such as ``.SMSPEC`` or ``.UNSMRY`` reads only those files, and
+with ``.ESMRY`` only the ``ESMRY`` file, so a stale file of the other format
+can be avoided by giving the suffix. The cases it was restarted from are
+read in the same format, otherwise they are found without a suffix.
+
+``ESMRY`` keys have the full well and group names while ``SMSPEC`` keys have
+them cut to 8 characters. When a case and the case it restarts from are not
+of the same format, the keys are matched with the names cut to 8 characters.
+If different keys are cut to the same key, none of them are matched, and the
+column gets the default value (-99) for the rows of the restart case.
 """
 
 import fnmatch
@@ -14,13 +30,14 @@ from datetime import date, datetime, timedelta
 from functools import cached_property
 from itertools import pairwise
 from pathlib import Path
-from typing import Any, Self
+from typing import Any, Protocol, Self
 
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
 from natsort import natsorted
 from resfo_utilities import (
+    EsmryReader,
     InvalidSummaryError,
     InvalidSummaryKeyError,
     SummaryKeyType,
@@ -36,6 +53,12 @@ _SECONDS_PER_UNIT = {"DAYS": 24 * 3600, "HOURS": 3600}
 _SENTINEL_NAME = ":+:+:+:+"
 # resdata ignores the NUMS of YEARS and always reports this get_num
 _YEARS_NUMS = -32676
+# Snnnn and Annnn are the unformatted and formatted split (non-unified) files
+_SMSPEC_SUFFIX = re.compile(
+    r"\.(unsmry|funsmry|smspec|fsmspec|[sa]\d{4})", re.IGNORECASE
+)
+_ESMRY_SUFFIX = re.compile(r"\.esmry", re.IGNORECASE)
+_DATA_SUFFIX = re.compile(r"\.data", re.IGNORECASE)
 _CHUNK_BYTES = 64 * 1024 * 1024
 _WELL = SummaryKeyType.WELL
 _GROUP = SummaryKeyType.GROUP
@@ -105,9 +128,10 @@ def summary_pandas_frame(
     columns = [name for name, _ in chosen]
     selected = [i for _, i in chosen]
     rates = np.array(
-        [is_rate(main.keywords[i].summary_variable) for i in selected], dtype=bool
+        [is_rate(main.variable(i)) for i in selected],
+        dtype=bool,
     )
-    times, values = _merge([_read_block(c, chosen) for c in cases], len(selected))
+    times, values = _merge([_read_block(c, chosen, main) for c in cases], len(selected))
     index: pd.Index
     if time_index is None:
         index = _seconds_index(times)
@@ -118,9 +142,7 @@ def summary_pandas_frame(
         index, requested = _requested(times, time_index, start_date, end_date)
         values = _interpolate(times, values, rates, requested)
     dframe = pd.DataFrame(index=index, columns=columns, data=values, copy=False)
-    dframe.attrs["meta"] = {
-        name: _meta(main.keywords[i]) for name, i in chosen if name != "TIME"
-    }
+    dframe.attrs["meta"] = {name: main.meta(i) for name, i in chosen if name != "TIME"}
     return dframe
 
 
@@ -237,6 +259,27 @@ def _meta(kw: SummaryKeyword) -> dict[str, Any]:
     return meta
 
 
+def _esmry_wgname(key_type: SummaryKeyType, qualifiers: list[str]) -> str:
+    """The well or group name of an ESMRY key, split on ``:`` into qualifiers.
+
+    The name itself can contain ``:``. It is what is between the lgr name (for
+    local keys) and the trailing connection or segment (for completion and
+    segment keys).
+    """
+    if key_type in (SummaryKeyType.LOCAL_WELL, SummaryKeyType.LOCAL_COMPLETION):
+        # Local keys are assumed to be LWOPR:<lgr>:<well> as in resdata. This
+        # is untested against flow output as flow does not support LGR.
+        qualifiers = qualifiers[1:]
+    has_trailing_part = key_type in (
+        SummaryKeyType.COMPLETION,
+        SummaryKeyType.LOCAL_COMPLETION,
+        SummaryKeyType.SEGMENT,
+    )
+    if has_trailing_part and len(qualifiers) > 1:
+        qualifiers = qualifiers[:-1]
+    return ":".join(qualifiers)
+
+
 def _is_total(variable: str, key_type: SummaryKeyType) -> bool:
     match key_type:
         case (
@@ -262,10 +305,8 @@ def summary_meta(case: str | os.PathLike[str]) -> dict[str, dict[str, Any]]:
 
     See :func:`res2df.summary.smry_meta` for the content.
     """
-    main = _KeyedReader.read(SummaryReader(case_path=case))
-    return {
-        key: _meta(main.keywords[i]) for key, i in main.by_key.items() if key != "TIME"
-    }
+    main = _open_keyed_reader(case)
+    return {key: main.meta(i) for key, i in main.by_key.items() if key != "TIME"}
 
 
 def _naive_seconds(time: datetime | date) -> int:
@@ -281,8 +322,166 @@ def _naive_seconds(time: datetime | date) -> int:
     return (naive - _EPOCH) // timedelta(seconds=1)
 
 
+class _KeyedReader(Protocol):
+    """A summary case, with its keys identified by their keyword index."""
+
+    @property
+    def restart(self) -> str | None: ...
+
+    @property
+    def keys(self) -> list[str | None]: ...
+
+    @property
+    def by_key(self) -> dict[str, int]: ...
+
+    @property
+    def truncated_by_key(self) -> dict[str, int]: ...
+
+    def variable(self, index: int) -> str: ...
+
+    def meta(self, index: int) -> dict[str, Any]: ...
+
+    def read_values(
+        self, keyword_indices: list[int]
+    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]: ...
+
+
 @dataclass(frozen=True)
-class _KeyedReader:
+class _KeyedEsmry:
+    """The layout of an ESMRY file, and the reader.
+
+    Attributes:
+        reader: Reader for the ESMRY file of the case.
+        key_names: The summary key at each keyword index.
+        units: The unit at each keyword index.
+        time_keyword_index: The keyword index of TIME.
+        time_unit: The number of seconds per unit of TIME.
+        restart: Path of the case this case was restarted from.
+        by_key: The last keyword index for each key.
+    """
+
+    reader: EsmryReader
+    key_names: list[str]
+    units: list[str]
+    time_keyword_index: int
+    time_unit: int
+    restart: str | None
+
+    @property
+    def keys(self) -> list[str | None]:
+        return list(self.key_names)
+
+    @cached_property
+    def by_key(self) -> dict[str, int]:
+        return {key: i for i, key in enumerate(self.key_names)}
+
+    @cached_property
+    def truncated_by_key(self) -> dict[str, int]:
+        """The last keyword index for each key with names cut to 8 characters.
+
+        Different keys that are cut to the same key are ambiguous, and are
+        left out.
+        """
+        full_keys: dict[str, set[str]] = {}
+        for key in self.by_key:
+            full_keys.setdefault(_truncate_key(key), set()).add(key)
+        return {
+            cut: self.by_key[next(iter(keys))]
+            for cut, keys in full_keys.items()
+            if len(keys) == 1
+        }
+
+    def variable(self, index: int) -> str:
+        return self.key_names[index].split(":")[0]
+
+    def meta(self, index: int) -> dict[str, Any]:
+        """Metadata derived from the key as the ESMRY file has no summary spec.
+
+        The ``get_num`` of block and completion vectors depends on the grid
+        dimensions which are not in the ESMRY file, so they get 0, as do
+        field, well and group vectors (which is what flow writes to NUMS).
+        """
+        variable, *qualifiers = self.key_names[index].split(":")
+        key_type = SummaryKeyType.from_variable(variable)
+        meta: dict[str, Any] = {
+            # flow leaves the unit of YEARS blank in the ESMRY file
+            "unit": "YEARS" if variable == "YEARS" else self.units[index],
+            "is_total": _is_total(variable, key_type),
+            "is_rate": is_rate(variable),
+            "is_historical": variable.endswith("H")
+            and key_type in (_WELL, _GROUP, SummaryKeyType.FIELD),
+            "keyword": variable,
+            "wgname": None,
+            "get_num": _YEARS_NUMS if variable == "YEARS" else 0,
+        }
+        if key_type in _WGNAME_TYPES and qualifiers:
+            meta["wgname"] = _esmry_wgname(key_type, qualifiers)
+        if key_type in (
+            SummaryKeyType.REGION,
+            SummaryKeyType.AQUIFER,
+            SummaryKeyType.SEGMENT,
+        ):
+            if qualifiers and qualifiers[-1].isdecimal():
+                meta["get_num"] = int(qualifiers[-1])
+        elif key_type is SummaryKeyType.INTER_REGION:
+            regions = qualifiers and re.fullmatch(r"(\d+)-(-?\d+)", qualifiers[0])
+            if regions:
+                meta["get_num"] = int(regions[1]) + 32768 * (int(regions[2]) + 10)
+        return meta
+
+    def read_values(
+        self, keyword_indices: list[int]
+    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
+        """The time (in seconds since epoch) and values for each step."""
+        columns = [self.time_keyword_index, *keyword_indices]
+        # The same key may be selected for several columns
+        positions: dict[int, list[int]] = {}
+        for position, index in enumerate(columns):
+            positions.setdefault(index, []).append(position)
+        wanted = sorted(positions)
+        # The vectors are given in the order of the file. Each is written to
+        # its rows of a (columns, steps) matrix as it is read, so the vectors
+        # are not kept. As the values are float32 in the file, the matrix is
+        # too, and is cast in _to_seconds. The transposed matrix is Fortran
+        # ordered, which is also how pandas stores the frame, so the cast is
+        # the only copy.
+        data: npt.NDArray[np.float32] | None = None
+        vectors = self.reader.values(
+            report_step_only=False,
+            keys=[self.key_names[i] for i in wanted],
+        )
+        for index, vector in zip(wanted, vectors, strict=True):
+            if data is None:
+                data = np.empty((len(columns), len(vector)), dtype=np.float32)
+            for position in positions[index]:
+                data[position] = vector
+        if data is None:
+            data = np.empty((len(columns), 0), dtype=np.float32)
+        return _to_seconds(self.reader.start_date, self.time_unit, data.T)
+
+    @classmethod
+    def read(cls, reader: EsmryReader) -> Self:
+        keys = reader.summary_keys
+        time_keyword_indices = [i for i, key in enumerate(keys) if key == "TIME"]
+        if not time_keyword_indices:
+            raise InvalidSummaryError("KEYCHECK did not contain TIME in summary")
+        # See _KeyedSmry.read for why the last TIME is used
+        time_keyword_index = time_keyword_indices[-1]
+        unit = reader.units[time_keyword_index]
+        if unit not in _SECONDS_PER_UNIT:
+            raise InvalidSummaryError(f"Unknown date unit in summary: {unit}")
+        return cls(
+            reader,
+            keys,
+            reader.units,
+            time_keyword_index,
+            _SECONDS_PER_UNIT[unit],
+            reader.restart,
+        )
+
+
+@dataclass(frozen=True)
+class _KeyedSmry:
     """The layout of one summary (its keys) and the reader.
 
     Attributes:
@@ -341,6 +540,35 @@ class _KeyedReader:
     def by_key(self) -> dict[str, int]:
         return {key: i for i, key in enumerate(self.keys) if key is not None}
 
+    @property
+    def truncated_by_key(self) -> dict[str, int]:
+        # The names in the SMSPEC are already cut to 8 characters
+        return self.by_key
+
+    def variable(self, index: int) -> str:
+        return self.keywords[index].summary_variable
+
+    def meta(self, index: int) -> dict[str, Any]:
+        return _meta(self.keywords[index])
+
+    def read_values(
+        self, keyword_indices: list[int]
+    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
+        """The time (in seconds since epoch) and values for each step."""
+        columns = np.array([self.time_keyword_index, *keyword_indices], dtype=np.intp)
+        data = np.empty((256, len(columns)), dtype=np.float32)
+        steps = 0
+        for row in self.reader.values(report_step_only=False):
+            if len(row) != len(self.keywords):
+                raise InvalidSummaryError(
+                    f"Expected {len(self.keywords)} values in each step, got {len(row)}"
+                )
+            if steps == len(data):
+                data = np.resize(data, (2 * steps, len(columns)))
+            data[steps] = row[columns]
+            steps += 1
+        return _to_seconds(self.reader.start_date, self.time_unit, data[:steps])
+
     @classmethod
     def read(cls, reader: SummaryReader) -> Self:
         dims = reader.dimensions
@@ -371,17 +599,46 @@ class _KeyedReader:
         )
 
 
+def _truncate_key(key: str) -> str:
+    """The key with the well or group name cut to 8 characters, as in SMSPEC."""
+    variable, *qualifiers = key.split(":")
+    key_type = SummaryKeyType.from_variable(variable)
+    if key_type not in _WGNAME_TYPES or not qualifiers:
+        return key
+    is_local = key_type in (
+        SummaryKeyType.LOCAL_WELL,
+        SummaryKeyType.LOCAL_COMPLETION,
+    )
+    leading = qualifiers[:1] if is_local else []
+    name = _esmry_wgname(key_type, qualifiers)
+    trailing = qualifiers[len(leading) + len(name.split(":")) :]
+    return ":".join([variable, *leading, name[:8], *trailing])
+
+
 def _read_block(
-    case: _KeyedReader, chosen: list[tuple[str, int]]
+    case: _KeyedReader,
+    chosen: list[tuple[str, int]],
+    main: _KeyedReader,
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
     """The times and values for the chosen columns, found by key in the case.
 
     Only the needed keyword indices are kept while reading. Columns
     not present in the case gets the default value.
+
+    If the case is not of the same format (ESMRY or SMSPEC) as the main
+    case, the keys are compared with well and group names cut to 8 characters.
+    Keys that are ambiguous when cut get the default value.
     """
-    source = [case.by_key.get(name) for name, _ in chosen]
+    if type(case) is type(main):
+        source = [case.by_key.get(name) for name, _ in chosen]
+    else:
+        cut = [_truncate_key(name) for name, _ in chosen]
+        source = [
+            case.truncated_by_key.get(c) if c in main.truncated_by_key else None
+            for c in cut
+        ]
     found = [i for i, src in enumerate(source) if src is not None]
-    times, values = _read_values(case, [src for src in source if src is not None])
+    times, values = case.read_values([src for src in source if src is not None])
     if len(found) == len(chosen):
         return times, values
     block = np.full((len(times), len(chosen)), _DEFAULT_VALUE)
@@ -389,29 +646,16 @@ def _read_block(
     return times, block
 
 
-def _read_values(
-    case: _KeyedReader, keyword_indices: list[int]
+def _to_seconds(
+    start_date: datetime, time_unit: int, data: npt.NDArray[np.float32 | np.float64]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]]:
-    """The time (in seconds since epoch) and values for each step."""
-    columns = np.array([case.time_keyword_index, *keyword_indices], dtype=np.intp)
-    data = np.empty((256, len(columns)), dtype=np.float32)
-    steps = 0
-    for row in case.reader.values(report_step_only=False):
-        if len(row) != len(case.keywords):
-            raise InvalidSummaryError(
-                f"Expected {len(case.keywords)} values in each step, got {len(row)}"
-            )
-        if steps == len(data):
-            data = np.resize(data, (2 * steps, len(columns)))
-        data[steps] = row[columns]
-        steps += 1
-    data = data[:steps]
+    """Split data with TIME as first column into seconds since epoch and values."""
     # resdata ignores the time of day in STARTDAT
     # one can avoid this by dropping .date()
     # kept for backwards compatability
-    start_time = _naive_seconds(case.reader.start_date.date())
-    times = np.trunc(start_time + data[:, 0].astype(np.float64) * case.time_unit)
-    return times.astype(np.int64), data[:, 1:].astype(np.float64)
+    start_time = _naive_seconds(start_date.date())
+    times = np.trunc(start_time + data[:, 0].astype(np.float64) * time_unit)
+    return times.astype(np.int64), data[:, 1:].astype(np.float64, copy=False)
 
 
 def _merge(
@@ -450,19 +694,63 @@ def _read_restart_chain(
 ) -> list[_KeyedReader]:
     files: list[_KeyedReader] = []
     visited: set[Path] = set()
+    # As in resdata, the restart cases are read in the format asked for
+    file_format = _format_of(case_path)
     current: str | os.PathLike[str] | None = case_path
     while current and Path(current).resolve() not in visited:
         try:
-            reader = SummaryReader(case_path=current)
+            case = _open_keyed_reader(current, file_format)
         except FileNotFoundError:
             if not files:  # No files found
                 raise
             else:
                 break  # Did not find a restart
-        files.append(_KeyedReader.read(reader))
+        files.append(case)
         visited.add(Path(current).resolve())
-        current = files[-1].restart if include_restart else None
+        current = case.restart if include_restart else None
     return files
+
+
+def _format_of(case_path: str | os.PathLike[str]) -> str | None:
+    """ "smspec" or "esmry" if the suffix of the case gives the format."""
+    suffix = Path(case_path).suffix
+    if _SMSPEC_SUFFIX.fullmatch(suffix):
+        return "smspec"
+    if _ESMRY_SUFFIX.fullmatch(suffix):
+        return "esmry"
+    return None
+
+
+def _open_keyed_reader(
+    case_path: str | os.PathLike[str], file_format: str | None = None
+) -> _KeyedReader:
+    """The summary files of the case, in the format given by the suffix.
+
+    With the suffix of a SMSPEC or UNSMRY file only those are read, and with
+    the suffix of an ESMRY file only that is read, so a stale file of the
+    other format is ignored. Otherwise (no suffix, or .DATA) the ESMRY file is
+    read if it exists, and the SMSPEC and UNSMRY files if not.
+
+    The ``file_format`` ("smspec" or "esmry") is used instead of the one given
+    by the suffix, which is how the restart cases get the format of the case.
+    """
+    path = Path(case_path)
+    file_format = file_format or _format_of(path)
+    esmry_path = path
+    if _DATA_SUFFIX.fullmatch(path.suffix):
+        esmry_path = path.with_suffix("")
+        # Without the explicit suffix EsmryReader takes CASE.esmry as the file
+        if _ESMRY_SUFFIX.fullmatch(esmry_path.suffix):
+            esmry_path = esmry_path.with_name(esmry_path.name + ".ESMRY")
+    if file_format == "smspec":
+        return _KeyedSmry.read(SummaryReader(case_path=case_path))
+    if file_format == "esmry":
+        return _KeyedEsmry.read(EsmryReader(case_path=esmry_path))
+    try:
+        esmry = EsmryReader(case_path=esmry_path)
+    except FileNotFoundError:
+        return _KeyedSmry.read(SummaryReader(case_path=case_path))
+    return _KeyedEsmry.read(esmry)
 
 
 def _select_columns(
@@ -518,22 +806,55 @@ def _interpolate(
     """
     if len(times) == 0:
         return np.zeros((len(requested), values.shape[1]))
-    result = np.empty((len(requested), values.shape[1]))
     # Interpolate in chunks to bound the size of the temporaries
+    if values.flags.f_contiguous and not values.flags.c_contiguous:
+        # Column-wise storage (as read from ESMRY files): gathering steps from
+        # it is very slow, so the transposed matrix is interpolated instead, one
+        # chunk of columns at a time. The result is then also column-wise, which
+        # is how pandas stores it anyway.
+        transposed = values.T
+        weights = _interpolation_weights(times, requested)
+        result = np.empty((values.shape[1], len(requested)))
+        columns = max(1, _CHUNK_BYTES // max(1, len(requested) * values.itemsize))
+        for start in range(0, len(transposed), columns):
+            chunk = slice(start, start + columns)
+            _interpolate_columns_into(
+                transposed[chunk], rates[chunk], weights, result[chunk]
+            )
+        return result.T
+    result = np.empty((len(requested), values.shape[1]))
     rows = max(1, _CHUNK_BYTES // max(1, values.shape[1] * values.itemsize))
     for start in range(0, len(requested), rows):
         chunk = slice(start, start + rows)
-        _interpolate_into(times, values, rates, requested[chunk], result[chunk])
+        weights = _interpolation_weights(times, requested[chunk])
+        _interpolate_into(values, rates, weights, result[chunk])
     return result
 
 
-def _interpolate_into(
-    times: npt.NDArray[np.int64],
-    values: npt.NDArray[np.float64],
-    rates: npt.NDArray[np.bool_],
-    requested: npt.NDArray[np.int64],
-    result: npt.NDArray[np.float64],
-) -> None:
+@dataclass(frozen=True)
+class _Weights:
+    """Where and how to interpolate for each requested time.
+
+    Attributes:
+        lower: The index of the step at or before each requested time.
+        upper: The index of the step after each requested time.
+        weight_lower: The weight of the value at lower.
+        weight_upper: The weight of the value at upper.
+        below: Whether each requested time is before the first step.
+        above: Whether each requested time is after the last step.
+    """
+
+    lower: npt.NDArray[np.intp]
+    upper: npt.NDArray[np.intp]
+    weight_lower: npt.NDArray[np.float64]
+    weight_upper: npt.NDArray[np.float64]
+    below: npt.NDArray[np.bool_]
+    above: npt.NDArray[np.bool_]
+
+
+def _interpolation_weights(
+    times: npt.NDArray[np.int64], requested: npt.NDArray[np.int64]
+) -> _Weights:
     after = np.searchsorted(times, requested, side="left")
     lower = np.maximum(after - 1, 0)
     upper = np.minimum(after, len(times) - 1)
@@ -545,14 +866,48 @@ def _interpolate_into(
     first = after == 0
     weight_lower[first] = 1.0
     weight_upper[first] = 0.0
-    np.take(values, lower, axis=0, out=result)
-    result *= weight_lower[:, None]
-    result += values[upper] * weight_upper[:, None]
+    return _Weights(
+        lower,
+        upper,
+        weight_lower,
+        weight_upper,
+        requested < times[0],
+        requested > times[-1],
+    )
+
+
+def _interpolate_into(
+    values: npt.NDArray[np.float64],
+    rates: npt.NDArray[np.bool_],
+    weights: _Weights,
+    result: npt.NDArray[np.float64],
+) -> None:
+    """Interpolate row-wise values (one row per step) into result."""
+    np.take(values, weights.lower, axis=0, out=result)
+    result *= weights.weight_lower[:, None]
+    result += values[weights.upper] * weights.weight_upper[:, None]
     if rates.any():
-        result[:, rates] = values[upper][:, rates]
-    below = requested < times[0]
-    above = requested > times[-1]
-    if below.any():
-        result[below] = np.where(rates, 0.0, values[0])
-    if above.any():
-        result[above] = np.where(rates, 0.0, values[-1])
+        result[:, rates] = values[weights.upper][:, rates]
+    if weights.below.any():
+        result[weights.below] = np.where(rates, 0.0, values[0])
+    if weights.above.any():
+        result[weights.above] = np.where(rates, 0.0, values[-1])
+
+
+def _interpolate_columns_into(
+    transposed: npt.NDArray[np.float64],
+    rates: npt.NDArray[np.bool_],
+    weights: _Weights,
+    result: npt.NDArray[np.float64],
+) -> None:
+    """Interpolate column-wise values (one row per key) into result."""
+    np.take(transposed, weights.lower, axis=1, out=result)
+    result *= weights.weight_lower
+    upper = transposed[:, weights.upper]
+    result += upper * weights.weight_upper
+    if rates.any():
+        result[rates] = upper[rates]
+    if weights.below.any():
+        result[:, weights.below] = np.where(rates, 0.0, transposed[:, 0])[:, None]
+    if weights.above.any():
+        result[:, weights.above] = np.where(rates, 0.0, transposed[:, -1])[:, None]

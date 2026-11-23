@@ -113,7 +113,7 @@ Module Contents
    column_keys are not existing.
 
 
-.. py:function:: smry_meta(resdatafiles: res2df.resdatafiles.ResdataFiles | resdata.summary.Summary) -> dict[str, dict[str, Any]]
+.. py:function:: smry_meta(resdatafiles: res2df.resdatafiles.ResdataFiles) -> dict[str, dict[str, Any]]
 
    Provide metadata for summary data vectors.
 

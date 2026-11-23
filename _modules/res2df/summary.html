@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.4.1.dev1+gde8033bd8 documentation</title>
+  <title>res2df.summary &mdash; res2df 1.4.1.dev2+g584dd8e8b documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8b27f39c"></script>
+      <script src="../../_static/documentation_options.js?v=e51ff4f6"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -483,7 +483,7 @@
             <span class="c1"># pandas 2 gives nanosecond resolution, which cannot represent</span>
             <span class="c1"># dates after 2262, while pandas 3 gives microseconds</span>
             <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">as_unit</span><span class="p">(</span><span class="s2">"us"</span><span class="p">)</span>
-        <span class="n">meta</span> <span class="o">=</span> <span class="n">smry_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">_smry_meta_from_summary</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">dframe</span> <span class="o">=</span> <span class="n">summary_pandas_frame</span><span class="p">(</span>
@@ -675,7 +675,7 @@
 
 <div class="viewcode-block" id="smry_meta">
 <a class="viewcode-back" href="../../res2df/res2df/summary/index.html#res2df.summary.smry_meta">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">smry_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span> <span class="o">|</span> <span class="n">Summary</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">smry_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""Provide metadata for summary data vectors.</span>
 
 <span class="sd">    A dictionary indexed by summary vector name is returned, and each</span>
@@ -690,10 +690,14 @@
 <span class="sd">    * keyword (str)</span>
 <span class="sd">    * wgname (str or None)</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">summary_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">)</span>
-    <span class="n">summary</span> <span class="o">=</span> <span class="n">resdatafiles</span>
+    <span class="k">return</span> <span class="n">summary_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">)</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_smry_meta_from_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">:</span> <span class="n">Summary</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Provide metadata for the vectors in an already loaded Summary object.</span>
+
+<span class="sd">    See :func:`smry_meta` for the content."""</span>
     <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">:</span>
         <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -706,8 +710,7 @@
         <span class="n">num</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">get_num</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">num</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">"get_num"</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
-    <span class="k">return</span> <span class="n">meta</span></div>
-
+    <span class="k">return</span> <span class="n">meta</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fix_dframe_for_resdata</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>

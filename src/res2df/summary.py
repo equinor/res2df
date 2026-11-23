@@ -392,7 +392,7 @@ def df(
             # pandas 2 gives nanosecond resolution, which cannot represent
             # dates after 2262, while pandas 3 gives microseconds
             dframe.index = dframe.index.as_unit("us")
-        meta = smry_meta(resdatafiles)
+        meta = _smry_meta_from_summary(resdatafiles)
     else:
         try:
             dframe = summary_pandas_frame(
@@ -581,7 +581,7 @@ def _merge_params(
     return dframe
 
 
-def smry_meta(resdatafiles: ResdataFiles | Summary) -> dict[str, dict[str, Any]]:
+def smry_meta(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
     """Provide metadata for summary data vectors.
 
     A dictionary indexed by summary vector name is returned, and each
@@ -596,10 +596,13 @@ def smry_meta(resdatafiles: ResdataFiles | Summary) -> dict[str, dict[str, Any]]
     * keyword (str)
     * wgname (str or None)
     """
-    if not isinstance(resdatafiles, Summary):
-        return summary_meta(resdatafiles._eclbase)
-    summary = resdatafiles
+    return summary_meta(resdatafiles._eclbase)
 
+
+def _smry_meta_from_summary(summary: Summary) -> dict[str, dict[str, Any]]:
+    """Provide metadata for the vectors in an already loaded Summary object.
+
+    See :func:`smry_meta` for the content."""
     meta: dict[str, dict[str, Any]] = {}
     for col in summary:
         meta[col] = {}

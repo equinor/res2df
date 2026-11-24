@@ -612,7 +612,8 @@ def df(
                 "ICD_LONELYSEG",
             }
         )
-        con_icd_seg = con_icd_seg[list(set(con_icd_seg.columns) - delete_cols)]
+        con_icd_seg = con_icd_seg[[col for col in con_icd_seg.columns
+                                   if col not in delete_cols]]
 
         rftdata.append(con_icd_seg)
 

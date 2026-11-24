@@ -14,6 +14,7 @@ from ecl2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
     _fix_dframe_for_libecl,
+    _smry_meta_from_summary,
     df,
     df2eclsum,
     resample_smry_dates,
@@ -663,7 +664,7 @@ def test_smry_meta_synthetic():
             {"DATE": np.datetime64("2016-01-01"), "FOPT": 1000, "FOPR": 100},
         ]
     ).set_index("DATE")
-    synt_meta = smry_meta(df2eclsum(dframe))
+    synt_meta = _smry_meta_from_summary(df2eclsum(dframe))
 
     # Dummy unit provided by EclSum:
     assert synt_meta["FOPT"]["unit"] == "UNIT"

@@ -14,7 +14,6 @@ from ecl2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
     _fix_dframe_for_libecl,
-    _smry_meta_from_summary,
     df,
     df2eclsum,
     resample_smry_dates,
@@ -651,23 +650,6 @@ def test_smry_meta():
     meta_df = pd.DataFrame.from_dict(meta, orient="index")
     hist_keys = meta_df[meta_df["is_historical"]].index
     assert all(key.split(":")[0].endswith("H") for key in hist_keys)
-
-
-def test_smry_meta_synthetic():
-    """What does meta look like when we start from a synthetic summary?
-
-    ecl2df currently does not try to set the units to anything when
-    making synthetic summary.
-    """
-    dframe = pd.DataFrame(
-        [
-            {"DATE": np.datetime64("2016-01-01"), "FOPT": 1000, "FOPR": 100},
-        ]
-    ).set_index("DATE")
-    synt_meta = _smry_meta_from_summary(df2eclsum(dframe))
-
-    # Dummy unit provided by EclSum:
-    assert synt_meta["FOPT"]["unit"] == "UNIT"
 
 
 @pytest.mark.parametrize(

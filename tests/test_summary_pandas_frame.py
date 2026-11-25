@@ -111,12 +111,10 @@ def raw_values(unsmry: Unsmry) -> np.ndarray:
 def raw_seconds(smspec: Smspec, unsmry: Unsmry) -> np.ndarray:
     """The time of each ministep in seconds since epoch.
 
-    The time of day of the start date is ignored, and the fractions of seconds
-    are dropped (rounding towards zero, so towards later times before 1970).
+    The fractions of seconds are dropped (rounding towards zero, so towards
+    later times before 1970).
     """
-    start = smspec.start_date.to_datetime().replace(
-        hour=0, minute=0, second=0, microsecond=0
-    )
+    start = smspec.start_date.to_datetime().replace(microsecond=0)
     unit = 3600 if smspec.units[0].strip() == "HOURS" else 24 * 3600
     start_seconds = (start - _EPOCH) // timedelta(seconds=1)
     return np.trunc(start_seconds + raw_values(unsmry)[:, 0] * unit).astype(np.int64)
@@ -174,14 +172,17 @@ def test_that_the_frame_has_the_values_of_the_summary_vectors_except_time(
 
 
 @given(summaries())
-def test_that_the_time_of_day_of_the_start_date_is_ignored(generated):
+def test_that_the_time_of_day_of_the_start_date_is_kept(generated):
     smspec, unsmry = generated
     midnight = dataclasses.replace(
         smspec.start_date, hour=0, minutes=0, micro_seconds=0
     )
+    start = smspec.start_date.to_datetime().replace(microsecond=0)
+    offset = start - start.replace(hour=0, minute=0, second=0)
     pd.testing.assert_index_equal(
         frame_of(smspec, unsmry).index,
-        frame_of(dataclasses.replace(smspec, start_date=midnight), unsmry).index,
+        frame_of(dataclasses.replace(smspec, start_date=midnight), unsmry).index
+        + offset,
     )
 
 

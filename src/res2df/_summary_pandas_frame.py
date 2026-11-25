@@ -406,10 +406,9 @@ def _read_values(
         data[steps] = row[columns]
         steps += 1
     data = data[:steps]
-    # resdata ignores the time of day in STARTDAT
-    # one can avoid this by dropping .date()
-    # kept for backwards compatability
-    start_time = _naive_seconds(case.reader.start_date.date())
+    # resdata >= 7.0.1 keeps the time of day in STARTDAT (older versions
+    # dropped it), fractions of a second are truncated
+    start_time = _naive_seconds(case.reader.start_date)
     times = np.trunc(start_time + data[:, 0].astype(np.float64) * case.time_unit)
     return times.astype(np.int64), data[:, 1:].astype(np.float64)
 

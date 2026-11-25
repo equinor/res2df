@@ -1,6 +1,7 @@
 import dataclasses
 import re
 from datetime import datetime, timedelta
+from importlib.metadata import version
 from pathlib import Path
 
 import pandas as pd
@@ -8,6 +9,7 @@ import pytest
 import resfo
 from hypothesis import HealthCheck, assume, given, settings
 from hypothesis import strategies as st
+from packaging.version import Version
 from resdata.summary import Summary
 from resfo_utilities import SummaryKeyType, history_key
 from resfo_utilities.testing import (
@@ -19,8 +21,8 @@ from resfo_utilities.testing import (
     SummaryStep,
     UnitSystem,
     Unsmry,
-    summaries,
 )
+from resfo_utilities.testing import summaries as _summaries
 
 from res2df import ResdataFiles
 from res2df._summary_pandas_frame import (
@@ -163,6 +165,21 @@ def workdir(tmp_path_factory) -> Path:
 @pytest.fixture
 def make_dir(tmp_path_factory):
     return lambda: tmp_path_factory.mktemp("case")
+
+
+# resdata < 7.0.1 drops the time of day of the start date, which res2df keeps
+_RESDATA_KEEPS_START_TIME = Version(version("resdata")) >= Version("7.0.1")
+
+
+def summaries(**kwargs):
+    if not _RESDATA_KEEPS_START_TIME:
+        kwargs.setdefault(
+            "start_date",
+            st.datetimes(
+                min_value=datetime(1969, 1, 1), max_value=datetime(2100, 1, 1)
+            ).map(lambda d: d.replace(hour=0, minute=0, second=0, microsecond=0)),
+        )
+    return _summaries(**kwargs)
 
 
 @settings(suppress_health_check=[HealthCheck.function_scoped_fixture])

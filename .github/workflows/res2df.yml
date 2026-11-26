@@ -62,7 +62,16 @@ jobs:
           enable-cache: true
           python-version: ${{ matrix.python-version }}
 
+      - name: Install locked dependencies
+        # Pull requests and pushes use the versions in uv.lock, so that new
+        # releases of dependencies do not break unrelated changes
+        if: github.event_name != 'schedule'
+        run: |
+          uv export --frozen --no-emit-project --extra tests --extra docs \
+            | uv pip install -r -
+
       - name: Install res2df with dependencies
+        # The nightly run uses the latest versions allowed by pyproject.toml
         run: |
           uv pip install ".[tests, docs]"
 

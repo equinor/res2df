@@ -203,3 +203,9 @@ ignore = [
 
 [tool.ruff.lint.pylint]
 max-args = 20
+
+[dependency-groups]
+dev = ["res2df[tests,docs,style,types]"]
+
+[tool.uv]
+default-groups = ["dev"]

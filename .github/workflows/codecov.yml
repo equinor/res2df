@@ -36,6 +36,13 @@ jobs:
         enable-cache: true
         python-version: "3.11"
 
+    - name: Install locked dependencies
+      # An explicit shell enables pipefail, so a failing export fails the step
+      shell: bash
+      run: |
+        uv export --locked --no-emit-project --extra tests --extra ert \
+          | uv pip install -r -
+
     - name: Install res2df
       run: |
         uv pip install ".[tests, ert]"

@@ -67,7 +67,7 @@ jobs:
         # releases of dependencies do not break unrelated changes
         if: github.event_name != 'schedule'
         run: |
-          uv export --frozen --no-emit-project --extra tests --extra docs \
+          uv export --locked --no-emit-project --extra tests --extra docs \
             | uv pip install -r -
 
       - name: Install res2df with dependencies

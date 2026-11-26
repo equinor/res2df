@@ -68,6 +68,7 @@ jobs:
         if: github.event_name != 'schedule'
         run: |
           uv export --locked --no-emit-project --extra tests --extra docs \
+            ${{ matrix.install-ert && '--extra ert' || '' }} \
             | uv pip install -r -
 
       - name: Install res2df with dependencies

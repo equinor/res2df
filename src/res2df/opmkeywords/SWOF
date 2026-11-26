@@ -11,6 +11,9 @@
     "OIL",
     "WATER"
   ],
+  "prohibits": [
+    "WSF"
+  ],
   "items": [
     {
       "name": "DATA",

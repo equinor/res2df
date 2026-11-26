@@ -48,7 +48,8 @@ WCONHIST
                     "ALQ": 0,
                     "THP": 0,
                     "BHP": 0,
-                    "NGLRAT": 0,
+                    "WGASRAT_HIS": 0,
+                    "NGLRAT_HIS": 0,
                     "DATE": None,
                     "KEYWORD": "WCONHIST",
                 }

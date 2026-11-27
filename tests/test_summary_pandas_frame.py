@@ -8,6 +8,7 @@ test by replacing ``SummaryReader`` in ``res2df._summary_pandas_frame``.
 import dataclasses
 import fnmatch
 import os
+from contextlib import ExitStack
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from pathlib import Path
@@ -21,8 +22,10 @@ import resfo
 from hypothesis import assume, given
 from hypothesis import strategies as st
 from natsort import natsorted
-from resfo_utilities import InvalidSummaryError, SummaryReader, is_rate
+from resfo_utilities import EsmryReader, InvalidSummaryError, SummaryReader, is_rate
 from resfo_utilities.testing import (
+    Date,
+    Esmry,
     Smspec,
     SummaryMiniStep,
     SummaryStep,
@@ -38,7 +41,9 @@ from res2df.summary import resample_smry_dates
 class SummaryChain:
     def __init__(self) -> None:
         self.opened: list[str] = []
+        self.opened_esmry: list[str] = []
         self._cases: dict[str, tuple[bytes, bytes]] = {}
+        self._esmrys: dict[str, bytes] = {}
 
     def add(
         self,
@@ -62,6 +67,12 @@ class SummaryChain:
         self._cases[name] = (contents[0], contents[1])
         return self
 
+    def add_esmry(self, name: str, esmry: Esmry) -> "SummaryChain":
+        buffer = BytesIO()
+        esmry.to_file(buffer)
+        self._esmrys[name] = buffer.getvalue()
+        return self
+
     def frame(self, case: str, **kwargs: Any) -> pd.DataFrame:
         with self._patched():
             return summary_pandas_frame(case, **kwargs)
@@ -71,11 +82,26 @@ class SummaryChain:
             return summary_meta(case)
 
     def _patched(self) -> Any:
-        """We patch SummaryReader constructor so that we can
-        inject the bytes contents in self._cases and avoid
+        """We patch the reader constructors so that we can
+        inject the bytes contents in self._cases and self._esmrys and avoid
         writing to file in the unit tests
         """
-        return mock.patch("res2df._summary_pandas_frame.SummaryReader", self)
+        stack = ExitStack()
+        stack.enter_context(
+            mock.patch("res2df._summary_pandas_frame.SummaryReader", self)
+        )
+        stack.enter_context(
+            mock.patch("res2df._summary_pandas_frame.EsmryReader", self.esmry_reader)
+        )
+        return stack
+
+    def esmry_reader(self, *, case_path: str) -> EsmryReader:
+        name = str(case_path)
+        if name not in self._esmrys:
+            raise FileNotFoundError(name)
+        self.opened_esmry.append(name)
+        contents = self._esmrys[name]
+        return EsmryReader(esmry=lambda: BytesIO(contents))
 
     def __call__(self, *, case_path: str | os.PathLike[str]) -> SummaryReader:
         name = os.fspath(case_path)
@@ -817,3 +843,406 @@ def test_that_steps_with_the_wrong_number_of_values_are_invalid(generated):
     ]
     with pytest.raises(InvalidSummaryError):
         frame_of(smspec, Unsmry(steps))
+
+
+def esmry_chain(smspec: Smspec, unsmry: Unsmry) -> SummaryChain:
+    return SummaryChain().add_esmry("CASE", Esmry.from_summary(smspec, unsmry))
+
+
+@pytest.mark.parametrize(
+    ("key", "wgname"),
+    [
+        ("WOPR:OP1", "OP1"),
+        ("WOPR:LONGWELLNAME_ONE", "LONGWELLNAME_ONE"),
+        ("WOPR:WELL:COLON-1", "WELL:COLON-1"),
+        ("GOPR:GRP:A:B", "GRP:A:B"),
+        ("COPR:OP1:1,1,1", "OP1"),
+        ("COPR:WELL:COLON-1:1,2,3", "WELL:COLON-1"),
+        ("SOFR:OP1:2", "OP1"),
+        ("SOFR:WELL:COLON-1:2", "WELL:COLON-1"),
+    ],
+)
+def test_that_the_wgname_of_an_esmry_key_is_the_whole_well_or_group_name(key, wgname):
+    # flow writes the full name (names can be longer than 8 characters and
+    # contain ":") to ESMRY, unlike the SMSPEC which truncates to 8 characters.
+    keys = ["TIME", key]
+    esmry = Esmry(
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+        keys=keys,
+        units=["DAYS", "SM3"],
+        report_steps=[1],
+        ministeps=[0],
+        vectors=[[0.0], [1.0]],
+    )
+    frame = SummaryChain().add_esmry("CASE", esmry).frame("CASE")
+    assert frame.attrs["meta"][key]["wgname"] == wgname
+
+
+@given(summaries())
+def test_that_an_esmry_file_gives_the_same_frame_as_the_smspec_and_unsmry(generated):
+    smspec, unsmry = generated
+    pd.testing.assert_frame_equal(
+        esmry_chain(smspec, unsmry).frame("CASE"),
+        frame_of(smspec, unsmry),
+        check_exact=True,
+    )
+
+
+@given(
+    summaries(),
+    st.sampled_from(["*", "F*", "W*:*"]),
+    st.sampled_from(
+        [
+            "raw",
+            "YE",
+            "daily",
+            # Dates before, within and after the simulated range
+            [date(1900, 1, 1), datetime(2000, 1, 1, 12), date(2200, 1, 1)],
+        ]
+    ),
+    st.sampled_from([None, date(1950, 1, 1), date(2000, 1, 1)]),
+)
+def test_that_an_esmry_file_gives_the_same_selected_and_resampled_frame(
+    generated, pattern, time_index, start_date
+):
+    smspec, unsmry = generated
+    kwargs = {
+        "column_keys": [pattern, "TIME"],
+        "time_index": time_index,
+        "start_date": start_date,
+    }
+    pd.testing.assert_frame_equal(
+        esmry_chain(smspec, unsmry).frame("CASE", **kwargs),
+        frame_of(smspec, unsmry, **kwargs),
+        check_exact=True,
+    )
+
+
+@given(
+    smspecs(
+        sum_keys=st.just(meta_keys),
+        # flow writes the full names to ESMRY, which can contain ":"
+        well_names=st.text(alphabet="AB1:-_", min_size=1, max_size=8),
+    )
+)
+def test_that_the_metadata_of_an_esmry_file_describes_each_column(smspec):
+    assume(len(set(smspec.summary_keys())) == len(smspec.keywords))
+    unsmry = Unsmry(
+        [SummaryStep(0, [SummaryMiniStep(0, [0.0] * len(smspec.keywords))])]
+    )
+    expected = frame_of(smspec, unsmry).attrs["meta"]
+    meta = esmry_chain(smspec, unsmry).frame("CASE").attrs["meta"]
+    assert esmry_chain(smspec, unsmry).meta("CASE") == meta
+    # The NUMS of block and completion vectors are not in the ESMRY file, and
+    # flow writes 0 for field, well and group vectors
+    without_num = {k: {**v, "get_num": 0} for k, v in expected.items()}
+    assert {k: {**v, "get_num": 0} for k, v in meta.items()} == without_num
+    assert meta[next(k for k in meta if k.startswith("LWOPR"))]["get_num"] == 0
+    assert all(v["get_num"] == 0 for k, v in meta.items() if k[0] in "FWGBC")
+
+
+@given(summaries())
+def test_that_the_esmry_file_is_read_in_preference_to_the_smspec_and_unsmry(generated):
+    smspec, unsmry = generated
+    smspec = with_restart(smspec, "")
+    cases = esmry_chain(smspec, unsmry).add("CASE", smspec, unsmry)
+    cases.frame("CASE")
+    assert cases.opened_esmry == ["CASE"]
+    assert cases.opened == []
+
+
+@given(summaries())
+def test_that_the_case_is_read_from_the_smspec_if_there_is_no_esmry_file(generated):
+    smspec, unsmry = generated
+    smspec = with_restart(smspec, "")
+    cases = SummaryChain().add("CASE", smspec, unsmry)
+    pd.testing.assert_frame_equal(
+        cases.frame("CASE"), frame_of(smspec, unsmry), check_exact=True
+    )
+    assert cases.opened == ["CASE"]
+
+
+@given(parent_summaries, child_summaries)
+def test_that_restarts_can_be_followed_between_esmry_and_smspec_cases(parent, child):
+    child_smspec = with_restart(child[0], "PARENT")
+    parent = (with_restart(parent[0], ""), parent[1])
+    expected = (
+        SummaryChain().add("PARENT", *parent).add("CHILD", child_smspec, child[1])
+    ).frame("CHILD")
+    mixed = SummaryChain().add("PARENT", *parent)
+    mixed.add_esmry("CHILD", Esmry.from_summary(child_smspec, child[1]))
+    pd.testing.assert_frame_equal(mixed.frame("CHILD"), expected, check_exact=True)
+    assert mixed.opened_esmry == ["CHILD"]
+    assert mixed.opened == ["PARENT"]
+    mixed = SummaryChain().add("CHILD", child_smspec, child[1])
+    mixed.add_esmry("PARENT", Esmry.from_summary(*parent))
+    pd.testing.assert_frame_equal(mixed.frame("CHILD"), expected, check_exact=True)
+    assert mixed.opened_esmry == ["PARENT"]
+    assert mixed.opened == ["CHILD"]
+
+
+@pytest.mark.parametrize("name", ["CASE", "CASE.DATA", "CASE.ESMRY"])
+def test_that_esmry_files_are_read_from_disk_by_default(tmp_path, name):
+    smspec, unsmry = summaries().example()
+    Esmry.from_summary(smspec, unsmry).to_file(tmp_path / "CASE.ESMRY")
+    pd.testing.assert_frame_equal(
+        summary_pandas_frame(tmp_path / name),
+        frame_of(smspec, unsmry),
+        check_exact=True,
+    )
+    assert (
+        summary_meta(tmp_path / name).keys()
+        == frame_of(smspec, unsmry).attrs["meta"].keys()
+    )
+
+
+@pytest.mark.parametrize(
+    "directory, name, stem",
+    [
+        ("run.esmry", "CASE", "CASE"),
+        ("run.esmry", "CASE.esmry", "CASE"),
+        ("run.v2", "CASE.V2", "CASE.V2"),
+        ("run.v2", "CASE.V2.ESMRY", "CASE.V2"),
+        ("run.data", "CASE.DATA", "CASE"),
+        ("run.data", "CASE.data", "CASE"),
+    ],
+)
+def test_that_only_the_suffix_of_the_file_name_is_stripped_to_find_the_esmry_file(
+    tmp_path, directory, name, stem
+):
+    smspec, unsmry = summaries().example()
+    (tmp_path / directory).mkdir()
+    Esmry.from_summary(smspec, unsmry).to_file(tmp_path / directory / f"{stem}.ESMRY")
+    pd.testing.assert_frame_equal(
+        summary_pandas_frame(tmp_path / directory / name),
+        frame_of(smspec, unsmry),
+        check_exact=True,
+    )
+
+
+@pytest.mark.parametrize("name", ["CASE.SMSPEC", "CASE.UNSMRY"])
+def test_that_a_smspec_suffix_ignores_a_stale_esmry_file(tmp_path, name):
+    smspec, unsmry = summaries().example()
+    smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)
+    unsmry.to_file(tmp_path / "CASE.UNSMRY", resfo.Format.UNFORMATTED)
+    stale = Esmry.from_summary(smspec, unsmry)
+    stale.vectors = [stale.vectors[0]] + [
+        [12345.678] * len(vector) for vector in stale.vectors[1:]
+    ]
+    stale.to_file(tmp_path / "CASE.ESMRY")
+    expected = frame_of(smspec, unsmry)
+    pd.testing.assert_frame_equal(
+        summary_pandas_frame(tmp_path / name), expected, check_exact=True
+    )
+    assert summary_meta(tmp_path / name).keys() == expected.attrs["meta"].keys()
+    if len(expected.columns):
+        assert not summary_pandas_frame(tmp_path / "CASE").equals(expected)
+
+
+@given(summaries())
+def test_that_the_format_given_by_the_suffix_is_used_for_the_restart_cases(
+    tmp_path_factory, template
+):
+    tmp_path = tmp_path_factory.mktemp("restart")
+    parent = long_name_smspec(template[0], ["GROUP_A"])
+    child = long_name_smspec(template[0], ["GROUP_A"], restart=str(tmp_path / "PARENT"))
+    for name, smspec, times, base in (
+        ("PARENT", parent, [0.0, 10.0], 100.0),
+        ("CHILD", child, [20.0, 30.0], 200.0),
+    ):
+        smspec.to_file(tmp_path / f"{name}.SMSPEC", resfo.Format.UNFORMATTED)
+        long_name_unsmry(times, base, 1).to_file(
+            tmp_path / f"{name}.UNSMRY", resfo.Format.UNFORMATTED
+        )
+    # The ESMRY of the restart case is stale
+    long_name_esmry(["GROUP_A"], [0.0, 10.0], 500.0).to_file(tmp_path / "PARENT.ESMRY")
+    for name in ("CHILD.SMSPEC", "CHILD.UNSMRY"):
+        frame = summary_pandas_frame(tmp_path / name)
+        assert list(frame["GOPR:GROUP_A"]) == [100.0, 110.0, 220.0, 230.0]
+    frame = summary_pandas_frame(tmp_path / "CHILD")
+    assert list(frame["GOPR:GROUP_A"]) == [500.0, 510.0, 220.0, 230.0]
+
+
+@pytest.mark.parametrize("name", ["CASE.esmry.ESMRY", "CASE.esmry.DATA"])
+def test_that_a_case_name_ending_in_esmry_finds_its_esmry_file(tmp_path, name):
+    long_name_esmry(["GROUP_A"], [0.0], 100.0).to_file(tmp_path / "CASE.esmry.ESMRY")
+    long_name_esmry(["GROUP_A"], [0.0], 200.0).to_file(tmp_path / "CASE.ESMRY")
+    frame = summary_pandas_frame(tmp_path / name)
+    assert list(frame["GOPR:GROUP_A"]) == [100.0]
+
+
+def test_that_an_esmry_suffix_without_an_esmry_file_is_an_error(tmp_path):
+    smspec, unsmry = summaries().example()
+    smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)
+    unsmry.to_file(tmp_path / "CASE.UNSMRY", resfo.Format.UNFORMATTED)
+    with pytest.raises(FileNotFoundError):
+        summary_pandas_frame(tmp_path / "CASE.ESMRY")
+
+
+def test_that_an_invalid_esmry_file_is_an_error_even_if_there_is_an_smspec(tmp_path):
+    smspec, unsmry = summaries().example()
+    smspec.to_file(tmp_path / "CASE.SMSPEC", resfo.Format.UNFORMATTED)
+    unsmry.to_file(tmp_path / "CASE.UNSMRY", resfo.Format.UNFORMATTED)
+    resfo.write(tmp_path / "CASE.ESMRY", [("TSTEP   ", np.array([1], dtype=np.int32))])
+    with pytest.raises(InvalidSummaryError):
+        summary_pandas_frame(tmp_path / "CASE")
+
+
+@pytest.mark.parametrize(
+    ("keys", "units", "message"),
+    [
+        (["FOPT"], ["SM3"], "did not contain TIME"),
+        (["TIME", "FOPT"], ["FURLONG", "SM3"], "Unknown date unit"),
+    ],
+)
+def test_that_an_esmry_file_without_a_valid_time_is_an_error(keys, units, message):
+    esmry = Esmry(
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+        keys=keys,
+        units=units,
+        report_steps=[1],
+        ministeps=[0],
+        vectors=[[0.0]] * len(keys),
+    )
+    with pytest.raises(InvalidSummaryError, match=message):
+        SummaryChain().add_esmry("CASE", esmry).frame("CASE")
+
+
+@pytest.mark.parametrize("name", ["CASE", "CASE.ESMRY", "CASE.DATA"])
+def test_that_the_meta_of_an_esmry_file_can_be_read_by_any_suffix_but_smspec(
+    tmp_path, name
+):
+    smspec, unsmry = summaries().example()
+    Esmry.from_summary(smspec, unsmry).to_file(tmp_path / "CASE.ESMRY")
+    assert (
+        summary_meta(tmp_path / name).keys()
+        == frame_of(smspec, unsmry).attrs["meta"].keys()
+    )
+
+
+@given(smspecs(sum_keys=st.just(["YEARS"])))
+def test_that_the_metadata_of_years_in_an_esmry_file_is_as_in_resdata(smspec):
+    unsmry = Unsmry([SummaryStep(0, [SummaryMiniStep(0, [0.0, 0.0])])])
+    esmry = Esmry.from_summary(smspec, unsmry)
+    esmry.units[1] = "        "  # flow leaves the unit of YEARS blank
+    meta = SummaryChain().add_esmry("CASE", esmry).frame("CASE").attrs["meta"]
+    assert meta["YEARS"]["unit"] == "YEARS"
+    assert meta["YEARS"]["get_num"] == -32676
+
+
+@given(smspecs(sum_keys=st.just(["BPR", "CPR"])))
+def test_that_block_and_completion_vectors_of_an_esmry_file_have_get_num_zero(smspec):
+    assume(len(set(smspec.summary_keys())) == len(smspec.keywords))
+    unsmry = Unsmry(
+        [SummaryStep(0, [SummaryMiniStep(0, [0.0] * len(smspec.keywords))])]
+    )
+    meta = esmry_chain(smspec, unsmry).frame("CASE").attrs["meta"]
+    assert meta
+    assert all(v["get_num"] == 0 for v in meta.values())
+
+
+def long_name_smspec(template: Smspec, names: list[str], restart: str = "") -> Smspec:
+    """A SMSPEC with TIME and a group vector for each of the (cut) names."""
+    return dataclasses.replace(
+        template,
+        restart=restart,
+        num_keywords=len(names) + 1,
+        keywords=["TIME", *["GOPR"] * len(names)],
+        well_names=["        ", *[n.ljust(8) for n in names]],
+        region_numbers=[0] * (len(names) + 1),
+        units=["DAYS", *["SM3/DAY"] * len(names)],
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+    )
+
+
+def long_name_unsmry(times: list[float], base: float, width: int) -> Unsmry:
+    return Unsmry(
+        [
+            SummaryStep(
+                i, [SummaryMiniStep(i, [t, *[base + t + w for w in range(width)]])]
+            )
+            for i, t in enumerate(times)
+        ]
+    )
+
+
+def long_name_esmry(names: list[str], times: list[float], base: float) -> Esmry:
+    return Esmry(
+        start_date=Date(1, 1, 2000, 0, 0, 0),
+        keys=["TIME", *[f"GOPR:{n}" for n in names]],
+        units=["DAYS", *["SM3/DAY"] * len(names)],
+        report_steps=[0] * (len(times) - 1) + [1],
+        ministeps=list(range(len(times))),
+        vectors=[times, *[[base + t + w for t in times] for w in range(len(names))]],
+        restart="PARENT",
+        restart_step=0,
+    )
+
+
+@pytest.mark.parametrize("child_is_esmry", [True, False])
+@given(summaries())
+def test_that_a_restart_in_the_other_format_matches_names_cut_to_8_characters(
+    child_is_esmry, template
+):
+    full = "GROUP_LONG"
+    cut = full[:8]
+    template = template[0]
+    parent_times, child_times = [0.0, 10.0], [20.0, 30.0]
+    cases = SummaryChain()
+    if child_is_esmry:
+        cases.add(
+            "PARENT",
+            long_name_smspec(template, [cut]),
+            long_name_unsmry(parent_times, 100.0, 1),
+        )
+        cases.add_esmry("CHILD", long_name_esmry([full], child_times, 200.0))
+    else:
+        cases.add_esmry("PARENT", long_name_esmry([full], parent_times, 100.0))
+        cases.add(
+            "CHILD",
+            long_name_smspec(template, [cut], restart="PARENT"),
+            long_name_unsmry(child_times, 200.0, 1),
+        )
+    frame = cases.frame("CHILD")
+    key = f"GOPR:{full if child_is_esmry else cut}"
+    assert list(frame.columns) == [key]
+    assert list(frame[key]) == [100.0, 110.0, 220.0, 230.0]
+
+
+@pytest.mark.parametrize("child_is_esmry", [True, False])
+@given(summaries())
+def test_that_names_which_are_the_same_when_cut_to_8_characters_are_not_matched(
+    child_is_esmry, template
+):
+    template = template[0]
+    parent_times, child_times = [0.0, 10.0], [20.0, 30.0]
+    cases = SummaryChain()
+    if child_is_esmry:
+        # Both child names are cut to the name in the parent
+        cases.add(
+            "PARENT",
+            long_name_smspec(template, ["GROUP_LO"]),
+            long_name_unsmry(parent_times, 100.0, 1),
+        )
+        cases.add_esmry(
+            "CHILD",
+            long_name_esmry(["GROUP_LONG1", "GROUP_LONG2"], child_times, 200.0),
+        )
+        keys = ["GOPR:GROUP_LONG1", "GOPR:GROUP_LONG2"]
+    else:
+        # Both parent names are cut to the name in the child
+        cases.add_esmry(
+            "PARENT",
+            long_name_esmry(["GROUP_LONG1", "GROUP_LONG2"], parent_times, 100.0),
+        )
+        cases.add(
+            "CHILD",
+            long_name_smspec(template, ["GROUP_LO"], restart="PARENT"),
+            long_name_unsmry(child_times, 200.0, 1),
+        )
+        keys = ["GOPR:GROUP_LO"]
+    frame = cases.frame("CHILD")
+    assert list(frame.columns) == keys
+    for key in keys:
+        assert list(frame[key][:2]) == [-99.0, -99.0]
+        assert (frame[key][2:] != -99.0).all()

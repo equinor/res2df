@@ -12,7 +12,7 @@ version_file = "src/res2df/version.py"
 name = "res2df"
 description = "Convert reservoir simulator input and output to DataFrames"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 authors = [
@@ -25,7 +25,6 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Libraries",
     "Topic :: Utilities",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -37,7 +36,7 @@ dynamic = ["version"]
 dependencies= [
 "resdata>=5",
 "resfo",
-"resfo-utilities",
+"resfo-utilities>=1.3",
 "natsort",
 "networkx",
 "numpy",
